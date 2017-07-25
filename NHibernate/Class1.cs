@@ -7,6 +7,6 @@ using System.Threading.Tasks;
 namespace NHibernate
 {
     public class Class1
-    {
+    { 
     }
 }
