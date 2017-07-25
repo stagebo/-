@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL", "DAL\DAL.csproj", "{E
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model", "Model\Model.csproj", "{E0B55545-7826-416B-992A-221166A364E0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHibernate", "NHibernate\NHibernate.csproj", "{E4DF3B1F-0205-42D2-AD24-41C0884EF731}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{E0B55545-7826-416B-992A-221166A364E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E0B55545-7826-416B-992A-221166A364E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E0B55545-7826-416B-992A-221166A364E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4DF3B1F-0205-42D2-AD24-41C0884EF731}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4DF3B1F-0205-42D2-AD24-41C0884EF731}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4DF3B1F-0205-42D2-AD24-41C0884EF731}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4DF3B1F-0205-42D2-AD24-41C0884EF731}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
