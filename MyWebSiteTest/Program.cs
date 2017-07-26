@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Common.Log4Net;
+using Common.NHibernate;
+using NHibernate;
 
 namespace MyWebSiteTest
 {
@@ -11,7 +13,7 @@ namespace MyWebSiteTest
     {
         static void Main(string[] args)
         {
-            Log4NetUtils.Error("main","错误错误错误");
+            ISession v=SessionManager.OpenSession();
             int[] a = { 1,2,3};
             string s = string.Join("#",a);
             Console.WriteLine(s);
