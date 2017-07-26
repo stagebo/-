@@ -60,7 +60,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Config\NHibernate.cfg.xml" />
+    <Content Include="Config\NHibernate.cfg.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Lib\Iesi.Collections.dll" />
     <Content Include="Lib\Mono.Security.dll" />
     <Content Include="Lib\NHibernate.dll" />
