@@ -11,7 +11,11 @@ namespace MyWebSit.Controllers.NoteManage
         // GET: Note
         public ActionResult Index()
         {
-            return View();
+            return View("Page_Note");
+        }
+        public ActionResult Test()
+        {
+            return View("View");
         }
     }
 }
