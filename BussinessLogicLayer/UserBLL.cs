@@ -5,14 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using DataAccessLayer;
 using Model;
-
+using Base;
 namespace BussinessLogicLayer
 {
-    public class UserBLL
+    public class UserBLL:BaseBLL
     {
         public List<User> SearchAllUser()
         {
             return new UserDAL().SelectAllUser();
         }
+        
     }
 }

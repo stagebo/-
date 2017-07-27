@@ -13,12 +13,19 @@ namespace MyWebSit.Controllers.NoteManage
     public class NoteController : Controller
     {
         /// <summary>
-        /// GET /Not/Index
+        /// GET /Note/Index
         /// </summary>
         /// <returns></returns>
         public ActionResult Index()
         {
             List<Message> l = new MessageBLL().SearchAllMessage();
+            User u = new User();
+            u.f_id = Guid.NewGuid();
+            u.f_uid = "123";
+            u.f_pwd = "123";
+            u.f_exist = 1;
+            u.f_reg_date = DateTime.Now;
+            bool f = new UserBLL().AddModel<User>(u);
             return View("Page_Note");
         }
         /// <summary>

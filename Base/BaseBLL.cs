@@ -7,6 +7,10 @@ namespace Base
 {
     public abstract class BaseBLL
     {
+        public bool ModifyModel<T>(T t )where T :BaseModel
+        {
+            return true;
+        }
         public static class TransactionItemType
         {
             public static readonly string ADD = "add";
@@ -19,20 +23,25 @@ namespace Base
             List<object[]> transactionItem = new List<object[]>();
             foreach (object[] item in modelObjectList)
             {
-                if (item[0].Equals(TransactionItemType.ADD))
+                switch (item[0].ToString())
                 {
-                    transactionItem.Add(new object[] { BaseDAL<BaseModel>.TransactionItemSQLType.INSERT, item[1] });
-                }
-                else if(item[0].Equals(TransactionItemType.REMOVE))
-                {
-                    transactionItem.Add(new object[] { BaseDAL<BaseModel>.TransactionItemSQLType.DELETE, item[1] });
-                }
-                else if(item[0].Equals(TransactionItemType.MODIFY))
-                {
-                    transactionItem.Add(new object[] { BaseDAL<BaseModel>.TransactionItemSQLType.UPDATE, item[1] });
+                    case "add":
+                        transactionItem.Add(new object[] { "insert", item[1] });
+                        break;
+                    case "remove":
+                        transactionItem.Add(new object[] { "delete", item[1] });
+                        break;
+                    case "modify":
+                        transactionItem.Add(new object[] { "update", item[1] });
+                        break;
                 }
             }
             return BaseDAL<BaseModel>.Transaction(transactionItem);
+        }
+        public virtual bool AddModel<T>(T t) where T : BaseModel
+        {
+            return new BaseDAL<T>().Insert(t);
+            //return new Common.BaseDAL().Insert(t);
         }
     }
 }

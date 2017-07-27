@@ -348,6 +348,10 @@
     <Folder Include="Style\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Base\Base.csproj">
+      <Project>{4bb7d0f1-08f9-4028-bd32-e0812f1c37d5}</Project>
+      <Name>Base</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BussinessLogicLayer\BussinessLogicLayer.csproj">
       <Project>{c06b5391-2c0b-4d5d-b214-f754fbd0ab05}</Project>
       <Name>BussinessLogicLayer</Name>
