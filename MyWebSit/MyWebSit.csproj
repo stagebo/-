@@ -348,6 +348,10 @@
     <Folder Include="Style\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BussinessLogicLayer\BussinessLogicLayer.csproj">
+      <Project>{c06b5391-2c0b-4d5d-b214-f754fbd0ab05}</Project>
+      <Name>BussinessLogicLayer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common.Log4Net\Common.Log4Net.csproj">
       <Project>{d8f1b0ba-2633-4e0d-b6dd-6ca0096ea2b3}</Project>
       <Name>Common.Log4Net</Name>
@@ -359,6 +363,10 @@
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{9510f8a5-3fcd-4073-9a11-75b804d6e25d}</Project>
       <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataAccessLayer\DataAccessLayer.csproj">
+      <Project>{6740B930-0F3F-44B2-BA97-66A5DB46D688}</Project>
+      <Name>DataAccessLayer</Name>
     </ProjectReference>
     <ProjectReference Include="..\Model\Model.csproj">
       <Project>{e0b55545-7826-416b-992a-221166a364e0}</Project>

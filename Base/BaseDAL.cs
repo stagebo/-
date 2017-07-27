@@ -11,7 +11,7 @@ using NHibernate;
 using Common.NHibernate;
 using NHibernate.Criterion;
 
-namespace Lib.Base
+namespace Base
 {
     public abstract class BaseDAL<Model> where Model : BaseModel
     {

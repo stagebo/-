@@ -4,6 +4,9 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using BussinessLogicLayer;
+using DataAccessLayer;
+using Model;
 
 namespace MyWebSit.Controllers.NoteManage
 {
@@ -15,7 +18,7 @@ namespace MyWebSit.Controllers.NoteManage
         /// <returns></returns>
         public ActionResult Index()
         {
-            
+            List<Message> l = new MessageBLL().SearchAllMessage();
             return View("Page_Note");
         }
         /// <summary>

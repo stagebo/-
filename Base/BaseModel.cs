@@ -8,7 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace Lib.Base
+namespace Base
 {
     [Serializable]
     public abstract class BaseModel
