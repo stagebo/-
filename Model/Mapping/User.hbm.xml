@@ -1,0 +1,18 @@
+﻿<?xml version="1.0"  encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="Model" namespace="Model">
+  <class name="Model.user, Model" table="t_user">
+    <id name="f_id" column="f_id" type="Guid" unsaved-value="00000000-0000-0000-0000-000000000000">
+
+    </id>
+    <property name="f_uid" column="f_uid" type="string"  />
+    <property name="f_pwd" column="f_pwd" type="string"  />
+    <property name="f_reg_date" column="f_reg_date" type="DateTime"  />
+    <property name="f_email" column="f_email" type="string"  />
+    <property name="f_phone" column="f_phone" type="string"  />
+    <property name="f_age" column="f_age" type="int"  />
+    <property name="f_gender" column="f_gender" type="int"  />
+    <property name="f_address" column="f_address" type="string"  />
+    <property name="f_exist" column="f_exist" type="int"  />
+
+  </class>
+</hibernate-mapping>

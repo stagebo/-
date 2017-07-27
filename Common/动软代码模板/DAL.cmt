@@ -1,0 +1,60 @@
+﻿<#@ template language="c#" HostSpecific="True" #>
+<#@ output extension= ".cs" #>
+<#
+	TableHost host = (TableHost)(Host);	
+	string DbParaHead=host.DbParaHead;
+	string DbParaDbType=host.DbParaDbType;
+	string preParameter=host.preParameter;
+	string ModelSpace = host.NameSpace+".Model."+ host.GetModelClass(host.TableName);
+	ColumnInfo identityKey=host.IdentityKey;
+	string returnValue = "void";
+    if (identityKey!=null)
+    {         
+         returnValue = CodeCommon.DbTypeToCS(identityKey.TypeName);              
+    }
+#>
+<# string tableName = host.GetDALClass(host.TableName);
+	int startIndex = (tableName.IndexOf('_') == -1 ? 0 : tableName.IndexOf('_')) + 1;
+	string className = tableName.Substring(startIndex,tableName.Length - startIndex);
+#>
+using Common;
+using Lib.Model;
+using NHibernate;
+using System; 
+using System.Text;
+using System.Collections.Generic; 
+using System.Linq;
+
+namespace Lib.DAL  
+<# if( host.Folder.Length > 0){ #>
+	.<#= host.Folder #>
+<# } #>
+{
+	public class <#= className #>DAL : BaseDAL<<#= className #>>
+	{
+		#region BaseMethod
+   		
+   		/// <summary>
+		/// 创建查询条件
+		/// </summary>	
+     	protected override ICriteria _createConditionCriteria(ICriteria criteria, Dictionary<string, object> conditionDictionary)
+     	{
+     		criteria = base._createConditionCriteria(criteria, conditionDictionary);
+
+        	return criteria;
+     	}
+   		
+		/// <summary>
+		/// 创建排序条件
+		/// </summary>	
+     	protected override ICriteria _createOrderCriteria(ICriteria criteria, List<string[]> orderList)
+     	{
+        	 criteria = base._createOrderCriteria(criteria, orderList);
+         	return criteria;
+     	}
+     	
+     	#endregion
+     	
+	}
+}
+

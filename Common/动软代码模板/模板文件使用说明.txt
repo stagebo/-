@@ -1,0 +1,7 @@
+1. Lib.Model项目下的文件直接去掉前缀，如：System_Right.cs，去掉前缀后：Right.cs
+2. Lib.Model项目下Mapping文件夹下的文件 
+   (1)去掉前缀，如：System_Right_hbm.xml,去掉前缀后：Right.hbm.xml
+   (2)将文件的属性“复制到输出目录”的内容设置为：“始终复制”
+   (3)将文件的属性“生成操作”的内容设置为：“嵌入的资源”
+3. Lib.DAL项目下的文件：(1)去掉前缀，(2)在后面补上DAL，如：System_Right.cs,修改后为：RightDAL.cs
+4. Lib.BLL项目下的文件：(1)去掉前缀，(2)在后面补上BLL，如：System_Right.cs,修改后卫：RightBLL.cs

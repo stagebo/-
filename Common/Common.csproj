@@ -30,8 +30,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Mono.Security">
+      <HintPath>..\Common.NHibernate\Lib\Mono.Security.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -40,8 +44,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common.cs" />
     <Compile Include="CommonFunction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="动软代码模板\BLL.cmt" />
+    <None Include="动软代码模板\DAL.cmt" />
+    <None Include="动软代码模板\Model.cmt" />
+    <None Include="动软代码模板\XmlMapping.cmt" />
+    <None Include="动软代码模板\模板文件使用说明.txt.bak" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="动软代码模板\模板文件使用说明.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common.Log4Net\Common.Log4Net.csproj">
+      <Project>{d8f1b0ba-2633-4e0d-b6dd-6ca0096ea2b3}</Project>
+      <Name>Common.Log4Net</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

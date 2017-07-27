@@ -1,0 +1,37 @@
+﻿<#@ template language="C#" HostSpecific="True" #>
+<#@ output extension= ".hbm.xml"  #>
+<#
+	TableHost host = (TableHost)(Host);
+	host.Fieldlist.Sort(CodeCommon.CompareByintOrder);
+	
+
+#>
+<# string tableName = host.GetDALClass(host.TableName);
+		int startIndex = (tableName.IndexOf('_') == -1 ? 0 : tableName.IndexOf('_')) + 1;
+		string className = tableName.Substring(startIndex,tableName.Length - startIndex);
+		string nameSpace = "Lib.Model";
+	#>
+<?xml version="1.0"  encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="Lib.Model" namespace="Lib.Model">
+	<class name="Lib.Model<# if( host.Folder.Length > 0) {#>.<#= host.Folder #><# } #>.<#= className #>, <#= nameSpace #>" table="<#= host.TableName #>">
+		<# if(host.Keys.Count>1) 
+			{ #><composite-id>
+        		<# foreach (ColumnInfo k in host.Keys){ 
+        		#><key-property name="<#= k.ColumnName #>" column="<#= k.ColumnName #>" type="<#= CodeCommon.DbTypeToCS(k.TypeName) #>" <#
+					if(k.IsIdentity){ #> insert="false" update="false"<# } #> />
+				<# } #>
+			
+		</composite-id>
+		<# } else if (host.Keys.Count==1)
+		{ #><id name="<#= host.Keys[0].ColumnName #>" column="<#= host.Keys[0].ColumnName #>" type="<#= CodeCommon.DbTypeToCS(host.Keys[0].TypeName) #>" unsaved-value="<# if(CodeCommon.DbTypeToCS(host.Keys[0].TypeName) == "Guid") { Write("00000000-0000-0000-0000-000000000000");} else { Write("0");} #>">
+      			<# if(host.Keys[0].IsIdentity) { #><generator class="native" /> <# } #>
+      			
+    	</id><# } #>
+      		
+		<# foreach (ColumnInfo c in host.Fieldlist)
+		{ #><# if(!c.IsPrimaryKey){ #><property name="<#= c.ColumnName #>" column="<#= c.ColumnName #>" type="<# if( c.TypeName == "nvarchar" && c.Length.ToString() == "0") { Write("StringClob");} else { if(c.TypeName == "image" ){Write("BinaryBlob");} else {Write(CodeCommon.DbTypeToCS(c.TypeName));}}  #>" <# 
+		if(c.IsIdentity){ #> insert="false" update="false"<# } #> />
+		<# } #><# } #>
+		
+	</class>
+</hibernate-mapping>
