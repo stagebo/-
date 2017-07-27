@@ -1,0 +1,198 @@
+﻿<#@ template language="c#" HostSpecific="True" #>
+<#@ output extension= ".cs" #>
+<#
+	TableHost host = (TableHost)(Host);		
+	string ModelSpace = host.NameSpace+".Model."+ host.GetModelClass(host.TableName);
+	string DALSpace= host.NameSpace+".DAL."+ host.GetDALClass(host.TableName);
+	ColumnInfo identityKey=host.IdentityKey;
+	string returnValue = "void";
+    if (identityKey!=null)
+    {         
+         returnValue = CodeCommon.DbTypeToCS(identityKey.TypeName);              
+    }
+#>
+<# string tableName = host.GetDALClass(host.TableName);
+		int startIndex = (tableName.IndexOf('_') == -1 ? 0 : tableName.IndexOf('_')) + 1;
+		string className = tableName.Substring(startIndex,tableName.Length - startIndex);
+	
+	#>
+using Common;
+using Common.Log4Net;
+using Lib.DAL;
+using Lib.Model;
+using System; 
+using System.Text;
+using System.Collections.Generic; 
+using System.Linq;
+
+namespace Lib.BLL <# if( host.Folder.Length > 0){ #>.<#= host.Folder #><# } #>
+
+{
+	public class <#= className #>BLL : BaseBLL
+	{
+		#region Method
+		
+		/// <summary>
+		/// 添加<#= className #>记录
+		/// </summary>
+		/// <param name="<#= host.GetBLLClass(host.TableName).Substring(0,1).ToLower() #><#= host.GetBLLClass(host.TableName).Substring(1) #>"></param>
+		/// <returns></returns>
+		public bool Add<#= className #>(Model.<#= className #> <#= className.Substring(0,1).ToLower() #><#= className.Substring(1) #>)
+		{
+		    return new DAL.<#= className #>DAL().Insert(<#= className.Substring(0,1).ToLower() #><#= className.Substring(1) #>);
+		}
+		
+		/// <summary>
+        /// 删除<#= className #>记录
+        /// </summary>
+        /// <param name="<#= host.GetBLLClass(host.TableName).Substring(0,1).ToLower() #><#= host.GetBLLClass(host.TableName).Substring(1) #>"></param>
+        /// <returns></returns>
+        public bool Remove<#= className #>(Model.<#= className #> <#= className.Substring(0,1).ToLower() #><#= className.Substring(1) #>)
+        {
+            return new DAL.<#= className #>DAL().Delete(<#= className.Substring(0,1).ToLower() #><#= className.Substring(1) #>);
+        }
+		
+		/// <summary>
+        /// 修改<#= className #>记录
+        /// </summary>
+        /// <param name="<#= host.GetBLLClass(host.TableName).Substring(0,1).ToLower() #><#= host.GetBLLClass(host.TableName).Substring(1) #>"></param>
+        /// <returns></returns>
+        public bool Modify<#= className #>(Model.<#= className #> <#= className.Substring(0,1).ToLower() #><#= className.Substring(1) #>)
+        {
+            return new DAL.<#= className #>DAL().Update((object)<#= className.Substring(0,1).ToLower() #><#= className.Substring(1) #>);
+        }
+		
+		/// <summary>
+        /// 查询<#= className #>下一个自增ID
+        /// </summary>
+        /// <returns></returns>
+        public int? Search<#= className #>Identity()
+        {
+            return new DAL.<#= className #>DAL().SelectNextIdentity();
+        }
+
+        /// <summary>
+        /// 查询全部<#= className #>记录数量
+        /// </summary>
+        /// <returns></returns>
+        public int? Search<#= className #>Count()
+        {
+            return new DAL.<#= className #>DAL().SelectModelObjectCountByCondition();
+        }
+
+        /// <summary>
+        /// 按条件查询<#= className #>记录数量
+        /// </summary>
+        /// <param name="conditionDictionary"></param>
+        /// <returns></returns>
+        public int? Search<#= className #>Count(Dictionary<string, object> conditionDictionary)
+        {
+            return new DAL.<#= className #>DAL().SelectModelObjectCountByCondition(conditionDictionary);
+        }
+
+        /// <summary>
+        /// 查询指定<#= CodeCommon.GetFieldstrlist(host.Keys, false).Substring(0,1).ToLower()#><#= CodeCommon.GetFieldstrlist(host.Keys, false).Substring(1)#>的<#= className #>是否存在
+        /// </summary>
+        /// <param name="<#= CodeCommon.GetFieldstrlist(host.Keys, false).Substring(0,1).ToLower()#><#= CodeCommon.GetFieldstrlist(host.Keys, false).Substring(1)#>"></param>
+        /// <returns></returns>
+        public bool? Search<#= className #>Exists(object <#= CodeCommon.GetFieldstrlist(host.Keys, false).Substring(0,1).ToLower()#><#= CodeCommon.GetFieldstrlist(host.Keys, false).Substring(1)#>)
+        {
+            return new DAL.<#= className #>DAL().SelectModelObjectExistsByID(<#= CodeCommon.GetFieldstrlist(host.Keys, false).Substring(0,1).ToLower()#><#= CodeCommon.GetFieldstrlist(host.Keys, false).Substring(1)#>);
+        }
+
+        /// <summary>
+        /// 查询指定条件的<#= className #>是否存在
+        /// </summary>
+        /// <param name="conditionDictionary"></param>
+        /// <returns></returns>
+        public bool? Search<#= className #>Exists(Dictionary<string, object> conditionDictionary)
+        {
+            return new DAL.<#= className #>DAL().SelectModelObjectExistsByCondition(conditionDictionary);
+        }
+
+        /// <summary>
+        /// 按<#= CodeCommon.GetFieldstrlist(host.Keys, false).Substring(0,1).ToLower()#><#= CodeCommon.GetFieldstrlist(host.Keys, false).Substring(1)#>查询<#= className #>
+        /// </summary>
+        /// <param name="<#= CodeCommon.GetFieldstrlist(host.Keys, false).Substring(0,1).ToLower()#><#= CodeCommon.GetFieldstrlist(host.Keys, false).Substring(1)#>"></param>
+        /// <returns></returns>
+        public Model.<#= className #> Search<#= className #>ByID(object <#= CodeCommon.GetFieldstrlist(host.Keys, false).Substring(0,1).ToLower()#><#= CodeCommon.GetFieldstrlist(host.Keys, false).Substring(1)#>)
+        {
+            return new DAL.<#= className #>DAL().SelectModelObjectByID(<#= CodeCommon.GetFieldstrlist(host.Keys, false).Substring(0,1).ToLower()#><#= CodeCommon.GetFieldstrlist(host.Keys, false).Substring(1)#>);
+        }
+
+        /// <summary>
+        /// 查询第一个<#= className #>对象
+        /// </summary>
+        /// <returns></returns>
+        public Model.<#= className #> SearchUnique<#= className #>ByCondition()
+        {
+            return new DAL.<#= className #>DAL().SelectUniqueModelObjectByCondition();
+        }
+
+        /// <summary>
+        /// 按条件查询第一个<#= className #>对象
+        /// </summary>
+        /// <param name="conditionDictionary"></param>
+        /// <returns></returns>
+        public Model.<#= className #> SearchUnique<#= className #>ByCondition(Dictionary<string, object> conditionDictionary)
+        {
+            return new DAL.<#= className #>DAL().SelectUniqueModelObjectByCondition(conditionDictionary);
+        }
+
+        /// <summary>
+        /// 按条件和排序查询第一个<#= className #>对象
+        /// </summary>
+        /// <param name="conditionDictionary"></param>
+        /// <param name="orderList"></param>
+        /// <returns></returns>
+        public Model.<#= className #> SearchUnique<#= className #>ByCondition(Dictionary<string, object> conditionDictionary, List<string[]> orderList)
+        {
+            return new DAL.<#= className #>DAL().SelectUniqueModelObjectByCondition(conditionDictionary, orderList);
+        }
+
+        /// <summary>
+        /// 查询全部<#= className #>对象
+        /// </summary>
+        /// <returns></returns>
+        public List<Model.<#= className #>> Search<#= className #>ListByCondition()
+        {
+            return new DAL.<#= className #>DAL().SelectModelObjectListByCondition();
+        }
+
+        /// <summary>
+        /// 按条件查询<#= className #>对象
+        /// </summary>
+        /// <param name="conditionDictionary"></param>
+        /// <returns></returns>
+        public List<Model.<#= className #>> Search<#= className #>ListByCondition(Dictionary<string, object> conditionDictionary)
+        {
+            return new DAL.<#= className #>DAL().SelectModelObjectListByCondition(conditionDictionary);
+        }
+
+        /// <summary>
+        /// 按条件和排序查询<#= className #>对象
+        /// </summary>
+        /// <param name="conditionDictionary"></param>
+        /// <param name="orderList"></param>
+        /// <returns></returns>
+        public List<Model.<#= className #>> Search<#= className #>ListByCondition(Dictionary<string, object> conditionDictionary, List<string[]> orderList)
+        {
+            return new DAL.<#= className #>DAL().SelectModelObjectListByCondition(conditionDictionary, orderList);
+        }
+
+        /// <summary>
+        /// 按分页条件和排序查询<#= className #>内容
+        /// </summary>
+        /// <param name="conditionDictionary"></param>
+        /// <param name="orderList"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public List<Model.<#= className #>> Search<#= className #>ListByPage(Dictionary<string, object> conditionDictionary, List<string[]> orderList, int pageIndex, int pageSize)
+        {
+            return new DAL.<#= className #>DAL().SelectModelObjectListByPage(conditionDictionary, orderList, pageIndex, pageSize);
+        }
+
+		#endregion
+	}
+}

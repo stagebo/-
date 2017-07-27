@@ -1,21 +1,52 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using BussinessLogicLayer;
+using DataAccessLayer;
+using Model;
 
 namespace MyWebSit.Controllers.NoteManage
 {
     public class NoteController : Controller
     {
-        // GET: Note
+        /// <summary>
+        /// GET /Not/Index
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Index()
         {
+            List<Message> l = new MessageBLL().SearchAllMessage();
             return View("Page_Note");
         }
-        public ActionResult Test()
+        /// <summary>
+        /// POST /Note/SubmitMessage 提交留言信息
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult SubmitNote()
         {
-            return View("View");
+            
+            return Content("{\"result\":0}");
+        }
+        /// <summary>
+        /// post /Note/SearchNoteList
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult SearchCommonList()
+        {
+            
+            return Content(null);
+        }
+        /// <summary>
+        /// POST /Note/DeleteSingleNote
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult DeleteSingleNote()
+        {
+           
+            return Content(null);
         }
     }
 }

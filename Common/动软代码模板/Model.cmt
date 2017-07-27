@@ -1,0 +1,101 @@
+﻿<#@ template language="c#" HostSpecific="True" #>
+<#@ output extension= ".cs" #>
+<#
+	TableHost host = (TableHost)(Host);
+	host.Fieldlist.Sort(CodeCommon.CompareByintOrder);
+#>
+<# string tableName = host.GetDALClass(host.TableName);
+		int startIndex = (tableName.IndexOf('_') == -1 ? 0 : tableName.IndexOf('_')) + 1;
+		string className = tableName.Substring(startIndex,tableName.Length - startIndex);
+	
+	#>
+using Common;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Lib.Model<# if( host.Folder.Length > 0) {#>.<#= host.Folder #><# } #>
+
+{
+	public class <#= className #> : BaseModel
+	{
+		#region Model
+		
+      	<# foreach (ColumnInfo c in host.Fieldlist)
+		{ #>/// <summary>
+		/// <#= string.IsNullOrEmpty(c.Description)  ? c.ColumnName : c.Description #>
+        /// </summary>
+        public virtual <#= CodeCommon.DbTypeToCS(c.TypeName) #><# if(c.Nullable) {  #><#if(CodeCommon.isValueType(CodeCommon.DbTypeToCS(c.TypeName
+))){ #>?<# }#><# }#> <#= c.ColumnName #>
+        {
+            get; 
+            set; 
+        } 
+        
+		<# } #>
+   		
+   		#endregion
+   		
+   		#region ToJsonString
+   		
+   		/// <summary>
+        /// 生成json结构
+        /// </summary>
+        /// <param name="isClose"></param>
+        /// <returns></returns>
+   		public override string ToJsonString(bool isClose)
+   		{
+   			return new System.Text.StringBuilder(string.Empty)
+				.Append(isClose ? "{" : "")
+   				<# foreach (ColumnInfo c in host.Fieldlist){ if(CodeCommon.DbTypeToCS(c.TypeName) == "byte[]") {	
+																continue;
+															} #>
+.Append("\"<#= c.ColumnName #>\":<# 
+if(CodeCommon.DbTypeToCS(c.TypeName) == "byte[]") {	
+	Write("");
+} 
+else 
+{
+
+	if(c.Nullable)
+	{
+	   
+		if(CodeCommon.DbTypeToCS(c.TypeName) == "DateTime")
+		{
+		   	
+		 Write("\").Append(this." + c.ColumnName + "  == null ? \"null\" : (\"\\\"\" + Uri.EscapeDataString(Convert.ToDateTime(this." + c.ColumnName + " ).ToString(\"yyyy-MM-dd HH:mm:ss\")) + \"\\\"\")).Append(\"");
+		
+		}
+		else 
+		{
+		   Write("\").Append(this." + c.ColumnName + " == null ? \"null\" : (\"\\\"\"+  Uri.EscapeDataString(this." + c.ColumnName + ".ToString()) + \"\\\"\")).Append(\"");
+		}
+	}
+	else 
+	{
+	    Write("\\\"");
+	    Write("\").Append(Uri.EscapeDataString(");
+	
+		if(CodeCommon.DbTypeToCS(c.TypeName) == "DateTime")
+		{
+			Write("this." + c.ColumnName + ".ToString(\"yyyy-MM-dd HH:mm:ss\")");
+		}
+		else 
+		{
+			Write("this." + c.ColumnName + ".ToString()");
+		}
+		Write(")).Append(\"\\\"");
+	}
+	
+	
+}
+#><#=c==host.Fieldlist[host.Fieldlist.Count - 1] ? "" : "," #>")
+   				<# } #>
+.Append(isClose ? "}" : "")
+                .ToString();
+   		}
+   		
+   		#endregion
+	}
+}
