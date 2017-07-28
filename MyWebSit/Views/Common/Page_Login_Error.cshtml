@@ -1,0 +1,38 @@
+﻿
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>用户未登录</title>
+    <script src="~/Scripts/Plugins/jQuery/jquery-1.12.2.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            setTimeout("refresh()",1000);
+
+        });
+        function refresh() {
+            var seconds = $("#seconds");
+            var time = parseInt(seconds.html());
+            if (time < 1) {
+                window.location.href = "/Login/Index";
+            } else {
+                time = time - 1;
+                seconds.html(time);
+                setTimeout("refresh()", 1000);
+            }
+        }
+    </script>
+</head>
+<body>
+    <div>
+        <div>用户未登录<span id="seconds">5</span>秒后跳转到登录页面~</div>
+    </div>
+</body>
+</html>
+

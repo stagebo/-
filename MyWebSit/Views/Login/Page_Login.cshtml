@@ -1,6 +1,6 @@
 ﻿
 @{
-
+    Layout = null;
 }
 
 <!DOCTYPE html>
@@ -10,12 +10,43 @@
     <meta name="viewport" content="width=device-width" />
     <title>登录</title>
     <link href="~/Scripts/Plugins/MiniUI/themes/default/miniui.css" rel="stylesheet" />
+    <link href="~/Scripts/Plugins/Bootstrap/css/bootstrap.css" rel="stylesheet" />
+
     <script src="~/Scripts/Plugins/jQuery/jquery-1.12.2.min.js"></script>
     <script src="~/Scripts/Plugins/MiniUI/miniui.js"></script>
+    <script src="~/Scripts/Plugins/Bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript">
         $(function () {
             mini.parse();
         });
+        function validateUser() {
+            var uid = mini.get("uid_div").getValue();
+            var pwd = mini.get("pwd_div").getValue();
+            if (uid == "") {
+                mini.alert("用户名不能为空！");
+                return;
+            }
+            if (pwd == "") {
+                mini.alert("密码不能为空！");
+                return;
+            }
+            $.ajax({
+                type: 'post',
+                url: '/Login/Validate ',
+                data: { 'uid': uid, 'pwd': pwd },
+                dataType: 'json',
+                success: function (data) {
+                    if (data["result"] == "@Common.CommonEnum.AjaxResult.ERROR") {
+                        mini.alert("用户名或密码错误！请重新输入！");
+                        return;
+                    }
+                    window.location.href = "/MainPage/Index";
+                },
+                error: function () {
+                    mini.alert("登录失败！");
+                }
+            });
+        }
     </script>
 </head>
 <body>

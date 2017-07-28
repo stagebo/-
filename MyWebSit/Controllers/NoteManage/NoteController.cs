@@ -46,9 +46,9 @@ namespace MyWebSit.Controllers.NoteManage
             Message m = new Message();
             m.f_message_id = Guid.NewGuid();
             m.f_message_exist = CommonEnum.DataExist.EXIST;
-            m.f_writer_name = Session["uname"].ToString();
+            m.f_writer_name = Session["uid"].ToString();
             Guid writerIDGuid;
-            Guid.TryParse(Session["uid"].ToString(),out writerIDGuid);
+            Guid.TryParse(Session["id"].ToString(),out writerIDGuid);
             m.f_writer_id = writerIDGuid;
             m.f_common_date = DateTime.Now;
             m.f_content = content;
@@ -70,7 +70,9 @@ namespace MyWebSit.Controllers.NoteManage
             {
                 { "f_message_exist,Eq",CommonEnum.DataExist.EXIST}
             };
-            List<Message> messageList = new MessageBLL().SearchModelObjectListByCondition<Message>(condition);
+            List<string[]> orderList = new List<string[]>();
+            orderList.Add(new string[2] { "f_common_date", "desc"});
+            List<Message> messageList = new MessageBLL().SearchModelObjectListByCondition<Message>(condition,orderList);
             if (messageList == null)
             {
                 Log4NetUtils.Error(this,"查询留言，查询MessageList失败！");
@@ -89,7 +91,7 @@ namespace MyWebSit.Controllers.NoteManage
         /// <returns></returns>
         public ActionResult DeleteSingleNote()
         {
-            string errorJsonString = $"{{\"result\":\"{CommonEnum.AjaxResult.ERROR}\"}}";
+            string errorJsonString = "{\"result\":\""+CommonEnum.AjaxResult.ERROR+"\",\"state\":\"0\"}";
             string f_id = Request.Form["f_id"];
             if (string.IsNullOrWhiteSpace(f_id))
             {
@@ -108,9 +110,16 @@ namespace MyWebSit.Controllers.NoteManage
                 Log4NetUtils.Error(this,$"删除留言，查询留言实体失败,实体id：{f_idGuid}");
                 return Content(errorJsonString);
             }
+            string uid = Session["uid"].ToString();
+            if (!message.f_writer_name.Equals(uid)) {
+                string err = "{\"result\":\"" + CommonEnum.AjaxResult.ERROR + "\",\"state\":\"1\"}";
+                return Content(err);
+            }
+
             message.f_message_exist = CommonEnum.DataExist.NOT_EXIST;
             if (!messageBLL.ModifyModel<Message>(message))
             {
+                errorJsonString= "{\"result\":\"" + CommonEnum.AjaxResult.ERROR + "\",\"state\":\"2\"}"; ;
                 Log4NetUtils.Error(this,$"删除留言，修改留言逻辑列失败！");
             }
             string successString =$"{{\"result\":\"{CommonEnum.AjaxResult.SUCCESS}\"}}";

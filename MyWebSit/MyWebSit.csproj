@@ -97,6 +97,14 @@
     <Content Include="Scripts\Common\CommonEnum.js" />
     <Content Include="Scripts\Common\CommonFunction.js" />
     <Content Include="Scripts\jQuery\jquery-3.2.1.min.js" />
+    <Content Include="Scripts\Plugins\Bootstrap\css\bootstrap-theme.css" />
+    <Content Include="Scripts\Plugins\Bootstrap\css\bootstrap-theme.min.css" />
+    <Content Include="Scripts\Plugins\Bootstrap\css\bootstrap.css" />
+    <Content Include="Scripts\Plugins\Bootstrap\css\bootstrap.min.css" />
+    <Content Include="Scripts\Plugins\Bootstrap\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Scripts\Plugins\Bootstrap\js\bootstrap.js" />
+    <Content Include="Scripts\Plugins\Bootstrap\js\bootstrap.min.js" />
+    <Content Include="Scripts\Plugins\Bootstrap\js\npm.js" />
     <Content Include="Scripts\Plugins\jQueryUI\images\ui-icons_444444_256x240.png" />
     <Content Include="Scripts\Plugins\jQueryUI\images\ui-icons_555555_256x240.png" />
     <Content Include="Scripts\Plugins\jQueryUI\images\ui-icons_777620_256x240.png" />
@@ -528,18 +536,6 @@
     <Content Include="Scripts\Plugins\jQuery\jquery-1.12.2.js" />
     <Content Include="Scripts\Plugins\jQuery\jquery-1.12.2.min.js" />
     <Content Include="Scripts\Plugins\jQuery\jquery-form.js" />
-    <Content Include="Scripts\Plugins\kindeditor\asp.net\bin\LitJSON.dll" />
-    <Content Include="Scripts\Plugins\kindeditor\asp.net\demo.aspx" />
-    <Content Include="Scripts\Plugins\kindeditor\asp.net\README.txt" />
-    <Content Include="Scripts\Plugins\kindeditor\asp\demo.asp" />
-    <Content Include="Scripts\Plugins\kindeditor\asp\file_manager_json.asp" />
-    <Content Include="Scripts\Plugins\kindeditor\asp\JSON_2.0.4.asp" />
-    <Content Include="Scripts\Plugins\kindeditor\asp\UpLoad_Class.asp" />
-    <Content Include="Scripts\Plugins\kindeditor\asp\upload_json.asp" />
-    <Content Include="Scripts\Plugins\kindeditor\jsp\lib\commons-fileupload-1.2.1.jar" />
-    <Content Include="Scripts\Plugins\kindeditor\jsp\lib\commons-io-1.4.jar" />
-    <Content Include="Scripts\Plugins\kindeditor\jsp\lib\json_simple-1.1.jar" />
-    <Content Include="Scripts\Plugins\kindeditor\jsp\README.txt" />
     <Content Include="Scripts\Plugins\kindeditor\kindeditor-all-min.js" />
     <Content Include="Scripts\Plugins\kindeditor\kindeditor-all.js" />
     <Content Include="Scripts\Plugins\kindeditor\lang\ar.js" />
@@ -3447,11 +3443,17 @@
     <Content Include="Scripts\Plugins\MiniUI\themes\olive2003\images\tree\treeNodeLine.gif" />
     <Content Include="Scripts\Plugins\MiniUI\themes\olive2003\images\window\header.gif" />
     <Content Include="Scripts\Plugins\MiniUI\themes\olive2003\skin.css" />
+    <Content Include="Scripts\Plugins\slimScroll\jquery.slimscroll.js" />
+    <Content Include="Scripts\Plugins\slimScroll\jquery.slimscroll.min.js" />
+    <Content Include="Scripts\Plugins\slimScroll\prettify.css" />
+    <Content Include="Scripts\Plugins\slimScroll\prettify.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\Common\CommonController.cs" />
     <Compile Include="Controllers\Common\LoginController.cs" />
+    <Compile Include="Controllers\MainPage\MainPageController.cs" />
     <Compile Include="Controllers\NoteManage\NoteController.cs" />
     <Compile Include="Controllers\User\UserManagementController.cs" />
     <Compile Include="Filter\GlobalHandleError.cs" />
@@ -3469,15 +3471,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Note\Page_Show_Note.cshtml" />
-    <Content Include="Scripts\Plugins\kindeditor\asp.net\file_manager_json.ashx" />
-    <Content Include="Scripts\Plugins\kindeditor\asp.net\upload_json.ashx" />
-    <Content Include="Scripts\Plugins\kindeditor\jsp\demo.jsp" />
-    <Content Include="Scripts\Plugins\kindeditor\jsp\file_manager_json.jsp" />
-    <Content Include="Scripts\Plugins\kindeditor\jsp\upload_json.jsp" />
-    <Content Include="Scripts\Plugins\kindeditor\php\demo.php" />
-    <Content Include="Scripts\Plugins\kindeditor\php\file_manager_json.php" />
-    <Content Include="Scripts\Plugins\kindeditor\php\JSON.php" />
-    <Content Include="Scripts\Plugins\kindeditor\php\upload_json.php" />
     <Content Include="Scripts\Plugins\MiniUI\res\font-awesome\fonts\fontawesome-webfont.eot" />
     <Content Include="Scripts\Plugins\MiniUI\res\font-awesome\fonts\fontawesome-webfont.ttf" />
     <Content Include="Scripts\Plugins\MiniUI\res\font-awesome\fonts\fontawesome-webfont.woff" />
@@ -3490,6 +3483,12 @@
     <Content Include="Scripts\Plugins\MiniUI\themes\olive2003\images\buttonedit\Thumbs.db" />
     <Content Include="Scripts\Plugins\MiniUI\themes\olive2003\images\tree\Thumbs.db" />
     <Content Include="Views\Login\Page_Register.cshtml" />
+    <Content Include="Views\Common\Page_Login_Error.cshtml" />
+    <Content Include="Scripts\Plugins\Bootstrap\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Scripts\Plugins\Bootstrap\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Scripts\Plugins\Bootstrap\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Scripts\Plugins\Bootstrap\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Views\MainPage\Page_Main.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -3510,7 +3509,7 @@
     <Folder Include="Scripts\Plugins\MiniUI\themes\metro-orange\images\button\" />
     <Folder Include="Scripts\Plugins\MiniUI\themes\metro\images\button\" />
     <Folder Include="Style\" />
-    <Folder Include="Views\Common\" />
+    <Folder Include="Views\Blog\" />
     <Folder Include="Views\UserManagement\" />
   </ItemGroup>
   <ItemGroup>

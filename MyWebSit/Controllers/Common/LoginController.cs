@@ -27,6 +27,7 @@ namespace MyWebSit.Controllers.Common
         {
             return View("Page_Register");
         }
+
         /// <summary>
         /// POST /Login/Register 用户注册
         /// </summary>
@@ -101,7 +102,7 @@ namespace MyWebSit.Controllers.Common
             return Content(result);
         }
         /// <summary>
-        /// 用户验证登录
+        /// /Login/Validate 用户验证登录
         /// </summary>
         /// <returns></returns>
         public ActionResult Validate()
@@ -146,8 +147,7 @@ namespace MyWebSit.Controllers.Common
             Session["uid"] = "";
             Session["id"] = "";
             Session["logTime"] = "";
-            string successString = $"{{\"result\":\"{CommonEnum.AjaxResult.SUCCESS}\"}}";
-            return Content(successString);
+            return View("Page_Login");
         }
 
     }

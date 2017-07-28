@@ -1,12 +1,12 @@
 ﻿
 @{
-    ViewBag.Title = "Page_Show_Note";
+    ViewBag.Title = "留言簿";
 }
 <script src="~/Scripts/jQuery/jquery-3.2.1.min.js"></script>
 <link href="~/Scripts/Plugins/kindeditor/themes/default/default.css" rel="stylesheet" />
 <link href="~/Scripts/Plugins/kindeditor/plugins/code/prettify.css" rel="stylesheet" />
-<script src="~/Scripts/Plugins/kindeditor/lang/zh-CN.js"></script>
 <script src="~/Scripts/Plugins/kindeditor/kindeditor-all-min.js"></script>
+<script src="~/Scripts/Plugins/kindeditor/lang/zh-CN.js"></script>
 <script src="~/Scripts/Plugins/kindeditor/plugins/code/prettify.js"></script>
 <script src="~/Scripts/Common/CommonFunction.js"></script>
 
@@ -51,8 +51,8 @@
                 }
                 //console.log(JSON.stringify(data));
                 data = data["data"];
-                $("#main_containor_div").html("");
-                var containt = $("#main_containor_div");
+                $("#main_comment_container_div").html("");
+                var containt = $("#main_comment_container_div");
                 for (var i = 0; i < data.length; i++) {
                     var d = data[i];
                     containt.append("<br />");
@@ -92,39 +92,43 @@
     }
 </script>
 <script type="text/javascript">
+    $(function () {
+       
+    });
+</script>
+<script type="text/javascript">
 
     $(function () {
-        $HtmlEditor = KindEditor.create('textarea[name="content"]');
+        $HtmlEditor = KindEditor.create('textarea[name="note_content"]');
+       
     });
-    google_ad_client = "ca-pub-7116729301372758";
-    /* 更多演示（728x90） */
-    google_ad_slot = "5052271949";
-    google_ad_width = 500;
-    google_ad_height = 160;
+  
 
 </script>
+<div id="" style="margin-left:50px;">
+
 <div id="text_area_div">
     <br />
     <div id="input_id_div">
         <br />
-        请输入内容：
         @*html编辑框*@
         <form>
-            <textarea id="common_input_text_area" name="content" style="width:800px;height:200px;"></textarea>
+            <textarea id="common_input_text_area" name="note_content" style="width:650px;height:200px;"></textarea>
         </form>
 
-        <input type="button" id="common_submit" value="提交" />
+        <input type="button" id="common_submit" value="提交留言" />
         <a onclick="refreshTable()">刷新</a>
 
     </div>
 
-    <div id="main_containor_div">
+    <div id="main_comment_container_div">
         123
     </div>
 
 </div>
+</div>
 <style type="text/css">
-    #main_containor_div {
-        width: 800px;
+    #main_comment_container_div {
+        width: 650px;
     }
 </style>
