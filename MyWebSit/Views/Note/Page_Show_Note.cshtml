@@ -8,7 +8,7 @@
 <script src="~/Scripts/Plugins/kindeditor/lang/zh-CN.js"></script>
 <script src="~/Scripts/Plugins/kindeditor/kindeditor-all-min.js"></script>
 <script src="~/Scripts/Plugins/kindeditor/plugins/code/prettify.js"></script>
-
+<script src="~/Scripts/Common/CommonFunction.js"></script>
 
 <script type="text/javascript">
     $(function () {
@@ -24,7 +24,7 @@
             var data = {  "content": content }
             $.ajax({
                 type: 'post',
-                url: '/Note/SubmitMessage',
+                url: '/Note/SubmitNote',
                 data: {  "content": content },
                 dataType: 'json',
                 success: function (data) {
@@ -40,11 +40,15 @@
     function refreshTable() {
         $.ajax({
             type: 'post',
-            url: '/Note/SearchCommonList',
+            url: '/Note/SearchNoteList',
             data: {},
             dataType: 'json',
             success: function (data) {
                 data = $CommonFunction.decodeObject(data);
+                if(data["result"]=="@Common.CommonEnum.AjaxResult.ERROR"){
+                    alert("查询失败~");
+                    return;
+                }
                 //console.log(JSON.stringify(data));
                 data = data["data"];
                 $("#main_containor_div").html("");
@@ -68,12 +72,12 @@
         console.log("delete id:"+f_id);
         $.ajax({
             type: 'post',
-            url: '/Note/DeleteSingleCommon',
+            url: '/Note/DeleteSingleNote',
             data: { 'f_id': f_id },
             dataType: 'json',
             success: function (data) {
                 data = $CommonFunction.decodeObject(data);
-                if (data["result"] == 0) {
+                if (data["result"] == "@Common.CommonEnum.AjaxResult.ERROR") {
                     if (data["state"]&&data["state"] == '1') {
                         alert("对不起，您无权删除！");
                     }

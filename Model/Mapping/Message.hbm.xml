@@ -4,10 +4,10 @@
     <id name="f_message_id" column="f_message_id" type="Guid" unsaved-value="00000000-0000-0000-0000-000000000000">
 
     </id>
-    <property name="f_writer_id" column="f_writer_id" type="string"  />
+    <property name="f_writer_id" column="f_writer_id" type="Guid"  />
     <property name="f_writer_name" column="f_writer_name" type="string"  />
     <property name="f_common_date" column="f_common_date" type="DateTime"  />
-    <property name="f_parent_message_id" column="f_parent_message_id" type="string"  />
+    <property name="f_parent_message_id" column="f_parent_message_id" type="Guid"  />
     <property name="f_message_type" column="f_message_type" type="int"  />
     <property name="f_message_exist" column="f_message_exist" type="int"  />
     <property name="f_content" column="f_content" type="string"  />

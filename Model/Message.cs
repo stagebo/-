@@ -23,7 +23,7 @@ namespace Model
         /// <summary>
         /// f_writer_id
         /// </summary>
-        public virtual string f_writer_id
+        public virtual Guid f_writer_id
         {
             get;
             set;
@@ -50,7 +50,7 @@ namespace Model
         /// <summary>
         /// f_parent_message_id
         /// </summary>
-        public virtual string f_parent_message_id
+        public virtual Guid f_parent_message_id
         {
             get;
             set;

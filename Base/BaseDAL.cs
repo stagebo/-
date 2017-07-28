@@ -13,158 +13,26 @@ using NHibernate.Criterion;
 
 namespace Base
 {
-    public  class BaseDAL<Model> where Model : BaseModel
+    public class BaseDAL
     {
-        public bool Insert(Model modelObject)
+        public bool Insert<Model>(Model modelObject) where Model : BaseModel
         {
-            Type modelObjectType = modelObject.GetType();
-            string tableName = null;
-            List<Dictionary<string, string>> entityPropertyList = null;
-            try
-            {
-                Dictionary<string, object> entityTableMetaInfo = SessionManager.GetEntityTableMetaInfo(modelObjectType.Name);
-                if (entityTableMetaInfo == null)
-                {
-                    throw new Exception("获取实体表结构信息失败，Model类型：" + modelObjectType.FullName);
-                }
-                tableName = entityTableMetaInfo["tableName"].ToString();
-                entityPropertyList = (List<Dictionary<string, string>>)entityTableMetaInfo["entityPropertyList"];
-            }
-            catch (Exception exception)
-            {
-                Log4NetUtils.Error(this, "insert实体对象失败，Model类型：" + modelObjectType.FullName + "，Model内容：" + modelObject.ToJsonString(), exception);
-                return false;
-            }
-            object modelObjectID = null;
-            try
-            {
-                modelObjectID = modelObjectType.GetProperty(entityPropertyList[0]["name"]).GetValue(modelObject, null);
-            }
-            catch (Exception exception)
-            {
-                Log4NetUtils.Error(this, "insert实体对象失败，Model类型：" + modelObjectType.FullName + "，Model内容：" + modelObject.ToJsonString(), exception);
-                return false;
-            }
             ISession session = null;
-            if (modelObjectID is Int32 && modelObjectID.Equals(default(Int32)) || modelObjectID is Guid)
+            try
             {
-                try
-                {
-                    session = SessionManager.OpenSession();
-                    session.Save(modelObject);
-                    session.Flush();
-                    return true;
-                }
-                catch (Exception exception)
-                {
-                    Log4NetUtils.Error(this, "insert实体对象失败，Model类型：" + modelObjectType.FullName + "，Model内容：" + modelObject.ToJsonString(), exception);
-                    return false;
-                }
-                finally
-                {
-                    SessionManager.CloseSession(session);
-                }
+                session = SessionManager.OpenSession();
+                session.Save(modelObject);
+                session.Flush();
+                return true;
             }
-            else
+            catch (Exception exception)
             {
-                ITransaction transaction = null;
-                try
-                {
-                    session = SessionManager.OpenSession();
-                    transaction = session.BeginTransaction();
-                    session.CreateSQLQuery("SET IDENTITY_INSERT [" + tableName + "] ON").ExecuteUpdate();
-                    string columnString = "[" + entityPropertyList[0]["column"] + "]";
-                    string valueString = ":" + entityPropertyList[0]["column"];
-                    for (int i = 1; i < entityPropertyList.Count; i++)
-                    {
-                        columnString += "," + "[" + entityPropertyList[i]["column"] + "]";
-                        valueString += ",:" + entityPropertyList[i]["column"];
-                    }
-                    ISQLQuery insert = session.CreateSQLQuery("INSERT INTO [" + tableName + "](" + columnString + ") VALUES(" + valueString + ")");
-                    foreach (Dictionary<string, string> property in entityPropertyList)
-                    {
-                        string type = property["type"].ToLower();
-                        object value = modelObjectType.GetProperty(property["name"]).GetValue(modelObject, null);
-                        if (type.Equals("int"))
-                        {
-                            if (value == null)
-                            {
-                                insert.SetParameter(property["column"], new Nullable<int>());
-                            }
-                            else
-                            {
-                                insert.SetInt32(property["column"], Convert.ToInt32(value));
-                            }
-                        }
-                        else if (type.Equals("long"))
-                        {
-                            if (value == null)
-                            {
-                                insert.SetParameter(property["column"], new Nullable<long>());
-                            }
-                            else
-                            {
-                                insert.SetInt64(property["column"], Convert.ToInt64(value));
-                            }
-                        }
-                        else if (type.Equals("decimal"))
-                        {
-                            if (value == null)
-                            {
-                                insert.SetParameter(property["column"], new Nullable<decimal>());
-                            }
-                            else
-                            {
-                                insert.SetDecimal(property["column"], Convert.ToDecimal(value));
-                            }
-                        }
-                        else if (type.Equals("string"))
-                        {
-                            insert.SetString(property["column"], value as string);
-                        }
-                        else if (type.Equals("datetime"))
-                        {
-                            if (value == null)
-                            {
-                                insert.SetParameter(property["column"], new Nullable<DateTime>());
-                            }
-                            else
-                            {
-                                insert.SetDateTime(property["column"], Convert.ToDateTime(value));
-                            }
-                        }
-                        else if (type.Equals("guid"))
-                        {
-                            if (value == null)
-                            {
-                                insert.SetParameter(property["column"], new Nullable<Guid>());
-                            }
-                            else
-                            {
-                                insert.SetGuid(property["column"], Guid.Parse(value.ToString()));
-                            }
-                        }
-                        else
-                        {
-                            throw new Exception("未处理的字段数据类型");
-                        }
-                    }
-                    insert.ExecuteUpdate();
-                    session.CreateSQLQuery("SET IDENTITY_INSERT [" + tableName + "] OFF").ExecuteUpdate();
-                    transaction.Commit();
-                    return true;
-                }
-                catch (Exception exception)
-                {
-                    transaction.Rollback();
-                    Log4NetUtils.Error(this, "insert实体对象失败，Model类型：" + modelObjectType.FullName + "，Model内容：" + modelObject.ToJsonString(), exception);
-                    return false;
-                }
-                finally
-                {
-                    SessionManager.DisposeTransaction(transaction);
-                    SessionManager.CloseSession(session);
-                }
+                Log4NetUtils.Error(this, "删除实体失败，Model类型：" + modelObject.GetType().FullName, exception);
+                return false;
+            }
+            finally
+            {
+                SessionManager.CloseSession(session);
             }
         }
 
@@ -231,104 +99,9 @@ namespace Base
                     }
                     if (item[0].Equals("insert") && objectList.Count > 0)
                     {
-                        Type modelObjectType = objectList[0].GetType();
-                        Dictionary<string, object> entityTableMetaInfo = SessionManager.GetEntityTableMetaInfo(modelObjectType.Name);
-                        if (entityTableMetaInfo == null)
-                        {
-                            throw new Exception("获取实体表结构信息失败，Model类型：" + modelObjectType.FullName);
-                        }
-                        string tableName = entityTableMetaInfo["tableName"].ToString();
-                        List<Dictionary<string, string>> entityPropertyList = (List<Dictionary<string, string>>)entityTableMetaInfo["entityPropertyList"];
-                        string columnString = "[" + entityPropertyList[0]["column"] + "]";
-                        string valueString = ":" + entityPropertyList[0]["column"];
-                        for (int i = 1; i < entityPropertyList.Count; i++)
-                        {
-                            columnString += "," + "[" + entityPropertyList[i]["column"] + "]";
-                            valueString += ",:" + entityPropertyList[i]["column"];
-                        }
-                        string insertSQL = "INSERT INTO [" + tableName + "](" + columnString + ") VALUES(" + valueString + ")";
                         foreach (object modelObject in objectList)
                         {
-                            object modelObjectID = modelObjectType.GetProperty(entityPropertyList[0]["name"]).GetValue(modelObject, null);
-                            if (modelObjectID is Int32 && modelObjectID.Equals(default(Int32)) || modelObjectID is Guid)
-                            {
-                                session.Save(modelObject);
-                            }
-                            else
-                            {
-                                session.CreateSQLQuery("SET IDENTITY_INSERT [" + tableName + "] ON").ExecuteUpdate();
-                                ISQLQuery insert = session.CreateSQLQuery(insertSQL);
-                                foreach (Dictionary<string, string> property in entityPropertyList)
-                                {
-                                    string type = property["type"].ToLower();
-                                    object value = modelObjectType.GetProperty(property["name"]).GetValue(modelObject, null);
-                                    if (type.Equals("int"))
-                                    {
-                                        if (value == null)
-                                        {
-                                            insert.SetParameter(property["column"], new Nullable<int>());
-                                        }
-                                        else
-                                        {
-                                            insert.SetInt32(property["column"], Convert.ToInt32(value));
-                                        }
-                                    }
-                                    else if (type.Equals("long"))
-                                    {
-                                        if (value == null)
-                                        {
-                                            insert.SetParameter(property["column"], new Nullable<long>());
-                                        }
-                                        else
-                                        {
-                                            insert.SetInt64(property["column"], Convert.ToInt64(value));
-                                        }
-                                    }
-                                    else if (type.Equals("decimal"))
-                                    {
-                                        if (value == null)
-                                        {
-                                            insert.SetParameter(property["column"], new Nullable<decimal>());
-                                        }
-                                        else
-                                        {
-                                            insert.SetDecimal(property["column"], Convert.ToDecimal(value));
-                                        }
-                                    }
-                                    else if (type.Equals("string"))
-                                    {
-                                        insert.SetString(property["column"], value == null ? null : value.ToString());
-                                    }
-                                    else if (type.Equals("datetime"))
-                                    {
-                                        if (value == null)
-                                        {
-                                            insert.SetParameter(property["column"], new Nullable<DateTime>());
-                                        }
-                                        else
-                                        {
-                                            insert.SetDateTime(property["column"], Convert.ToDateTime(value));
-                                        }
-                                    }
-                                    else if (type.Equals("guid"))
-                                    {
-                                        if (value == null)
-                                        {
-                                            insert.SetParameter(property["column"], new Nullable<Guid>());
-                                        }
-                                        else
-                                        {
-                                            insert.SetGuid(property["column"], Guid.Parse(value.ToString()));
-                                        }
-                                    }
-                                    else
-                                    {
-                                        throw new Exception("未处理的字段数据类型");
-                                    }
-                                }
-                                insert.ExecuteUpdate();
-                                session.CreateSQLQuery("SET IDENTITY_INSERT [" + tableName + "] OFF").ExecuteUpdate();
-                            }
+                            session.Save(modelObject);
                         }
                     }
                     else if (item[0].Equals("delete") && objectList.Count > 0)
@@ -363,7 +136,7 @@ namespace Base
             }
         }
 
-        public int? SelectNextIdentity()
+        public int? SelectNextIdentity<Model>() where Model : BaseModel
         {
             ISession session = null;
             try
@@ -390,12 +163,12 @@ namespace Base
             }
         }
 
-        public int? SelectModelObjectCountByCondition()
+        public int? SelectModelObjectCountByCondition<Model>() where Model : BaseModel
         {
-            return this.SelectModelObjectCountByCondition(null);
+            return this.SelectModelObjectCountByCondition<Model>(null);
         }
 
-        public int? SelectModelObjectCountByCondition(Dictionary<string, object> conditionDictionary)
+        public int? SelectModelObjectCountByCondition<Model>(Dictionary<string, object> conditionDictionary) where Model : BaseModel
         {
             ISession session = null;
             try
@@ -419,7 +192,7 @@ namespace Base
             }
         }
 
-        public bool? SelectModelObjectExistsByID(object modelObjectID)
+        public bool? SelectModelObjectExistsByID<Model>(object modelObjectID) where Model : BaseModel
         {
             ISession session = null;
             try
@@ -445,7 +218,7 @@ namespace Base
             }
         }
 
-        public bool? SelectModelObjectExistsByCondition(Dictionary<string, object> conditionDictionary)
+        public bool? SelectModelObjectExistsByCondition<Model>(Dictionary<string, object> conditionDictionary) where Model : BaseModel
         {
             ISession session = null;
             try
@@ -474,7 +247,7 @@ namespace Base
             }
         }
 
-        public Model SelectModelObjectByID(object modelObjectID)
+        public Model SelectModelObjectByID<Model>(object modelObjectID) where Model : BaseModel
         {
             ISession session = null;
             try
@@ -500,17 +273,17 @@ namespace Base
             }
         }
 
-        public Model SelectUniqueModelObjectByCondition()
+        public Model SelectUniqueModelObjectByCondition<Model>() where Model : BaseModel
         {
-            return this.SelectUniqueModelObjectByCondition(null, null);
+            return this.SelectUniqueModelObjectByCondition<Model>(null, null);
         }
 
-        public Model SelectUniqueModelObjectByCondition(Dictionary<string, object> conditionDictionary)
+        public Model SelectUniqueModelObjectByCondition<Model>(Dictionary<string, object> conditionDictionary) where Model : BaseModel
         {
-            return this.SelectUniqueModelObjectByCondition(conditionDictionary, null);
+            return this.SelectUniqueModelObjectByCondition<Model>(conditionDictionary, null);
         }
 
-        public Model SelectUniqueModelObjectByCondition(Dictionary<string, object> conditionDictionary, List<string[]> orderList)
+        public Model SelectUniqueModelObjectByCondition<Model>(Dictionary<string, object> conditionDictionary, List<string[]> orderList) where Model : BaseModel
         {
             ISession session = null;
             try
@@ -535,7 +308,7 @@ namespace Base
                     this,
                     "查询实体信息失败，实体类型：" + typeof(Model).FullName + "，" +
                         "查询条件：" + //Common.SerializeJsonString(conditionDictionary) + "，" +
-                        "排序集合：" ,//+ Common.SerializeJsonString(orderList),
+                        "排序集合：",//+ Common.SerializeJsonString(orderList),
                     exception
                 );
                 return default(Model);
@@ -546,17 +319,17 @@ namespace Base
             }
         }
 
-        public List<Model> SelectModelObjectListByCondition()
+        public List<Model> SelectModelObjectListByCondition<Model>() where Model : BaseModel
         {
-            return this.SelectModelObjectListByCondition(null, null);
+            return this.SelectModelObjectListByCondition<Model>(null, null);
         }
 
-        public List<Model> SelectModelObjectListByCondition(Dictionary<string, object> conditionDictionary)
+        public List<Model> SelectModelObjectListByCondition<Model>(Dictionary<string, object> conditionDictionary) where Model : BaseModel
         {
-            return this.SelectModelObjectListByCondition(conditionDictionary, null);
+            return this.SelectModelObjectListByCondition<Model>(conditionDictionary, null);
         }
 
-        public List<Model> SelectModelObjectListByCondition(Dictionary<string, object> conditionDictionary, List<string[]> orderList)
+        public List<Model> SelectModelObjectListByCondition<Model>(Dictionary<string, object> conditionDictionary, List<string[]> orderList) where Model : BaseModel
         {
             ISession session = null;
             try
@@ -580,7 +353,7 @@ namespace Base
                 Log4NetUtils.Error(
                     this,
                     "查询实体集合信息失败，实体类型：" + typeof(Model).FullName + "，" +
-                        "查询条件："+// + Common.SerializeJsonString(conditionDictionary) + "，" +
+                        "查询条件：" +// + Common.SerializeJsonString(conditionDictionary) + "，" +
                         "排序集合：",// + Common.SerializeJsonString(orderList),
                     exception
                 );
@@ -592,7 +365,8 @@ namespace Base
             }
         }
 
-        public List<Model> SelectModelObjectListByPage(Dictionary<string, object> conditionDictionary, List<string[]> orderList, int pageIndex, int pageSize)
+        public List<Model> SelectModelObjectListByPage<Model>(Dictionary<string, object> conditionDictionary,
+            List<string[]> orderList, int pageIndex, int pageSize) where Model : BaseModel
         {
             ISession session = null;
             try

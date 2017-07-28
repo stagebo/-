@@ -1,0 +1,73 @@
+﻿
+@{
+
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>登录</title>
+    <link href="~/Scripts/Plugins/MiniUI/themes/default/miniui.css" rel="stylesheet" />
+    <script src="~/Scripts/Plugins/jQuery/jquery-1.12.2.min.js"></script>
+    <script src="~/Scripts/Plugins/MiniUI/miniui.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            mini.parse();
+        });
+        function registerUser() {
+            var uid = mini.get("uid_div").getValue();
+            var pwd = mini.get("pwd_div").getValue();
+            var repwd = mini.get("re_pwd_div").getValue();
+            if (uid == "" ) {
+                mini.alert("用户名不能为空！");
+                return;
+            }
+            if (pwd == "") {
+                mini.alert("密码不能为空！");
+                return;
+            }
+            if (repwd == "") {
+                mini.alert("请重新输入密码！");
+                return;
+            }
+            if (pwd != repwd) {
+                mini.alert("两次输入密码不一致，请重新输入！");
+                return;
+            }
+            $.ajax({
+                type: 'post',
+                url: '/Login/Register ',
+                data: { 'uid': uid, 'pwd': pwd },
+                dataType: 'json',
+                success: function (data) {
+                    if (data["result"] == "@Common.CommonEnum.AjaxResult.ERROR") {
+                        mini.alert("注册失败~");
+                        return;
+                    }
+                    else {
+                        alert("注册成功！转到登录界面");
+                        window.location.href = "/Login/Index";
+                    }
+                },
+                error: function () {
+                    mini.alert("注册失败！");
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <div style="width:300px;height:180px;margin:20% 0 0 50%;background-color:#4d6082">
+        <div style="margin:20px 0 0 30px; ">
+            <br /><br />
+            用　　户　　名： <div id="uid_div" class="mini-textbox"></div><br /><br />
+            密　　　　　码： <div id="pwd_div" class="mini-password"></div><br /><br />
+            请再次输入密码： <div id="re_pwd_div" class="mini-password"></div><br /><br />
+            <div id="login_div" class="mini-button" onclick="registerUser()">注册</div>
+        </div>
+    </div>
+</body>
+</html>
+

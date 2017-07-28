@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "View";
+
 }
 
 <!DOCTYPE html>
@@ -9,11 +9,24 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>登录</title>
-    <script src="~/Script/jQuery/jquery-3.2.1.min.js"></script>
+    <link href="~/Scripts/Plugins/MiniUI/themes/default/miniui.css" rel="stylesheet" />
+    <script src="~/Scripts/Plugins/jQuery/jquery-1.12.2.min.js"></script>
+    <script src="~/Scripts/Plugins/MiniUI/miniui.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            mini.parse();
+        });
+    </script>
 </head>
 <body>
-    <div> 
-        123123
+    <div style="width:300px;height:180px;margin:20% 0 0 50%;background-color:#4d6082">
+        <div style="margin:20px 0 0 30px; ">
+            <br /><br />
+            用户名： <div id="uid_div" class="mini-textbox"></div><br /><br />
+            密　码： <div id="pwd_div" class="mini-password"></div><br /><br />
+            <div id="login_div" class="mini-button" onclick="validateUser()">登录</div>
+            <a href="/Login/RegisterPage" style="margin-left:50px;">注册</a>
+        </div>
     </div>
 </body>
 </html>
