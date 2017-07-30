@@ -125,5 +125,6 @@ namespace MyWebSit.Controllers.NoteManage
             string successString =$"{{\"result\":\"{CommonEnum.AjaxResult.SUCCESS}\"}}";
              return Content(successString);
         }
+       
     }
 }

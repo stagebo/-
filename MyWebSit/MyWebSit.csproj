@@ -3489,6 +3489,8 @@
     <Content Include="Scripts\Plugins\Bootstrap\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="Scripts\Plugins\Bootstrap\fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="Views\MainPage\Page_Main.cshtml" />
+    <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
+    <None Include="Properties\PublishProfiles\CustomProfile1.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

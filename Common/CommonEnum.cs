@@ -33,5 +33,11 @@ namespace Common
             public static int EXIST = 1;
             public static int UNLEGAL = 2;
         }
+
+        public static class UserGender
+        {
+            public static int FAMALE = 0;
+            public static int MALE = 1;
+        }
     }
 }

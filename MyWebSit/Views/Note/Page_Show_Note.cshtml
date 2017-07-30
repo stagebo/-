@@ -28,6 +28,7 @@
                 data: {  "content": content },
                 dataType: 'json',
                 success: function (data) {
+                    $HtmlEditor.html("","");
                     refreshTable();
                 },
                 error: function () {
@@ -62,7 +63,7 @@
 
             },
             error: function () {
-                alert("search error!");
+                alert("查询失败~");
             }
         });
 

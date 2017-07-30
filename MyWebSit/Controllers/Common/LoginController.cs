@@ -126,7 +126,7 @@ namespace MyWebSit.Controllers.Common
                 {"f_uid,Eq",uid },
                 { "f_pwd,Eq",CommonFunction.MD5Encrypt(pwd)}
             };
-            User u = new UserBLL().SearchUniqueModelObjectByCondition<User>();
+            User u = new UserBLL().SearchUniqueModelObjectByCondition<User>(condition);
             if (u == null) {
                 Log4NetUtils.Error(this,"验证用户，用户名或密码错误，用户名："+uid);
                 return Content(errorJsonString);

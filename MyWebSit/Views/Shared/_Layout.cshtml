@@ -16,7 +16,26 @@
     <script type="text/javascript">
         $(function () {
             var height = screen.availHeight - 100 - 80;
-            setTimeout("refreshFooterTime", 1);
+            $.ajax({
+                type: 'post',
+                url: '/UserManagement/GetUserInfo ',
+                data: {},
+                dataType: 'json',
+                success: function (data) {
+                    if (data["result"] == "@Common.CommonEnum.AjaxResult.SUCCESS") {
+                        $("#uid_a").html("【"+data["f_uid"]+"】");
+                        data["gender"] = data["f_gender"];
+                        if (data["gender"] == "@Common.CommonEnum.UserGender.FAMALE") {
+                            $("#gender_div").html("女士！");
+                        } else if (data["gender"] == "@Common.CommonEnum.UserGender.MALE") {
+                            $("#gender_div").html("先生！");
+                        } else {
+                            $("#gender_div").html("用户！");
+                        }
+                    }
+                },
+                error: function () { }
+            });
 
         });
         function refreshFooterTime() {
@@ -39,21 +58,21 @@
         }
     </style>
 </head>
-<body>
+<body >
     <div id="main_container_div" class="mini-layout" style="width:1400px;height:760px;" showHeader="false" showCollapseButton="false">
 
         <div id="main_header_div" region="north" style="height:50px;background-color:#3cbad7;" height="50" showHeader="false">
-            <div id="head_welcome_container" style="margin-right:30px;">
+            <div id="head_welcome_container" style="margin-right:100px;">
                 <div class="head-welcome-item"><a href="/Login/Logout">退出登录</a></div>
                 <div class="head-welcome-item">
-                    <a href="/MainPage/Index" style="float:left;">【stagebo】</a>
-                    <div style="float:left;">先生！</div>
+                    <a href="/MainPage/Index" style="float:left;" id="uid_a">【stagebo】</a>
+                    <div style="float:left;" id="gender_div">先生！</div>
                 </div>
                 <div class="head-welcome-item">欢迎您</div>
             </div>
         </div>
 
-        <div id="main_menu_div" style="width:200px;" region="west" showHeader="false">
+        <div id="main_menu_div" style="width:200px;" region="west"  height="550" showHeader="false">
             <ul class="nav nav-pills nav-stacked">
                 <li class="active"><a href="/MainPage/Index" class="left-menu-item">主页</a></li>
                 <li><a href="#" class="left-menu-item">日记</a></li>
@@ -63,11 +82,11 @@
                 <li><a href="#" class="left-menu-item">记账</a></li>
             </ul>
         </div>
-        <div id="main_center_body_div" style="width:90%;" region="center" showHeader="false">
+        <div id="main_center_body_div" style="width:90%;" region="center" height="550" showHeader="false">
             @RenderBody()
         </div>
-        <div region="east" width="400" style="" showHeader="false">
-            <div style="margin-left:50px;margin-top:50px;">
+        <div region="east" width="400" height="550" style="" showHeader="false">
+            <div style="margin-left:0px;margin-top:50px;">
                 @*<div class="mini-datepicker" id="date_picker" value="1994-3-23" onvaluechanged="changed"></div>*@
                 <div class="life-container" id="life_container">
                     <!--<div>
