@@ -13,9 +13,9 @@
     <script src="~/Scripts/Plugins/slimScroll/prettify.js"></script>
     <script src="~/Scripts/Plugins/slimScroll/jquery.slimscroll.min.js"></script>
     <script src="~/Scripts/Plugins/MiniUI/miniui.js"></script>
+    <!--页面初始化函数-->
     <script type="text/javascript">
         $(function () {
-            var height = screen.availHeight - 100 - 80;
             $.ajax({
                 type: 'post',
                 url: '/UserManagement/GetUserInfo ',
@@ -23,173 +23,88 @@
                 dataType: 'json',
                 success: function (data) {
                     if (data["result"] == "@Common.CommonEnum.AjaxResult.SUCCESS") {
-                        $("#uid_a").html("【"+data["f_uid"]+"】");
-                        data["gender"] = data["f_gender"];
+                        $("#fat-btn").html("" + data["f_uid"] + "");
+                        @*data["gender"] = data["f_gender"];
                         if (data["gender"] == "@Common.CommonEnum.UserGender.FAMALE") {
                             $("#gender_div").html("女士！");
                         } else if (data["gender"] == "@Common.CommonEnum.UserGender.MALE") {
                             $("#gender_div").html("先生！");
                         } else {
                             $("#gender_div").html("用户！");
-                        }
+                        }*@
                     }
                 },
                 error: function () { }
             });
-
         });
-        function refreshFooterTime() {
-            setTimeout("refreshFooterTime", 1000);
-            var d = new Date();
-            console.log(d);
-            $("#footer_now_time_div").html(d);
-        }
     </script>
-    <style>
-        div.left-menu-item {
-            width: 200px;
-            text-align: center;
+
+    <style type="text/css">
+        div.head-line-div {
+            width: 100%;
+            height: 150px;
+            background-color:#000000;
+            background-image:url('http://s2.sinaimg.cn/mw690/005A8EsSzy6Ngx0CxeF41&690');
+            /*background-repeat:no-repeat;*/
+            background-position:center;
         }
 
-        div.head-welcome-item {
-            float: right;
-            font-size: 20px;
-            margin-top: 10px;
+        div.head-menu-div {
+            width: 15%;
+            height: 1000px;
+            float:left;
+            background-color: #dedada;
+        }
+
+        div.center-main-body-div {
+            width: 70%;
+            height: 1000px;
+            float:left;
+            background-color: #c2a2a2;
+            
+        }
+
+        div.footer-div {
+            width: 100%;
+            height: 20px;
+            clear:both;
+            background-color: #808080;
+            text-align:center;
+        }
+        a.left-menu-item {
+            text-align:center;
+
         }
     </style>
 </head>
-<body >
-    <div id="main_container_div" class="mini-layout" style="width:1400px;height:760px;" showHeader="false" showCollapseButton="false">
+<body>
+    <div>
+        <div id="head_line_div" class="head-line-div">
+            <div style="width:200px;height:50px;float:left;margin-top:50px;margin-left:100px;">
+                <button id="fat-btn" class="btn btn-primary" 
+                        type="button">
 
-        <div id="main_header_div" region="north" style="height:50px;background-color:#3cbad7;" height="50" showHeader="false">
-            <div id="head_welcome_container" style="margin-right:100px;">
-                <div class="head-welcome-item"><a href="/Login/Logout">退出登录</a></div>
-                <div class="head-welcome-item">
-                    <a href="/MainPage/Index" style="float:left;" id="uid_a">【stagebo】</a>
-                    <div style="float:left;" id="gender_div">先生！</div>
-                </div>
-                <div class="head-welcome-item">欢迎您</div>
+                </button>
             </div>
+            <div style="width:200px;float:right;height:50px;margin-top:100px;margin-right:100px;"></div>
+        </div>
+        <div id="head_menu_div" class="head-menu-div">
+            <ul class="nav nav-pills nav-stacked" >
+                <li class="active"><a href="/MainPage/Index" class="left-menu-item">主页</a></li>
+                <li><a href="#" class="left-menu-item">游戏</a></li>
+                <li><a href="/Note/Index" class="left-menu-item">留言板</a></li>
+                
+            </ul>
+
         </div>
 
-        <div id="main_menu_div" style="width:200px;" region="west"  height="550" showHeader="false">
-            <ul class="nav nav-pills nav-stacked">
-                <li class="active"><a href="/MainPage/Index" class="left-menu-item">主页</a></li>
-                <li><a href="#" class="left-menu-item">日记</a></li>
-                <li><a href="#" class="left-menu-item">相册</a></li>
-                <li><a href="#" class="left-menu-item">博客</a></li>
-                <li><a href="/Note/Index" class="left-menu-item">留言板</a></li>
-                <li><a href="#" class="left-menu-item">记账</a></li>
-            </ul>
-        </div>
-        <div id="main_center_body_div" style="width:90%;" region="center" height="550" showHeader="false">
+        <div id="center_main_body_div" class="center-main-body-div">
             @RenderBody()
         </div>
-        <div region="east" width="400" height="550" style="" showHeader="false">
-            <div style="margin-left:0px;margin-top:50px;">
-                @*<div class="mini-datepicker" id="date_picker" value="1994-3-23" onvaluechanged="changed"></div>*@
-                <div class="life-container" id="life_container">
-                    <!--<div>
-                        <div class="life-item"></div>
-                        <div class="life-item"></div>
-                        <div class="life-item"></div>
-                    </div>
-                    <div class="clear">
-                        <div class="life-item"></div>
-                        <div class="life-item"></div>
-                        <div class="life-item"></div>
-                    </div>-->
-                </div>
-            </div>
-            <script type="text/javascript">
-                $(function () {
-                    function init() {
-                        var bir = new Date('1994-3-23');
-                        var that = new Date('2017-6-6');
-                        var now = new Date();
-
-                        var single = 12 * (that.getYear() - bir.getYear()) + that.getMonth() - bir.getMonth();
-                        var togather = 12 * (now.getYear() - that.getYear()) + now.getMonth() - that.getMonth();
-
-                        console.log(single+"--"+togather);
-                        var items = [' <div class="life-item_p"></div>', ' <div class="life-item_t"></div>', ' <div class="life-item_f"></div>'];
-                        var index = 1;
-                        for (var j = 0; j < 30; j++) {
-                            var row = ' <div class="clear">';
-                            for (var i = 0; i < 30; i++) {
-                                var target;
-                                var index = 30 * (j + 1) + i;
-                                if (index <= single) target = 0;
-                                else if (index <= single + togather) target = 1;
-                                else target = 2;
-                                row += items[target];
-                                index++;
-                            }
-                            row += '</div>';
-                            $('div#life_container').append(row);
-                        }
-                    }
-                    init();
-                });
-                //function changed() {
-                //    $('div#life_container').html('');
-                //    var date = new Date();
-                //    var bir = mini.get('date_picker').getValue();
-                //    var y = date.getYear(), m = date.getMonth();
-                //    console.log('now:' + y + '年' + m);
-                //    var yy = bir.getYear(), mm = bir.getMonth();
-                //    console.log('bir:' + yy + 'nian' + mm);
-                //    var sum = 12 * (y - yy) + m - mm;
-                //    var items = [' <div class="life-item_p"></div>', ' <div class="life-item_f"></div>'];
-                //    var index = 1;
-                //    for (var j = 0; j < 30; j++) {
-                //        var row = ' <div class="clear">';
-                //        for (var i = 0; i < 30; i++) {
-                //            var item = index < sum ? items[0] : items[1];
-                //            row += item;
-                //            index++;
-                //        }
-                //        row += '</div>';
-                //        $('div#life_container').append(row);
-                //    }
-                //}
-            </script>
-            <style type="text/css">
-                div.life-item_f {
-                    float: left;
-                    background-color: green;
-                    width: 8px;
-                    height: 8px;
-                    margin: 2px 0 0 2px;
-                }
-
-                div.life-item_t {
-                    float: left;
-                    background-color: yellow;
-                    width: 8px;
-                    height: 8px;
-                    margin: 2px 0 0 2px;
-                }
-
-                div.life-item_p {
-                    float: left;
-                    background-color: gray;
-                    width: 8px;
-                    height: 8px;
-                    margin: 2px 0 0 2px;
-                }
-
-                div.clear {
-                    clear: both;
-                }
-            </style>
+        <div id="footer_div" class="footer-div">
+            @@2017 stagebo
         </div>
-
-        @*<div id="main_footer_div" style="height:30px;width:100%;background-color:#808080;" height="15" region="south" showHeader="false">
-                <div id="footer_now_time_div" style="float:right">
-
-                </div>
-            </div>*@
     </div>
+
 </body>
 </html>

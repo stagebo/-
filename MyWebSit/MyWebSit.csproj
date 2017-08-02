@@ -3469,7 +3469,7 @@
     <Content Include="packages.config" />
     <Content Include="Views\Login\Page_Login.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Shared\_Layout1.cshtml" />
     <Content Include="Views\Note\Page_Show_Note.cshtml" />
     <Content Include="Scripts\Plugins\MiniUI\res\font-awesome\fonts\fontawesome-webfont.eot" />
     <Content Include="Scripts\Plugins\MiniUI\res\font-awesome\fonts\fontawesome-webfont.ttf" />
@@ -3491,6 +3491,7 @@
     <Content Include="Views\MainPage\Page_Main.cshtml" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Properties\PublishProfiles\CustomProfile1.pubxml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
