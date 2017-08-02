@@ -60,7 +60,7 @@
                     var d = data[i];
                     containt.append("<br />");
                     containt.append("<div style=\"color:red;float:left;\">" + d["f_writer_name"] + ":</div><br><div>  <pre class=\"best-text mb-10\">" + d["f_content"] +
-                     "</pre></div><div style=\"color:blue;float:right;\"> " + d["f_common_date"] + "</div><a style=\"float:right;margin-right:10px;\" onclick=\"deleteCommon('" + d["f_message_id"] + "')\">删除</a>");
+                     "</pre></div><div style=\"color:#76b0e1;float:right;\"> " + d["f_common_date"] + "</div><a style=\"float:right;margin-right:10px;\" onclick=\"deleteCommon('" + d["f_message_id"] + "')\">删除</a>");
                 }
 
             },
@@ -126,7 +126,7 @@
     function refreshPager(totalPage) {
         console.log("totalPages:"+totalPage);
         $("#footer_pager_div").Page({
-            totalPages: totalPage,//total Pages
+            totalPages: parseInt(totalPage),//total Pages
             liNums: 5,//the li numbers(advice use odd)
             activeClass: 'activP', //active class style
             firstPage: 'first',//first button name
