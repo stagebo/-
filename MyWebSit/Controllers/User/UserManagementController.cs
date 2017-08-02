@@ -20,6 +20,22 @@ namespace MyWebSit.Controllers
             return View();
         }
         /// <summary>
+        /// GET /UserManagement/ModifyUserPage
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult ModifyUserPage()
+        {
+            return View("Page_Modify_User_Info");
+        }
+        /// <summary>
+        /// GET /UserManagement/CheckUserPage
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult CheckUserPage()
+        {
+            return View("Page_Check_User_Info");
+        }
+        /// <summary>
         /// POST /UserManagement/GetUserInfo 
         /// </summary>
         /// <returns></returns>

@@ -11,16 +11,16 @@
 <script src="~/Scripts/Plugins/jBox/jBox.js"></script>
 <script src="~/Scripts/Plugins/jBox/plugins/Notice/jBox.Notice.js"></script>
 <script type="text/javascript">
-
-    function $ShowTipsDialog(options) {
-        
-        
+    $ShowTipsDialogColorIndex = 0;
+    $ShowTipsDialog = function (options) {
+        var colors = ['red', 'green', 'yellow', 'blue'];
+        $ShowTipsDialogColorIndex = ++$ShowTipsDialogColorIndex % colors.length;
         new jBox('Notice', {
             animation: 'flip',
-            color: options["color"],
+            color: colors[$ShowTipsDialogColorIndex],
             content: options["message"]
         });
     }
-   
+
 </script>
 

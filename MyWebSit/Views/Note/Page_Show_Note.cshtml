@@ -20,7 +20,7 @@
             $HtmlEditor.sync();
             var content = $("#common_input_text_area").val();
             if (content == "") {
-                alert("请输入留言内容！");
+                $ShowTipsDialog({ 'color': 'red', 'message': '请输入留言内容！' });
                 return;
             }
             content = encodeURIComponent(content);
@@ -31,12 +31,13 @@
                 data: { "content": content },
                 dataType: 'json',
                 success: function (data) {
-                    $HtmlEditor.html("", "");                    
+                    $HtmlEditor.html("", "");  
+                    $ShowTipsDialog({ 'color': 'green', 'message': '留言成功！' });
                     refreshTable();
                 },
                 error: function () {
                     refreshTable();
-                    alert("submit error!");
+                    $ShowTipsDialog({ 'color': 'red', 'message': '留言失败！' });
                 }
             });
         });
@@ -51,7 +52,7 @@
             success: function (data) {
                 data = $CommonFunction.decodeObject(data);
                 if (data["result"] == "@Common.CommonEnum.AjaxResult.ERROR") {
-                    alert("查询失败~");
+                    $ShowTipsDialog({ 'color': 'red', 'message': '查询失败！' });
                     return;
                 }
                 //console.log(JSON.stringify(data));
@@ -64,10 +65,10 @@
                     containt.append("<div style=\"color:red;float:left;\">" + d["f_writer_name"] + ":</div><br><div>  <pre class=\"best-text mb-10\">" + d["f_content"] +
                      "</pre></div><div style=\"color:#76b0e1;float:right;\"> " + d["f_common_date"] + "</div><a style=\"float:right;margin-right:10px;\" onclick=\"deleteCommon('" + d["f_message_id"] + "')\">删除</a>");
                 }
-
+                $ShowTipsDialog({ 'color': 'green', 'message': '查询成功！' });
             },
             error: function () {
-                alert("查询失败~");
+                $ShowTipsDialog({ 'color': 'red', 'message': '查询失败！' });
             }
         });
 
@@ -88,6 +89,7 @@
                     }
                 } else {
                     refreshTable();
+                    $ShowTipsDialog({ 'color': 'green', 'message': '删除成功！' });
                 }
             },
             error: function () {
@@ -112,14 +114,14 @@
             dataType: 'json',
             success: function (data) {
                 if (data["result"] == "@Common.CommonEnum.AjaxResult.ERROR") {
-                    alert("查询失败！");
+                    $ShowTipsDialog({ 'color': 'red', 'message': '查询失败！' });
                     return;
                 }
                 refreshPager(data['totalPages']);
                 refreshTable(1);
             },
             error: function () {
-
+                $ShowTipsDialog({ 'color': 'red', 'message': '服务器异常！' });
             }
         });
 

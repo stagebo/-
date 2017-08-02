@@ -93,6 +93,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Files\Images\img-head-bgimg.jpg" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\Common\CommonEnum.js" />
     <Content Include="Scripts\Common\CommonFunction.js" />
@@ -3540,6 +3541,8 @@
     <Content Include="Scripts\Plugins\jBox\audio\boop2.ogg" />
     <Content Include="Scripts\Plugins\jBox\audio\boop3.ogg" />
     <Content Include="Views\Shared\Script_JBox.cshtml" />
+    <Content Include="Views\UserManagement\Page_Modify_User_Info.cshtml" />
+    <Content Include="Views\UserManagement\Page_Check_User_Info.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -3561,7 +3564,6 @@
     <Folder Include="Scripts\Plugins\MiniUI\themes\metro\images\button\" />
     <Folder Include="Style\" />
     <Folder Include="Views\Blog\" />
-    <Folder Include="Views\UserManagement\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Base\Base.csproj">

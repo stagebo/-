@@ -139,7 +139,7 @@ namespace MyWebSit.Controllers.Common
             return Content(successString);
         }
         /// <summary>
-        /// 用户登出
+        /// GET /Login/LogOut 用户登出
         /// </summary>
         /// <returns></returns>
         public ActionResult LogOut()
