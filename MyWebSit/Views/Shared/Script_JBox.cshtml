@@ -1,0 +1,26 @@
+﻿
+<link href="~/Scripts/Plugins/jBox/jBox.css" rel="stylesheet" />
+<link href="~/Scripts/Plugins/jBox/plugins/Notice/jBox.Notice.css" rel="stylesheet" />
+<link href="~/Scripts/Plugins/jBox/themes/TooltipSmallGray.css" rel="stylesheet" />
+<link href="~/Scripts/Plugins/jBox/themes/NoticeFancy.css" rel="stylesheet" />
+<link href="~/Scripts/Plugins/jBox/themes/TooltipBorder.css" rel="stylesheet" />
+<link href="~/Scripts/Plugins/jBox/themes/TooltipBorderThick.css" rel="stylesheet" />
+<link href="~/Scripts/Plugins/jBox/themes/TooltipDark.css" rel="stylesheet" />
+<link href="~/Scripts/Plugins/jBox/themes/TooltipError.css" rel="stylesheet" />
+<link href="~/Scripts/Plugins/jBox/themes/TooltipSmall.css" rel="stylesheet" />
+<script src="~/Scripts/Plugins/jBox/jBox.js"></script>
+<script src="~/Scripts/Plugins/jBox/plugins/Notice/jBox.Notice.js"></script>
+<script type="text/javascript">
+
+    function $ShowTipsDialog(options) {
+        
+        
+        new jBox('Notice', {
+            animation: 'flip',
+            color: options["color"],
+            content: options["message"]
+        });
+    }
+   
+</script>
+

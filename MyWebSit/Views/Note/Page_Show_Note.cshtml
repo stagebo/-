@@ -12,6 +12,8 @@
 <!--分页插件-->
 <link href="~/Scripts/Plugins/jQueryPager/jquery.page.css" rel="stylesheet" />
 <script src="~/Scripts/Plugins/jQueryPager/jquery.page.js"></script>
+<!--jbox插件-->
+@Html.Partial("~/Views/Shared/Script_JBox.cshtml")
 <script type="text/javascript">
     $(function () {
         $("#common_submit").click(function () {
@@ -82,14 +84,14 @@
                 data = $CommonFunction.decodeObject(data);
                 if (data["result"] == "@Common.CommonEnum.AjaxResult.ERROR") {
                     if (data["state"] && data["state"] == '1') {
-                        alert("对不起，您无权删除！");
+                        $ShowTipsDialog({'color':'red','message':'对不起，您无权删除！'});
                     }
                 } else {
                     refreshTable();
                 }
             },
             error: function () {
-                alert("删除失败");
+                $ShowTipsDialog({ 'color': 'red', 'message': '删除失败！' });
             }
         });
     }

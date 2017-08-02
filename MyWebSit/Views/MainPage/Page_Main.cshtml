@@ -2,15 +2,34 @@
 @{
     ViewBag.Title = "主页";
 }
+
+
+
+@Html.Partial("~/Views/Shared/Script_JBox.cshtml")
+
+
+<script type="text/javascript">
+    $(function () {
+        $('#Notice-2').click(function () {
+            new jBox('Notice', {
+                animation: 'flip',
+                color: getColor(),
+                content: '您无权删除！'
+            });
+
+        });
+    });
+
+
+    var colors = ['red', 'green', 'blue', 'yellow'], index = 0;
+    var getColor = function () {
+        (index >= colors.length) && (index = 0);
+        return colors[index++];
+    };
+
+</script>
+
 <div class="container">
-    <div class="jumbotron" width="800">
-        <h1>欢迎登陆！</h1>
-        <p>荆轲刺秦王！</p>
-        <p>
-            <a class="btn btn-primary btn-lg" role="button">
-                学习更多
-            </a>
-        </p>
-    </div>
+    <div id="Notice-2" class="target-notice">Click me</div>
 </div>
 
