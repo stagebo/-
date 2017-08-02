@@ -9,10 +9,11 @@
 <script src="~/Scripts/Plugins/kindeditor/lang/zh-CN.js"></script>
 <script src="~/Scripts/Plugins/kindeditor/plugins/code/prettify.js"></script>
 <script src="~/Scripts/Common/CommonFunction.js"></script>
-
+<!--分页插件-->
+<link href="~/Scripts/Plugins/jQueryPager/jquery.page.css" rel="stylesheet" />
+<script src="~/Scripts/Plugins/jQueryPager/jquery.page.js"></script>
 <script type="text/javascript">
     $(function () {
-        refreshTable();
         $("#common_submit").click(function () {
             $HtmlEditor.sync();
             var content = $("#common_input_text_area").val();
@@ -21,14 +22,14 @@
                 return;
             }
             content = encodeURIComponent(content);
-            var data = {  "content": content }
+            var data = { "content": content }
             $.ajax({
                 type: 'post',
                 url: '/Note/SubmitNote',
-                data: {  "content": content },
+                data: { "content": content },
                 dataType: 'json',
                 success: function (data) {
-                    $HtmlEditor.html("","");
+                    $HtmlEditor.html("", "");                    
                     refreshTable();
                 },
                 error: function () {
@@ -38,15 +39,16 @@
             });
         });
     });
-    function refreshTable() {
+    function refreshTable(pageIndex) {
+        var pageSize = 15;
         $.ajax({
             type: 'post',
             url: '/Note/SearchNoteList',
-            data: {},
+            data: { 'pageIndex': pageIndex, 'pageSize': pageSize },
             dataType: 'json',
             success: function (data) {
                 data = $CommonFunction.decodeObject(data);
-                if(data["result"]=="@Common.CommonEnum.AjaxResult.ERROR"){
+                if (data["result"] == "@Common.CommonEnum.AjaxResult.ERROR") {
                     alert("查询失败~");
                     return;
                 }
@@ -70,7 +72,7 @@
     }
 
     function deleteCommon(f_id) {
-        console.log("delete id:"+f_id);
+        console.log("delete id:" + f_id);
         $.ajax({
             type: 'post',
             url: '/Note/DeleteSingleNote',
@@ -79,7 +81,7 @@
             success: function (data) {
                 data = $CommonFunction.decodeObject(data);
                 if (data["result"] == "@Common.CommonEnum.AjaxResult.ERROR") {
-                    if (data["state"]&&data["state"] == '1') {
+                    if (data["state"] && data["state"] == '1') {
                         alert("对不起，您无权删除！");
                     }
                 } else {
@@ -94,39 +96,82 @@
 </script>
 <script type="text/javascript">
     $(function () {
-       
+
     });
 </script>
 <script type="text/javascript">
 
     $(function () {
         $HtmlEditor = KindEditor.create('textarea[name="note_content"]');
-       
+        $.ajax({
+            type: 'post',
+            url: '/Note/SearchNoteList',
+            data: {},
+            dataType: 'json',
+            success: function (data) {
+                if (data["result"] == "@Common.CommonEnum.AjaxResult.ERROR") {
+                    alert("查询失败！");
+                    return;
+                }
+                refreshPager(data['totalPages']);
+                refreshTable(1);
+            },
+            error: function () {
+
+            }
+        });
+
+
     });
-  
+    function refreshPager(totalPage) {
+        console.log("totalPages:"+totalPage);
+        $("#footer_pager_div").Page({
+            totalPages: totalPage,//total Pages
+            liNums: 5,//the li numbers(advice use odd)
+            activeClass: 'activP', //active class style
+            firstPage: 'first',//first button name
+            lastPage: 'last',//last button name
+            prv: '《',//prev button name
+            next: '》',//next button name
+            hasFirstPage: true,//whether has first button
+            hasLastPage: true,//whether has last button
+            hasPrv: true,//whether has prev button
+            hasNext: true,//whether has next button
+            callBack: function (page) {
+                console.log(page);
+                refreshTable(page);
+            }
+        });
+    }
 
 </script>
 <div id="" style="margin-left:50px;">
 
-<div id="text_area_div">
-    <br />
-    <div id="input_id_div">
+    <div id="text_area_div">
         <br />
-        @*html编辑框*@
-        <form>
-            <textarea id="common_input_text_area" name="note_content" style="width:700px;height:200px;"></textarea>
-        </form>
+        <div id="input_id_div">
+            <br />
+            @*html编辑框*@
+            <form>
+                <textarea id="common_input_text_area" name="note_content" style="width:700px;height:200px;"></textarea>
+            </form>
 
-        <input type="button" id="common_submit" value="提交留言" />
-        <a onclick="refreshTable()">刷新</a>
+            <input type="button" id="common_submit" value="提交留言" />
+            <a onclick="refreshTable('1')">刷新</a>
+
+        </div>
+
+        <div id="main_comment_container_div">
+            123
+        </div><br />
+        <hr />
+        <div id="footer_pager_div">
+
+
+        </div>
+        <br /><br />
 
     </div>
-
-    <div id="main_comment_container_div">
-        123
-    </div>
-
-</div>
 </div>
 <style type="text/css">
     #main_comment_container_div {

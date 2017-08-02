@@ -105,6 +105,9 @@
     <Content Include="Scripts\Plugins\Bootstrap\js\bootstrap.js" />
     <Content Include="Scripts\Plugins\Bootstrap\js\bootstrap.min.js" />
     <Content Include="Scripts\Plugins\Bootstrap\js\npm.js" />
+    <Content Include="Scripts\Plugins\jQueryPager\jquery.min.js" />
+    <Content Include="Scripts\Plugins\jQueryPager\jquery.page.css" />
+    <Content Include="Scripts\Plugins\jQueryPager\jquery.page.js" />
     <Content Include="Scripts\Plugins\jQueryUI\images\ui-icons_444444_256x240.png" />
     <Content Include="Scripts\Plugins\jQueryUI\images\ui-icons_555555_256x240.png" />
     <Content Include="Scripts\Plugins\jQueryUI\images\ui-icons_777620_256x240.png" />

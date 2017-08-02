@@ -66,13 +66,34 @@ namespace MyWebSit.Controllers.NoteManage
         public ActionResult SearchNoteList()
         {
             string errorJsonString = $"{{\"result\":\"{CommonEnum.AjaxResult.ERROR}\"}}";
+            string pageIndexString = Request.Form["pageIndex"];
+            string pageSizeString = Request.Form["pageSize"];
+            int pageIndex, pageSize;
+            if (!int.TryParse(pageIndexString, out pageIndex))
+            {
+                pageIndex = 1;
+            }
+            if (!int.TryParse(pageSizeString, out pageSize))
+            {
+                pageSize = 15;
+            }
+            pageIndex = pageIndex < 1 ? 1 : pageIndex;
+            pageSize = pageSize < 15 ? 15 : pageSize;
+            pageSize = pageSize > 50 ? 50 : pageSize;
             Dictionary<string, object> condition = new Dictionary<string, object>()
             {
                 { "f_message_exist,Eq",CommonEnum.DataExist.EXIST}
             };
+            int? totalCount = new MessageBLL().SearchModelObjectCountByCondition<Message>(condition);
+            if (totalCount == null)
+            {
+                Log4NetUtils.Error(this,"查询留言，查询留言总数失败！");
+                return Content(errorJsonString);
+            }
+            int totalPage=((int)totalCount-1)/ pageSize + 1;
             List<string[]> orderList = new List<string[]>();
             orderList.Add(new string[2] { "f_common_date", "desc"});
-            List<Message> messageList = new MessageBLL().SearchModelObjectListByCondition<Message>(condition,orderList);
+            List<Message> messageList = new MessageBLL().SearchModelObjectListByPage<Message>(condition,orderList,pageIndex,pageSize);
             if (messageList == null)
             {
                 Log4NetUtils.Error(this,"查询留言，查询MessageList失败！");
@@ -80,6 +101,7 @@ namespace MyWebSit.Controllers.NoteManage
             }
             StringBuilder successStringBuilder = new StringBuilder();
             successStringBuilder.Append("{\"result\":\""+CommonEnum.AjaxResult.SUCCESS+"\",");
+            successStringBuilder.Append($"\"totalPages\":\"{totalPage}\",");
             successStringBuilder.Append("\"data\":");
             successStringBuilder.Append(BaseModel.ModelListToJsonString(messageList));
             successStringBuilder.Append("}");
