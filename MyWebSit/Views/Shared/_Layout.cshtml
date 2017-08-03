@@ -23,8 +23,8 @@
                 dataType: 'json',
                 success: function (data) {
                     if (data["result"] == "@Common.CommonEnum.AjaxResult.SUCCESS") {
-                        //$("#uid_a").html("" + data["f_uid"] + "");
-                        $("#uid_span").html("" + data["f_uid"] + "");
+                        $("#uid_a").html("" + data["f_uid"] + "");
+                        //$("#uid_span").html("" + data["f_uid"] + "");
                         data["gender"] = data["f_gender"];
                         if (data["gender"] == "@Common.CommonEnum.UserGender.FAMALE") {
                             $("#gender_div").html("女士！");
@@ -86,10 +86,8 @@
             <div style="float:left;margin-top:50px;margin-left:100px;background-color:#b6ff00">
                 <div style="font-size:25px;">
                     <div style="float:left;">欢迎您：</div>
-                    @*<a id="uid_a" style="float:left;" href="/UserManagement/CheckUserPage"></a>*@
-                    <button type="button" class="btn btn-primary btn-lg" style="font-size: 60px">
-                        <span class="glyphicon glyphicon-user"></span> <span id="uid_span"></span>
-                    </button>
+                    <a id="uid_a" style="float:left;" href="/UserManagement/CheckUserPage"></a>
+                   
                     <div id="gender_div" style="float:left;"></div>
                 </div>
             </div>
