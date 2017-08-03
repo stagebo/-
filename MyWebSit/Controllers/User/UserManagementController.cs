@@ -20,7 +20,7 @@ namespace MyWebSit.Controllers
             return View();
         }
         /// <summary>
-        /// GET /UserManagement/ModifyUserPage
+        /// GET /UserManagement/ModifyUserPage  修改个人信息页面
         /// </summary>
         /// <returns></returns>
         public ActionResult ModifyUserPage()
@@ -28,13 +28,17 @@ namespace MyWebSit.Controllers
             return View("Page_Modify_User_Info");
         }
         /// <summary>
-        /// GET /UserManagement/CheckUserPage
+        /// GET /UserManagement/CheckUserPage  查看个人信息页面
         /// </summary>
         /// <returns></returns>
         public ActionResult CheckUserPage()
         {
             return View("Page_Check_User_Info");
         }
+        /// <summary>
+        /// GET /UserManagement/PageModifyPassword 修改密码页面
+        /// </summary>
+        /// <returns></returns>
         public ActionResult PageModifyPassword()
         {
             return View("Page_ModifyPassword");
@@ -44,6 +48,7 @@ namespace MyWebSit.Controllers
         /// </summary>
         /// <returns></returns>
         [Right]
+        [HttpPost]
         public ActionResult GetUserInfo()
         {
             string errorJsonString = $"{{\"result\":\"{CommonEnum.AjaxResult.ERROR}\"}}";
@@ -70,6 +75,7 @@ namespace MyWebSit.Controllers
         /// POST /UserManagement/  根据Session获取当前用户信息
         /// </summary>
         /// <returns></returns>
+        [HttpPost]
         public ActionResult SearchLoginingUserInfo()
         {
             string errorJsonString = $"{{\"result\":\"{CommonEnum.AjaxResult.ERROR}\"}}";
@@ -105,6 +111,7 @@ namespace MyWebSit.Controllers
         ///  POST /UserManagement/  修改用户信息
         /// </summary>
         /// <returns></returns>
+        [HttpPost]
         public ActionResult ModifySingleUserInfo()
         {
             string errorJsonString = $"{{\"result\":\"{CommonEnum.AjaxResult.ERROR}\"}}";
@@ -163,6 +170,7 @@ namespace MyWebSit.Controllers
         /// POST /UserManagement/ValidateUid  验证用户名状态 
         /// </summary>
         /// <returns></returns>
+        [HttpPost]
         public ActionResult ValidateUid()
         {
             string errorJsonString = $"{{\"result\":\"{CommonEnum.AjaxResult.ERROR}\"}}";
@@ -209,6 +217,94 @@ namespace MyWebSit.Controllers
             }
             re.Append("\"}");
             return Content(re.ToString());
+        }
+        /// <summary>
+        /// POST /UserManagement/ResetPassword 修改密码
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult ResetPassword()
+        {
+            string errorJsonString = $"{{\"result\":\"{CommonEnum.AjaxResult.ERROR}\"}}";
+            string idString = Request.Form["id"];
+            if (string.IsNullOrWhiteSpace(idString))
+            {
+                Log4NetUtils.Error(this, "重置密码，接收前台参数失败！");
+                return Content(errorJsonString);
+            }
+            Guid idGuid;
+            if (!Guid.TryParse(idString, out idGuid))
+            {
+                Log4NetUtils.Error(this, "重置密码，转换用户id失败！");
+                return Content(errorJsonString);
+            }
+            User user = new UserBLL().SearchModelObjectByID<User>(idGuid);
+            if (user == null)
+            {
+                Log4NetUtils.Error(this, "重置密码，查询用户失败！");
+                return Content(errorJsonString);
+            }
+            user.f_pwd = CommonFunction.MD5Encrypt(CommonEnum.UserDefaultParas.DEFAULT_PASSWORD);
+            if (!new UserBLL().ModifyModel<User>(user))
+            {
+                Log4NetUtils.Error(this, "重置密码，重置密码失败！");
+                return Content(errorJsonString);
+            }
+            string re = $"{{\"result\":\"{CommonEnum.AjaxResult.SUCCESS}\"}}";
+            return Content(re);
+        }
+        /// <summary>
+        /// POST /UserManagement/ModifyPassword 修改用户密码
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult ModifyPassword()
+        {
+            string errorJsonString = $"{{\"result\":\"{CommonEnum.AjaxResult.ERROR}\"}}";
+            string idString = Request.Form["id"];
+            string pwdOldString = Request.Form["pwd_old"];
+            string pwdNewString = Request.Form["pwd_new"];
+            if (string.IsNullOrWhiteSpace(idString))
+            {
+                Log4NetUtils.Error(this, "修改密码，接收前台参数失败！");
+                return Content(errorJsonString);
+            }
+            Guid idGuid;
+            if (!Guid.TryParse(idString, out idGuid))
+            {
+                Log4NetUtils.Error(this, "修改密码，转换用户id失败！");
+                return Content(errorJsonString);
+            }
+            if (string.IsNullOrWhiteSpace(pwdOldString))
+            {
+                Log4NetUtils.Error(this,"修改密码，接收前台旧密码失败！");
+                return Content(errorJsonString);
+            }
+            if (string.IsNullOrWhiteSpace(pwdNewString))
+            {
+                Log4NetUtils.Error(this,"修改密码，接收前台新密码失败！");
+                return Content(errorJsonString);
+            }
+          
+            User user = new UserBLL().SearchModelObjectByID<User>(idGuid);
+            if (user == null)
+            {
+                Log4NetUtils.Error(this, "修改密码，查询用户失败！");
+                return Content(errorJsonString);
+            }
+            if (!user.f_pwd.Equals(CommonFunction.MD5Encrypt(pwdOldString)))
+            {
+                return Content(errorJsonString);
+            }
+            user.f_pwd = CommonFunction.MD5Encrypt(pwdNewString);
+            if (!new UserBLL().ModifyModel<User>(user))
+            {
+                Log4NetUtils.Error(this, "修改密码，修改密码失败！");
+                return Content(errorJsonString);
+            }
+
+            string re = $"{{\"result\":\"{CommonEnum.AjaxResult.SUCCESS}\"}}";
+            return Content(re);
         }
     }
 }

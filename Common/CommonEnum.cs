@@ -33,11 +33,20 @@ namespace Common
             public static int EXIST = 1;
             public static int UNLEGAL = 2;
         }
-
+        /// <summary>
+        /// 用户性别
+        /// </summary>
         public static class UserGender
         {
             public static int FAMALE = 0;
             public static int MALE = 1;
+        }
+        /// <summary>
+        /// 用户信息字段默认值
+        /// </summary>
+        public static class UserDefaultParas
+        {
+            public static string DEFAULT_PASSWORD = "000000";
         }
     }
 }
