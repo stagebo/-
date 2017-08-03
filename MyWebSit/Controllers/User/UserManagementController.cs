@@ -172,7 +172,8 @@ namespace MyWebSit.Controllers
             }
             Dictionary<string, object> condition = new Dictionary<string, object>()
             {
-                { "f_uid,Eq",uid}
+                { "f_uid,Eq",uid},
+                { "f_exist,Eq",CommonEnum.DataExist.EXIST}
             };
             List<User> userList = new UserBLL().SearchModelObjectListByCondition<User>(condition);
             if (userList == null)
