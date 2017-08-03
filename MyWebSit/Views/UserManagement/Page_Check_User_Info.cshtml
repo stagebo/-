@@ -3,5 +3,79 @@
     ViewBag.Title = "查看个人信息";
 }
 
-<h2>Page_Check_User_Info</h2>
+<script src="~/Scripts/jQuery/jquery-3.2.1.min.js"></script>
+@Html.Partial("~/Views/Shared/Script_MiniUI.cshtml")
+@Html.Partial("~/Views/Shared/Script_JBox.cshtml")
+<script src="~/Scripts/Common/CommonFunction.js"></script>
+<style type="text/css">
+    div.check-user-block-div {
+        width: 300px;
+        height: 300px;
+        margin-left: 200px;
+        margin-top: 100px;
+    }
+
+    div.left-margin {
+        float: left;
+    }
+</style>
+<script type="text/javascript">
+
+    $(function () {
+        mini.parse();
+        $.ajax({
+            type: 'post',
+            url: '/UserManagement/SearchLoginingUserInfo',
+            data: '',
+            dataType: 'json',
+            success: function (data) {
+                data = $CommonFunction.decodeObject(data);
+                if (data['result'] == "@Common.CommonEnum.AjaxResult.ERROR") {
+                    $ShowTipsDialog({ 'message': '查询用户信息失败，请确认登录！' });
+                }
+                var user = data["user"];
+                $("#data_user_id_div").attr("f_id",user["f_id"]);
+                mini.get("check_uid_div").setValue(user['f_uid']);
+                mini.get("check_email_div").setValue(user["f_email"]);
+                mini.get("check_address_div").setValue(user["f_address"]);
+                mini.get("check_phone_div").setValue(user["f_phone"]);
+                mini.get("check_age_div").setValue(user["f_age"]);
+                if (user["f_gender"] == "@Common.CommonEnum.UserGender.MALE") {
+                    mini.get("check_sex_div").setValue("男");
+                } else if (user["f_gender"] == "@Common.CommonEnum.UserGender.FAMALE") {
+                    mini.get("check_sex_div").setValue("女");
+                }
+                $ShowTipsDialog({ 'message': '查询用户信息成功！' });
+            },
+            error: function () { }
+        });
+
+
+
+    });
+
+    
+</script>
+<div class="check-user-block-div">
+    <div id="data_user_id_div" f_id=""></div>
+    <div class="left-margin">用户名：</div>
+    <div id="check_uid_div" class="mini-textbox left-margin" width="250" allowInput="false"></div>
+    <br /><br />
+    <div class="left-margin">邮　箱：</div>
+    <div id="check_email_div" class="mini-textbox left-margin" width="250" allowInput="false"></div>
+    <br /><br />
+    <div class="left-margin">年　龄：</div>
+    <div id="check_age_div" class="mini-textbox left-margin" width="250" allowInput="false"></div>
+    <br /><br />
+    <div class="left-margin">性　别：</div>
+    <div id="check_sex_div" class="mini-textbox left-margin" width="250" allowInput="false"></div>
+    <br /><br />
+    <div class="left-margin">电　话：</div>
+    <div id="check_phone_div" class="mini-textbox left-margin" width="250" allowInput="false"></div>
+    <br /><br />
+    <div class="left-margin">住　址：</div>
+    <div id="check_address_div" class="mini-textbox left-margin" width="250" allowInput="false"></div>
+    <br /><br />
+    <a href="/UserManagement/ModifyUserPage">修改</a>
+</div>
 

@@ -2,4 +2,145 @@
 @{
     ViewBag.Title = "修改用户信息";
 }
-<h1>修改页面建设中....</h1>
+<script src="~/Scripts/jQuery/jquery-3.2.1.min.js"></script>
+@Html.Partial("~/Views/Shared/Script_MiniUI.cshtml")
+@Html.Partial("~/Views/Shared/Script_JBox.cshtml")
+<script src="~/Scripts/Common/CommonFunction.js"></script>
+<style type="text/css">
+    div.modify-user-block-div {
+        width: 300px;
+        height: 300px;
+        margin-left: 200px;
+        margin-top: 100px;
+    }
+
+    div.left-margin {
+        float: left;
+    }
+</style>
+<script type="text/javascript">
+   
+    $(function () {
+        mini.parse();
+        $.ajax({
+            type: 'post',
+            url: '/UserManagement/SearchLoginingUserInfo',
+            data: '',
+            dataType: 'json',
+            success: function (data) {
+                data = $CommonFunction.decodeObject(data);
+                if (data['result'] == "@Common.CommonEnum.AjaxResult.ERROR") {
+                    $ShowTipsDialog({ 'message': '查询用户信息失败，请确认登录！' });
+                }
+                //[f_uid]
+                //  , [f_pwd]
+                //  , [f_reg_date]
+                //  , [f_email]
+                //  , [f_phone]
+                //  , [f_age]
+                //  , [f_gender]
+                //  , [f_address]
+                //  , [f_exist]
+                var user = data["user"];
+                $("#data_user_id_div").attr("f_id",user["f_id"]);
+                mini.get("modify_uid_div").setValue(user['f_uid']);
+                mini.get("modify_email_div").setValue(user["f_email"]);
+                mini.get("modify_address_div").setValue(user["f_address"]);
+                mini.get("modify_phone_div").setValue(user["f_phone"]);
+                mini.get("modify_age_div").setValue(user["f_age"]);
+                if (user["f_gender"] == "@Common.CommonEnum.UserGender.MALE") {
+                    $("input#male").prop("checked", true);
+                } else if (user["f_gender"] == "@Common.CommonEnum.UserGender.FAMALE") {
+                    $("input#famale").prop("checked", true);
+                }
+                $ShowTipsDialog({ 'message': '查询用户信息成功，请开始你的修改！' });
+            },
+            error: function () { }
+        });
+
+        $("#modify_save_div").click(function () {
+
+            var uid = mini.get("modify_uid_div").getValue();
+            var email = mini.get("modify_email_div").getValue();
+            var address = mini.get("modify_address_div").getValue();
+            var phone = mini.get("modify_phone_div").getValue();
+            var age = mini.get("modify_age_div").getValue();
+            var gender = $('input:radio[name="sex"]:checked').val();
+            var option = {
+                'id': $("#data_user_id_div").attr("f_id"),
+                'uid':uid,
+                'email':email,
+                'phone':phone,
+                'age':age,
+                'gender': gender,
+                'address':address
+            };
+            /*校验*/
+
+            $.ajax({
+                type: 'post',
+                url: '/UserManagement/ValidateUid',
+                data: option,
+                dataType: 'json',
+                success: function (jsonData) {
+                    if (jsonData["result"] == "@Common.CommonEnum.AjaxResult.ERROR") {
+                        $ShowTipsDialog({ 'message': '验证失败！' });
+                        return;
+                    }
+                    if (jsonData["state"] == "@Common.CommonEnum.UserIDState.LEGAL") {
+                        confirmModify(option);
+                    }
+                    else {
+                        $ShowTipsDialog({ 'message': '用户名不合法！' });
+                    }
+                },
+                error: function () {
+                    $ShowTipsDialog({ 'message': '服务器异常！' });
+                }
+            });
+
+
+        });
+    });
+    function confirmModify(option) {
+        $.ajax({
+            type: 'post',
+            url: '/UserManagement/ModifySingleUserInfo',
+            data: option,
+            dataType: 'json',
+            success: function (jsonData) {
+                if (jsonData["result"] == "@Common.CommonEnum.AjaxResult.SUCCESS") {
+                    $ShowTipsDialog({ 'message': '修改成功！' });
+                } else {
+                    $ShowTipsDialog({ 'message': '修改失败！' });
+                }
+            },
+            error: function () {
+                $ShowTipsDialog({ 'message': '修改失败！' });
+            }
+        });
+    }
+</script>
+<div class="modify-user-block-div">
+    <div id="data_user_id_div" f_id=""></div>
+    <div class="left-margin">用户名：</div>
+    <div id="modify_uid_div" class="mini-textbox left-margin" width="250"></div>
+    <br /><br />
+    <div class="left-margin">邮　箱：</div>
+    <div id="modify_email_div" class="mini-textbox left-margin" width="250"></div>
+    <br /><br />
+    <div class="left-margin">年　龄：</div>
+    <div id="modify_age_div" class="mini-textbox left-margin" width="250"></div>
+    <br /><br />
+    <div class="left-margin">性　别：</div>
+    <label><input id="male" name="sex" type="radio" value="1" />男</label>
+    <label style="margin-left:100px;"><input id="famale" name="sex" type="radio" value="0" />女</label>
+    <br /><br />
+    <div class="left-margin">电　话：</div>
+    <div id="modify_phone_div" class="mini-textbox left-margin" width="250"></div>
+    <br /><br />
+    <div class="left-margin">住　址：</div>
+    <div id="modify_address_div" class="mini-textbox left-margin" width="250"></div>
+    <br /><br />
+    <div id="modify_save_div" class="mini-button" style="float:right;">保　存</div>
+</div>
