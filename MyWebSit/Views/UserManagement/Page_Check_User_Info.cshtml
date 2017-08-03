@@ -23,6 +23,7 @@
 
     $(function () {
         mini.parse();
+        $MessageDialog.ShowTipsLeftTop({'message':'testtest'});
         $.ajax({
             type: 'post',
             url: '/UserManagement/SearchLoginingUserInfo',

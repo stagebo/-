@@ -20,7 +20,33 @@
             color: colors[$ShowTipsDialogColorIndex],
             content: options["message"]
         });
+        
+
+
     }
+    $(function () {
+        if (true||$MessageDialog == undefined)
+        {
+            $MessageDialog = {};
+            $MessageDialog.Colors = ['red', 'green', 'yellow', 'blue'];
+            $MessageDialog.ColorIndex = 0;
+            /**
+             *
+             *
+             */
+            $MessageDialog.ShowTipsLeftTop = function (options) {
+                $MessageDialog.ColorIndex = ++$MessageDialog.ColorIndex % $MessageDialog.Colors.length;
+                new jBox('Notice', {
+                    animation: 'flip',
+                    color: $MessageDialog.Colors[$MessageDialog.ColorIndex],
+                    content: options["message"]
+                });
+            }
+
+        }
+
+
+    });
 
 </script>
 
