@@ -23,7 +23,8 @@
                 dataType: 'json',
                 success: function (data) {
                     if (data["result"] == "@Common.CommonEnum.AjaxResult.SUCCESS") {
-                        $("#uid_a").html("" + data["f_uid"] + "");
+                        //$("#uid_a").html("" + data["f_uid"] + "");
+                        $("#uid_span").html("" + data["f_uid"] + "");
                         data["gender"] = data["f_gender"];
                         if (data["gender"] == "@Common.CommonEnum.UserGender.FAMALE") {
                             $("#gender_div").html("女士！");
@@ -85,7 +86,10 @@
             <div style="float:left;margin-top:50px;margin-left:100px;background-color:#b6ff00">
                 <div style="font-size:25px;">
                     <div style="float:left;">欢迎您：</div>
-                    <a id="uid_a" style="float:left;" href="/UserManagement/CheckUserPage"></a>
+                    @*<a id="uid_a" style="float:left;" href="/UserManagement/CheckUserPage"></a>*@
+                    <button type="button" class="btn btn-primary btn-lg" style="font-size: 60px">
+                        <span class="glyphicon glyphicon-user"></span> <span id="uid_span"></span>
+                    </button>
                     <div id="gender_div" style="float:left;"></div>
                 </div>
             </div>
@@ -99,6 +103,18 @@
                 <li class="active"><a href="/MainPage/Index" class="left-menu-item">主页</a></li>
                 <li><a href="#" class="left-menu-item">游戏</a></li>
                 <li><a href="/Note/Index" class="left-menu-item">留言板</a></li>
+                <li class="dropdown left-menu-item">>
+                    <a href="#" class="dropdown-toggle left-menu-item" data-toggle="dropdown">
+                        设置
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu left-menu-item" style="float:right;">
+                    
+                        <li><a href="#" >个人信息设置</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#" >账号密码安全</a></li>
+                    </ul>
+                </li>
 
             </ul>
 
