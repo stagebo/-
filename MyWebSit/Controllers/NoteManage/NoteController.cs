@@ -102,6 +102,7 @@ namespace MyWebSit.Controllers.NoteManage
             StringBuilder successStringBuilder = new StringBuilder();
             successStringBuilder.Append("{\"result\":\""+CommonEnum.AjaxResult.SUCCESS+"\",");
             successStringBuilder.Append($"\"totalPages\":\"{totalPage}\",");
+            successStringBuilder.Append($"\"uid\":\"{Session["uid"]?.ToString()}\",");
             successStringBuilder.Append("\"data\":");
             successStringBuilder.Append(BaseModel.ModelListToJsonString(messageList));
             successStringBuilder.Append("}");

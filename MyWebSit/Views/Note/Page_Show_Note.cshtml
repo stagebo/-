@@ -31,7 +31,7 @@
                 data: { "content": content },
                 dataType: 'json',
                 success: function (data) {
-                    $HtmlEditor.html("", "");  
+                    $HtmlEditor.html("", "");
                     $ShowTipsDialog({ 'color': 'green', 'message': '留言成功！' });
                     refreshTable();
                 },
@@ -56,14 +56,30 @@
                     return;
                 }
                 //console.log(JSON.stringify(data));
+                var uid = data['uid'];
                 data = data["data"];
                 $("#main_comment_container_div").html("");
                 var containt = $("#main_comment_container_div");
                 for (var i = 0; i < data.length; i++) {
                     var d = data[i];
-                    containt.append("<br />");
-                    containt.append("<div style=\"color:red;float:left;\">" + d["f_writer_name"] + ":</div><br><div>  <pre class=\"best-text mb-10\">" + d["f_content"] +
-                     "</pre></div><div style=\"color:#76b0e1;float:right;\"> " + d["f_common_date"] + "</div><a style=\"float:right;margin-right:10px;\" onclick=\"deleteCommon('" + d["f_message_id"] + "')\">删除</a>");
+                    var writerHtml = $("<div></div>").attr('style', 'color:red;float:left;').html('【'+d["f_writer_name"]+'】：');
+                    var contentHtml = $("<div></div>").addClass("comment-content-div").html(d["f_content"]);
+                    var deleteButtonHtml = $("<a></a>").attr('style', 'float:right;margin-right:10px;')
+                    .attr('onclick', 'deleteCommon("' + d["f_message_id"] + '")').html("删除");
+                    var commentDate = $("<div></div>").attr('style', 'color:#76b0e1;float:right;').html(d["f_common_date"]);
+                    var brHtml = "<br />";
+                    containt.append(brHtml);
+                    containt.append(writerHtml);
+                    containt.append(brHtml);
+                    containt.append(contentHtml);
+                    containt.append(commentDate);
+                    if (uid == d["f_writer_name"]) {
+                        containt.append(deleteButtonHtml);
+                    }
+                    // containt.append("<div style=\"color:red;float:left;\">" + d["f_writer_name"] +
+                    //":</div><br><div>  <pre class=\"best-text mb-10\">" + d["f_content"] +
+                    // "</pre></div><div style=\"color:#76b0e1;float:right;\"> " + d["f_common_date"] +
+                    //"</div><a style=\"float:right;margin-right:10px;\" onclick=\"deleteCommon('" + d["f_message_id"] + "')\">删除</a>");
                 }
                 $ShowTipsDialog({ 'color': 'green', 'message': '查询成功！' });
             },
@@ -85,7 +101,7 @@
                 data = $CommonFunction.decodeObject(data);
                 if (data["result"] == "@Common.CommonEnum.AjaxResult.ERROR") {
                     if (data["state"] && data["state"] == '1') {
-                        $ShowTipsDialog({'color':'red','message':'对不起，您无权删除！'});
+                        $ShowTipsDialog({ 'color': 'red', 'message': '对不起，您无权删除！' });
                     }
                 } else {
                     refreshTable();
@@ -97,11 +113,6 @@
             }
         });
     }
-</script>
-<script type="text/javascript">
-    $(function () {
-
-    });
 </script>
 <script type="text/javascript">
 
@@ -128,7 +139,7 @@
 
     });
     function refreshPager(totalPage) {
-        console.log("totalPages:"+totalPage);
+        console.log("totalPages:" + totalPage);
         $("#footer_pager_div").Page({
             totalPages: parseInt(totalPage),//total Pages
             liNums: 5,//the li numbers(advice use odd)
@@ -149,6 +160,7 @@
     }
 
 </script>
+
 <div id="" style="margin-left:50px;">
 
     <div id="text_area_div">
@@ -159,14 +171,15 @@
             <form>
                 <textarea id="common_input_text_area" name="note_content" style="width:700px;height:200px;"></textarea>
             </form>
-
-            <input type="button" id="common_submit" value="提交留言" />
-            <a onclick="refreshTable('1')">刷新</a>
+            <div style="width:700px;">
+                <input type="button" id="common_submit" value="提交留言" style="float:right;" />
+                <a onclick="refreshTable('1')" style="float:right;margin-right:20px;font-size:20px;">刷新</a>
+            </div>
 
         </div>
 
         <div id="main_comment_container_div">
-            123
+
         </div><br />
         <hr />
         <div id="footer_pager_div">
@@ -180,5 +193,14 @@
 <style type="text/css">
     #main_comment_container_div {
         width: 700px;
+    }
+
+    div.comment-content-div {
+        width: 700px;
+        border: solid;
+        border-width: 1px;
+        border-radius: 5px;
+        word-wrap: break-word;
+        padding: 5px;
     }
 </style>
