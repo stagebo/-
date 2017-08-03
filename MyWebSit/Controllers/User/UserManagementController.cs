@@ -35,6 +35,10 @@ namespace MyWebSit.Controllers
         {
             return View("Page_Check_User_Info");
         }
+        public ActionResult PageModifyPassword()
+        {
+            return View("Page_ModifyPassword");
+        }
         /// <summary>
         /// POST /UserManagement/GetUserInfo 
         /// </summary>

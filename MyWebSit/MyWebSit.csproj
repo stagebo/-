@@ -3544,6 +3544,7 @@
     <Content Include="Views\UserManagement\Page_Modify_User_Info.cshtml" />
     <Content Include="Views\UserManagement\Page_Check_User_Info.cshtml" />
     <Content Include="Views\Shared\Script_MiniUI.cshtml" />
+    <Content Include="Views\UserManagement\Page_ModifyPassword.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
