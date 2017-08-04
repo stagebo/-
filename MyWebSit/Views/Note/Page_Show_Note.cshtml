@@ -65,7 +65,7 @@
                     var writerHtml = $("<div></div>").attr('style', 'color:red;float:left;').html('【'+d["f_writer_name"]+'】：');
                     var contentHtml = $("<div></div>").addClass("comment-content-div").html(d["f_content"]);
                     var deleteButtonHtml = $("<a></a>").attr('style', 'float:right;margin-right:10px;')
-                    .attr('onclick', 'deleteCommon("' + d["f_message_id"] + '")').html("删除");
+                    .attr('onclick', 'confirmDeleteComment("' + d["f_message_id"] + '")').html("删除");
                     var commentDate = $("<div></div>").attr('style', 'color:#76b0e1;float:right;').html(d["f_common_date"]);
                     var brHtml = "<br />";
                     containt.append(brHtml);
@@ -89,30 +89,36 @@
         });
 
     }
-
-    function deleteCommon(f_id) {
-        console.log("delete id:" + f_id);
-        $.ajax({
-            type: 'post',
-            url: '/Note/DeleteSingleNote',
-            data: { 'f_id': f_id },
-            dataType: 'json',
-            success: function (data) {
-                data = $CommonFunction.decodeObject(data);
-                if (data["result"] == "@Common.CommonEnum.AjaxResult.ERROR") {
-                    if (data["state"] && data["state"] == '1') {
-                        $ShowTipsDialog({ 'color': 'red', 'message': '对不起，您无权删除！' });
+    function confirmDeleteComment(f_id) {
+        var options = {
+            message: "您确定删除吗？",
+            confirm: function() {
+                $.ajax({
+                    type: 'post',
+                    url: '/Note/DeleteSingleNote',
+                    data: { 'f_id': f_id },
+                    dataType: 'json',
+                    success: function (data) {
+                        data = $CommonFunction.decodeObject(data);
+                        if (data["result"] == "@Common.CommonEnum.AjaxResult.ERROR") {
+                            if (data["state"] && data["state"] == '1') {
+                                $ShowTipsDialog({ 'color': 'red', 'message': '对不起，您无权删除！' });
+                            }
+                        } else {
+                            refreshTable();
+                            $ShowTipsDialog({ 'color': 'green', 'message': '删除成功！' });
+                        }
+                    },
+                    error: function () {
+                        $ShowTipsDialog({ 'color': 'red', 'message': '删除失败！' });
                     }
-                } else {
-                    refreshTable();
-                    $ShowTipsDialog({ 'color': 'green', 'message': '删除成功！' });
-                }
+                });
             },
-            error: function () {
-                $ShowTipsDialog({ 'color': 'red', 'message': '删除失败！' });
-            }
-        });
+            cancel: function () { }
+        };
+        $ShowMessageDialog.ShowConfirmMessage(options);
     }
+
 </script>
 <script type="text/javascript">
 
