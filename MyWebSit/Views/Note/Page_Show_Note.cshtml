@@ -15,6 +15,7 @@
 <!--jbox插件-->
 @Html.Partial("~/Views/Shared/Script_JBox.cshtml")
 <script type="text/javascript">
+    /*初始化*/
     $(function () {
         $("#common_submit").click(function () {
             $HtmlEditor.sync();
@@ -42,6 +43,7 @@
             });
         });
     });
+    /*刷新留言板*/
     function refreshTable(pageIndex) {
         var pageSize = 15;
         $.ajax({
@@ -89,6 +91,7 @@
         });
 
     }
+    /*删除留言*/
     function confirmDeleteComment(f_id) {
         var options = {
             message: "您确定删除吗？",
