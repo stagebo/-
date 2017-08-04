@@ -3486,13 +3486,15 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\Common\CommonController.cs" />
     <Compile Include="Controllers\Common\LoginController.cs" />
     <Compile Include="Controllers\MainPage\MainPageController.cs" />
     <Compile Include="Controllers\NoteManage\NoteController.cs" />
     <Compile Include="Controllers\User\UserManagementController.cs" />
-    <Compile Include="Filter\GlobalHandleError.cs" />
+    <Compile Include="Filter\GlobalHandleErrorAttribute.cs" />
+    <Compile Include="Filter\GlobalInfomationAttribute.cs" />
     <Compile Include="Filter\RightAttribute.cs" />
     <Compile Include="Filter\SessionUserFilterAttribute.cs" />
     <Compile Include="Global.asax.cs">
@@ -3545,6 +3547,7 @@
     <Content Include="Views\UserManagement\Page_Check_User_Info.cshtml" />
     <Content Include="Views\Shared\Script_MiniUI.cshtml" />
     <Content Include="Views\UserManagement\Page_ModifyPassword.cshtml" />
+    <Content Include="Views\Shared\Page_Notfond.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

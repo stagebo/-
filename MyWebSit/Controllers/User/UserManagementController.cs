@@ -12,6 +12,7 @@ using WebBlog.Filter;
 
 namespace MyWebSit.Controllers
 {
+
     public class UserManagementController : Controller
     {
         // GET: UserManagement
@@ -39,6 +40,8 @@ namespace MyWebSit.Controllers
         /// GET /UserManagement/PageModifyPassword 修改密码页面
         /// </summary>
         /// <returns></returns>
+        [Right]
+        [HttpPost]
         public ActionResult PageModifyPassword()
         {
             return View("Page_ModifyPassword");
@@ -76,6 +79,7 @@ namespace MyWebSit.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
+        [Right]
         public ActionResult SearchLoginingUserInfo()
         {
             string errorJsonString = $"{{\"result\":\"{CommonEnum.AjaxResult.ERROR}\"}}";
@@ -112,6 +116,7 @@ namespace MyWebSit.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
+        [Right]
         public ActionResult ModifySingleUserInfo()
         {
             string errorJsonString = $"{{\"result\":\"{CommonEnum.AjaxResult.ERROR}\"}}";
@@ -223,6 +228,7 @@ namespace MyWebSit.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
+        [Right]
         public ActionResult ResetPassword()
         {
             string errorJsonString = $"{{\"result\":\"{CommonEnum.AjaxResult.ERROR}\"}}";
@@ -258,6 +264,7 @@ namespace MyWebSit.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
+        [Right]
         public ActionResult ModifyPassword()
         {
             string errorJsonString = $"{{\"result\":\"{CommonEnum.AjaxResult.ERROR}\"}}";

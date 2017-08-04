@@ -48,5 +48,9 @@ namespace Common
         {
             public static string DEFAULT_PASSWORD = "000000";
         }
+        public static class ErrorPageUrl
+        {
+            public static string DEFAULT_URL = "/Common/NotFondPage";
+        }
     }
 }

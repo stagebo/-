@@ -54,107 +54,105 @@
     });
 
     $(function () {
-        /* 判断$.ShowMessageDialog命名空间是否存在，防止重复定义 */
-        if (true || !$.isPlainObject($ShowMessageDialog)) {
-            /************************************************************************/
-            $ShowMessageDialog = {};
-            $ShowMessageDialog.Colors = ['red', 'green', 'yellow', 'blue'];
-            $ShowMessageDialog.ColorIndex = 0;
+        /************************************************************************/
+        $ShowMessageDialog = {};
+        $ShowMessageDialog.Colors = ['red', 'green', 'yellow', 'blue'];
+        $ShowMessageDialog.ColorIndex = 0;
 
-            /***********************************************************************
-             * function      右上角提示消息
-             * params：      options["message"]      string        提示消息
-             *
-             ***********************************************************************/
-            $ShowMessageDialog.ShowTipsRightTop = function (options) {
-                $ShowMessageDialog.ColorIndex = ++$ShowMessageDialog.ColorIndex % $ShowMessageDialog.Colors.length;
-                new jBox('Notice', {
-                    animation: 'flip',
-                    color: $ShowMessageDialog.Colors[$ShowMessageDialog.ColorIndex],
-                    content: options["message"]
-                });
-            }
-
-            /***********************************************************************
-            * function      左下角提示消息
-            * params：      options["message"]      string        提示消息
-            *
-            ***********************************************************************/
-            $ShowMessageDialog.ShowTipsLeftBottom = function (options) {
-                new jBox('Notice', {
-                    theme: 'NoticeFancy',
-                    attributes: {
-                        x: 'left',
-                        y: 'bottom'
-                    },
-                    color: $ShowMessageDialog.Colors[$ShowMessageDialog.ColorIndex],
-                    content: options['message'],
-                    audio: '/Scripts/Plugins/jBox/audio/bling2',
-                    volume: 80,
-                    animation: { open: 'slide:bottom', close: 'slide:left' }
-                });
-            }
-            /***********************************************************************
-             * function      右下角提示消息
-             * params：      options["title"]        string        提示消息标题
-             * params：      options["message"]      string        提示消息
-             *
-             ***********************************************************************/
-            $ShowMessageDialog.ShowTipsRightBottom = function (options) {
-                new jBox('Notice', {
-                    attributes: {
-                        x: 'right',
-                        y: 'bottom'
-                    },
-                    stack: false,
-                    animation: {
-                        open: 'tada',
-                        close: 'zoomIn'
-                    },
-                    color: $ShowMessageDialog.Colors[$ShowMessageDialog.ColorIndex],
-                    title: options['title'],
-                    content: options['message']
-                });
-            }
-         /***********************************************************************
-          * function      右下角提示消息
-          * params：      options["title"]        string        提示消息标题
-          * params：      options["message"]      string        提示消息
-          *
-          ***********************************************************************/
-            $ShowMessageDialog.ShowConfirmMessage = function (options) {               
-                new jBox('Confirm', {
-                    content: options['message'],
-                    cancelButton: '否',
-                    confirmButton: '是',
-                    confirm: function () {
-                        options["confirm"]();
-                    },
-                    cancel: function () {
-                        options['cancel']();
-                    }
-                }).open();
-            }
-
-         /***********************************************************************
-          * function      右下角提示消息
-          * params：      options["title"]        string        提示消息标题
-          * params：      options["message"]      string        提示消息
-          *
-          ***********************************************************************/
-            $ShowMessageDialog.ShowInfoMessage = function (options) {
-                new jBox('Modal', {
-                    attach: options['id'],
-                    height: 200,
-                    title: options['title'],
-                    content: options['message'] ,
-                    footer: '<br/><br/><br/>Press [ESC] or click anywhere to close.'
-                }).open();
-
-            }
-
-
-           /************************************************************************/
+        /***********************************************************************
+         * function      右上角提示消息
+         * params：      options["message"]      string        提示消息
+         *
+         ***********************************************************************/
+        $ShowMessageDialog.ShowTipsRightTop = function (options) {
+            $ShowMessageDialog.ColorIndex = ++$ShowMessageDialog.ColorIndex % $ShowMessageDialog.Colors.length;
+            new jBox('Notice', {
+                animation: 'flip',
+                color: $ShowMessageDialog.Colors[$ShowMessageDialog.ColorIndex],
+                content: options["message"]
+            });
         }
+
+        /***********************************************************************
+        * function      左下角提示消息
+        * params：      options["message"]      string        提示消息
+        *
+        ***********************************************************************/
+        $ShowMessageDialog.ShowTipsLeftBottom = function (options) {
+            new jBox('Notice', {
+                theme: 'NoticeFancy',
+                attributes: {
+                    x: 'left',
+                    y: 'bottom'
+                },
+                color: $ShowMessageDialog.Colors[$ShowMessageDialog.ColorIndex],
+                content: options['message'],
+                audio: '/Scripts/Plugins/jBox/audio/bling2',
+                volume: 80,
+                animation: { open: 'slide:bottom', close: 'slide:left' }
+            });
+        }
+        /***********************************************************************
+         * function      右下角提示消息
+         * params：      options["title"]        string        提示消息标题
+         * params：      options["message"]      string        提示消息
+         *
+         ***********************************************************************/
+        $ShowMessageDialog.ShowTipsRightBottom = function (options) {
+            new jBox('Notice', {
+                attributes: {
+                    x: 'right',
+                    y: 'bottom'
+                },
+                stack: false,
+                animation: {
+                    open: 'tada',
+                    close: 'zoomIn'
+                },
+                color: $ShowMessageDialog.Colors[$ShowMessageDialog.ColorIndex],
+                title: options['title'],
+                content: options['message']
+            });
+        }
+        /***********************************************************************
+         * function      右下角提示消息
+         * params：      options["title"]        string        提示消息标题
+         * params：      options["message"]      string        提示消息
+         *
+         ***********************************************************************/
+        $ShowMessageDialog.ShowConfirmMessage = function (options) {
+            new jBox('Confirm', {
+                content: options['message'],
+                cancelButton: '否',
+                confirmButton: '是',
+                confirm: function () {
+                    options["confirm"]();
+                },
+                cancel: function () {
+                    options['cancel']();
+                }
+            }).open();
+        }
+
+        /***********************************************************************
+         * function      右下角提示消息
+         * params：      options["title"]        string        提示消息标题
+         * params：      options["message"]      string        提示消息
+         *
+         ***********************************************************************/
+        $ShowMessageDialog.ShowInfoMessage = function (options) {
+            new jBox('Modal', {
+                attach: options['id'],
+                height: 200,
+                title: options['title'],
+                content: options['message'],
+                footer: '<br/><br/><br/>Press [ESC] or click anywhere to close.'
+            }).open();
+
+        }
+
+
+        /************************************************************************/
+
     });
 </script>
