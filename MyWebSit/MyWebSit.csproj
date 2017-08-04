@@ -3488,6 +3488,7 @@
   <ItemGroup>
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\Blog\BlogController.cs" />
     <Compile Include="Controllers\Common\CommonController.cs" />
     <Compile Include="Controllers\Common\LoginController.cs" />
     <Compile Include="Controllers\MainPage\MainPageController.cs" />
@@ -3548,6 +3549,9 @@
     <Content Include="Views\Shared\Script_MiniUI.cshtml" />
     <Content Include="Views\UserManagement\Page_ModifyPassword.cshtml" />
     <Content Include="Views\Shared\Page_Notfond.cshtml" />
+    <Content Include="Views\Blog\Page_Search_Blog_List.cshtml" />
+    <Content Include="Views\Blog\Page_Add_Blog.cshtml" />
+    <Content Include="Views\Blog\Page_Blog_Manage.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -3568,7 +3572,6 @@
     <Folder Include="Scripts\Plugins\MiniUI\themes\metro-orange\images\button\" />
     <Folder Include="Scripts\Plugins\MiniUI\themes\metro\images\button\" />
     <Folder Include="Style\" />
-    <Folder Include="Views\Blog\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Base\Base.csproj">

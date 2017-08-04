@@ -99,18 +99,44 @@
         <div id="head_menu_div" class="head-menu-div">
             <ul class="nav nav-pills nav-stacked">
                 <li class="active"><a href="/MainPage/Index" class="left-menu-item">主页</a></li>
-                <li><a href="#" class="left-menu-item">游戏</a></li>
+                <li class="dropdown left-menu-item">
+                    <a href="#" class="dropdown-toggle left-menu-item" data-toggle="dropdown">
+                        游戏列表
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu left-menu-item" style="float:right;">
+
+                        <li><a href="#">游戏1TODO</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">游戏2TODO</a></li>
+                    </ul>
+                </li>
                 <li><a href="/Note/Index" class="left-menu-item">留言板</a></li>
-                <li class="dropdown left-menu-item">>
+                <li class="dropdown left-menu-item">
                     <a href="#" class="dropdown-toggle left-menu-item" data-toggle="dropdown">
                         设置
                         <b class="caret"></b>
                     </a>
                     <ul class="dropdown-menu left-menu-item" style="float:right;">
-                    
-                        <li><a href="/UserManagement/ModifyUserPage" >个人信息设置</a></li>
+
+                        <li><a href="/UserManagement/ModifyUserPage">个人信息设置</a></li>
                         <li class="divider"></li>
-                        <li><a href="/UserManagement/PageModifyPassword" >账号密码安全</a></li>
+                        <li><a href="/UserManagement/PageModifyPassword">账号密码安全</a></li>
+                    </ul>
+                </li>
+                <!--博客管理-->
+                <li class="dropdown left-menu-item">
+                    <a href="#" class="dropdown-toggle left-menu-item" data-toggle="dropdown">
+                        博客管理
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu left-menu-item" style="float:right;">
+
+                        <li><a href="/Blog/Index">查看博客</a></li>
+                        <li class="divider"></li>
+                        <li><a href="/Blog/AddBlogPage">新建博客</a></li>
+                        <li class="divider"></li>
+                        <li><a href="/Blog/BlogManagePage">管理博客</a></li>
                     </ul>
                 </li>
 
