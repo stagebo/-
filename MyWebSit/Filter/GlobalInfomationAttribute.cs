@@ -13,6 +13,7 @@ namespace MyWebSit
         {
             HttpRequestBase request = filterContext.HttpContext.Request;
             new Thread(() => {
+                /*在这里记录信息*/
                 string browser = request.Browser?.Browser;
                 string filePath = request.FilePath;
                 string url = request.Url.ToString();
@@ -26,7 +27,7 @@ namespace MyWebSit
                 //request.SaveAs("C:\\Users\\WANYONGBO\\Desktop\\FileDownload\\request.txt",true);
 
             }).Start();
-            int i = 0;
+           
         }
     }
 }
