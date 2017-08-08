@@ -1,0 +1,101 @@
+<script src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+<div style="margin-left:0px;margin-top:50px;">
+   
+    <div class="life-container" id="life_container">
+        <!--<div>
+            <div class="life-item"></div>
+            <div class="life-item"></div>
+            <div class="life-item"></div>
+        </div>
+        <div class="clear">
+            <div class="life-item"></div>
+            <div class="life-item"></div>
+            <div class="life-item"></div>
+        </div>-->
+    </div>
+</div>
+<script type="text/javascript">
+                $(function () {
+                    function init() {
+                        var bir = new Date('1994-3-23');
+                        var that = new Date('2017-6-6');
+                        var now = new Date();
+
+                        var single = 12 * (that.getYear() - bir.getYear()) + that.getMonth() - bir.getMonth();
+                        var togather = 12 * (now.getYear() - that.getYear()) + now.getMonth() - that.getMonth();
+
+                        console.log(single + "--" + togather);
+                        var $div = $("<div></div>")
+                        //var items = [$("<div></div>").addClass('life-item_p'), $("<div></div>").addClass('life-item_t'),
+                        //$("<div></div>").addClass('life-item_f')];
+                        var items = [' <div class="life-item_p"></div>', ' <div class="life-item_t"></div>',
+                        ' <div class="life-item_f"></div>'];
+                        var index = 1;
+                        for (var j = 0; j < 30; j++) {
+                            var row = $("<div></div>").addClass("clear");//' <div class="clear">';
+                            for (var i = 0; i < 30; i++) {
+                                var target;
+                                var index = 30 * (j + 1) + i;
+                                if (index <= single) target = 0;
+                                else if (index <= single + togather) target = 1;
+                                else target = 2;
+                                row.append(items[target]);
+                                index++;
+                            }
+                            $('div#life_container').append(row);
+                        }
+                    }
+                    init();
+                });
+                //function changed() {
+                //    $('div#life_container').html('');
+                //    var date = new Date();
+                //    var bir = mini.get('date_picker').getValue();
+                //    var y = date.getYear(), m = date.getMonth();
+                //    console.log('now:' + y + 'Äê' + m);
+                //    var yy = bir.getYear(), mm = bir.getMonth();
+                //    console.log('bir:' + yy + 'nian' + mm);
+                //    var sum = 12 * (y - yy) + m - mm;
+                //    var items = [' <div class="life-item_p"></div>', ' <div class="life-item_f"></div>'];
+                //    var index = 1;
+                //    for (var j = 0; j < 30; j++) {
+                //        var row = ' <div class="clear">';
+                //        for (var i = 0; i < 30; i++) {
+                //            var item = index < sum ? items[0] : items[1];
+                //            row += item;
+                //            index++;
+                //        }
+                //        row += '</div>';
+                //        $('div#life_container').append(row);
+                //    }
+                //}
+</script>
+<style type="text/css">
+    div.life-item_f {
+        float: left;
+        background-color: green;
+        width: 15px;
+        height: 15px;
+        margin: 2px 0 0 2px;
+    }
+
+    div.life-item_t {
+        float: left;
+        background-color: yellow;
+        width: 15px;
+        height: 15px;
+        margin: 2px 0 0 2px;
+    }
+
+    div.life-item_p {
+        float: left;
+        background-color: gray;
+        width: 15px;
+        height: 15px;
+        margin: 2px 0 0 2px;
+    }
+
+    div.clear {
+        clear: both;
+    }
+</style>

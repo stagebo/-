@@ -95,6 +95,7 @@
   <ItemGroup>
     <Content Include="Files\Images\img-head-bgimg.jpg" />
     <Content Include="Global.asax" />
+    <Content Include="life.html" />
     <Content Include="Scripts\Common\CommonEnum.js" />
     <Content Include="Scripts\Common\CommonFunction.js" />
     <Content Include="Scripts\jQuery\jquery-3.2.1.min.js" />
