@@ -8,12 +8,16 @@ using Model;
 using Base;
 namespace BussinessLogicLayer
 {
-    public class UserBLL:BaseBLL
+    public class UserBLL : BaseBLL
     {
         public List<User> SearchAllUser()
         {
             return new UserDAL().SelectAllUser();
         }
-        
+        public bool Test()
+        {
+            return new UserDAL().Test();
+        }
+
     }
 }

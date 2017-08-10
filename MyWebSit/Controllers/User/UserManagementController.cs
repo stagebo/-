@@ -9,6 +9,7 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using WebBlog.Filter;
+using Common.NHibernate;
 
 namespace MyWebSit.Controllers
 {
@@ -312,6 +313,14 @@ namespace MyWebSit.Controllers
 
             string re = $"{{\"result\":\"{CommonEnum.AjaxResult.SUCCESS}\"}}";
             return Content(re);
+        }
+
+        public ActionResult Test()
+        {
+            Dictionary<string, object> dic = SessionManager.GetEntityTableMetaInfo("User");
+            bool ff = new UserBLL().Test();
+
+            return Content(ff.ToString());
         }
     }
 }

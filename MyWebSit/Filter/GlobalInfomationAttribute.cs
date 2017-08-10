@@ -13,16 +13,17 @@ namespace MyWebSit
         {
             HttpRequestBase request = filterContext.HttpContext.Request;
             new Thread(() => {
+                int t = 0;
                 /*在这里记录信息*/
-                string browser = request.Browser?.Browser;
-                string filePath = request.FilePath;
-                string url = request.Url.ToString();
-                string referUrl = request.UrlReferrer?.ToString();
-                string fullUrl=request.RawUrl?.ToString();
+                //string browser = request.Browser?.Browser;
+                //string filePath = request.FilePath;
+                //string url = request.Url.ToString();
+                //string referUrl = request.UrlReferrer?.ToString();
+                //string fullUrl=request.RawUrl?.ToString();
 
-                string hostIP = request.UserHostAddress;
-                string hostName = request.UserHostName;
-                var param = request.Params;
+                //string hostIP = request.UserHostAddress;
+              //  string hostName = request.UserHostName;
+              //  var param = request.Params;
                 
                 //request.SaveAs("C:\\Users\\WANYONGBO\\Desktop\\FileDownload\\request.txt",true);
 

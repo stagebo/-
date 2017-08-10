@@ -44,11 +44,36 @@ namespace Common.NHibernate
             }
         }
 
+        private static ISession m_session = null;
         public static ISession OpenSession()
         {
+            //try
+            //{
+            //    if (m_session == null)
+            //        m_session = _sessionFactory.OpenSession();
+            //    if (!m_session.IsOpen)
+            //        m_session = _sessionFactory.OpenSession();
+            //    return m_session;
+            //}
+            //catch
+            //{
+            //    return null;
+            //}
             try
             {
                 return _sessionFactory.OpenSession();
+            }
+            catch (Exception exception)
+            {
+                Log4NetUtils.Error("Common.NHibernate.SessionManager", "NHibernate Session打开失败", exception);
+                return null;
+            }
+        }
+        public static ISession OpenSession(IInterceptor r)
+        {
+            try
+            {
+                return _sessionFactory.OpenSession(r);
             }
             catch (Exception exception)
             {
@@ -145,4 +170,4 @@ namespace Common.NHibernate
             }
         }
     }
-}
+} 
