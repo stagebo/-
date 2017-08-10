@@ -124,8 +124,8 @@ namespace MyWebSit.Controllers.Common
                 return Content(errorJsonString);
             }
             Dictionary<string, object> condition = new Dictionary<string, object>() {
-                {"f_uid,Eq",uid },
-                { "f_pwd,Eq",CommonFunction.MD5Encrypt(pwd)}
+                {"f_uid,Eq",uid }
+               ,{ "f_pwd,Eq",CommonFunction.MD5Encrypt(pwd)}
             };
             User u = new UserBLL().SearchUniqueModelObjectByCondition<User>(condition);
             if (u == null) {

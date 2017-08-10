@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="SessionManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ShowSQLInterceptor.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Config\NHibernate.cfg.xml">

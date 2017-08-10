@@ -61,7 +61,7 @@ namespace Common.NHibernate
             //}
             try
             {
-                return _sessionFactory.OpenSession();
+                return _sessionFactory.OpenSession(new ShowSQLInterceptor());
             }
             catch (Exception exception)
             {

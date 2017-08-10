@@ -10,6 +10,8 @@ using System.Web;
 using System.Web.Mvc;
 using WebBlog.Filter;
 using Common.NHibernate;
+using NHibernate;
+using Base;
 
 namespace MyWebSit.Controllers
 {
@@ -317,6 +319,19 @@ namespace MyWebSit.Controllers
 
         public ActionResult Test()
         {
+            ISession session = SessionManager.OpenSession();
+            User u=session.SearchUniqueModelObjectByCondition<User>(null,null);
+            User uu = new User();
+            uu.f_id = Guid.NewGuid();
+            uu.f_uid = "ExtendTest";
+            uu.f_reg_date = DateTime.Now;
+            uu.f_pwd = "213";
+            uu.f_exist = 1;
+
+            bool fff = new User().Add<User>(uu);
+
+
+
             Dictionary<string, object> dic = SessionManager.GetEntityTableMetaInfo("User");
             bool ff = new UserBLL().Test();
 
