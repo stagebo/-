@@ -3484,6 +3484,14 @@
     <Content Include="Scripts\Plugins\slimScroll\jquery.slimscroll.min.js" />
     <Content Include="Scripts\Plugins\slimScroll\prettify.css" />
     <Content Include="Scripts\Plugins\slimScroll\prettify.js" />
+    <Content Include="Scripts\Needs\Game\GaoZiQiScript\img\timg.jpg" />
+    <Content Include="Scripts\Needs\Game\GaoZiQiScript\img\timg1.jpg" />
+    <Content Include="Scripts\Needs\Game\GaoZiQiScript\js\bbwy.js" />
+    <Content Include="Scripts\Needs\Game\GaoZiQiScript\js\bbwyrj.min.js" />
+    <Content Include="Scripts\Needs\Game\GaoZiQiScript\js\DeviceOrientationControlsVR.js" />
+    <Content Include="Scripts\Needs\Game\GaoZiQiScript\js\OrbitControls.js" />
+    <Content Include="Scripts\Needs\Game\GaoZiQiScript\js\three.js" />
+    <Content Include="Scripts\Needs\Game\GaoZiQiScript\js\three.min.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -3492,6 +3500,7 @@
     <Compile Include="Controllers\Blog\BlogController.cs" />
     <Compile Include="Controllers\Common\CommonController.cs" />
     <Compile Include="Controllers\Common\LoginController.cs" />
+    <Compile Include="Controllers\Game\GameController.cs" />
     <Compile Include="Controllers\MainPage\MainPageController.cs" />
     <Compile Include="Controllers\NoteManage\NoteController.cs" />
     <Compile Include="Controllers\User\UserManagementController.cs" />
@@ -3553,6 +3562,8 @@
     <Content Include="Views\Blog\Page_Search_Blog_List.cshtml" />
     <Content Include="Views\Blog\Page_Add_Blog.cshtml" />
     <Content Include="Views\Blog\Page_Blog_Manage.cshtml" />
+    <Content Include="Views\Game\Page_Game_GaoZiQi.cshtml" />
+    <Content Include="Scripts\Needs\Game\GaoZiQiScript\fonts\SimHei_Regular.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -3603,6 +3614,9 @@
       <Project>{e0b55545-7826-416b-992a-221166a364e0}</Project>
       <Name>Model</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
