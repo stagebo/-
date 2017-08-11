@@ -12,11 +12,11 @@ using NHibernate.SqlCommand;
 
 namespace Common.NHibernate
 {
-    public class SessionManager
+    public class SessionManager01
     {
         private static ISessionFactory _sessionFactory;
 
-        static SessionManager()
+        static SessionManager01()
         {
             try
             {
@@ -40,42 +40,47 @@ namespace Common.NHibernate
             }
             catch (Exception exception)
             {
-                Log4NetUtils.Error("Common.NHibernate.SessionManager", "数据库连接失败", exception);
+                Log4NetUtils.Error("Common.NHibernate.SessionManager01", "数据库连接失败", exception);
             }
         }
 
         private static ISession m_session = null;
         public static ISession OpenSession()
         {
-            //try
-            //{
-            //    if (m_session == null)
-            //        m_session = _sessionFactory.OpenSession();                
-            //    return m_session;
-            //}
-            //catch (Exception ex)
-            //{
-            //    return null;
-            //}
             try
             {
-                return _sessionFactory.OpenSession(new ShowSQLInterceptor());
+                if (m_session == null)
+                    m_session = _sessionFactory.OpenSession();
+                if (!m_session.IsOpen)
+                    m_session.Reconnect();
+                return m_session;
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                Log4NetUtils.Error("Common.NHibernate.SessionManager", "NHibernate Session打开失败", exception);
                 return null;
             }
+            //try
+            //{
+            //    return _sessionFactory.OpenSession(new ShowSQLInterceptor());
+            //}
+            //catch (Exception exception)
+            //{
+            //    Log4NetUtils.Error("Common.NHibernate.SessionManager01", "NHibernate Session打开失败", exception);
+            //    return null;
+            //}
         }
         public static ISession OpenSession(IInterceptor r)
         {
             try
             {
-                return _sessionFactory.OpenSession(r);
+                if (m_session == null)
+                    m_session = _sessionFactory.OpenSession(r);
+                if (!m_session.IsOpen)
+                    m_session.Reconnect();
+                return m_session;
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                Log4NetUtils.Error("Common.NHibernate.SessionManager", "NHibernate Session打开失败", exception);
                 return null;
             }
         }
@@ -92,7 +97,7 @@ namespace Common.NHibernate
             }
             catch (Exception exception)
             {
-                Log4NetUtils.Error("Common.NHibernate.SessionManager", "NHibernate Session关闭失败", exception);
+                Log4NetUtils.Error("Common.NHibernate.SessionManager01", "NHibernate Session关闭失败", exception);
             }
         }
 
@@ -108,7 +113,7 @@ namespace Common.NHibernate
             }
             catch (Exception exception)
             {
-                Log4NetUtils.Error("Common.NHibernate.SessionManager", "NHibernate Transaction关闭失败", exception);
+                Log4NetUtils.Error("Common.NHibernate.SessionManager01", "NHibernate Transaction关闭失败", exception);
             }
         }
 
@@ -163,7 +168,7 @@ namespace Common.NHibernate
             }
             catch (Exception exception)
             {
-                Log4NetUtils.Error("Common.NHibernate.SessionManager", "获取实体对应数据表结构信息失败，entityName：" + entityName, exception);
+                Log4NetUtils.Error("Common.NHibernate.SessionManager01", "获取实体对应数据表结构信息失败，entityName：" + entityName, exception);
                 return null;
             }
         }

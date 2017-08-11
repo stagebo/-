@@ -102,7 +102,7 @@ namespace MyWebSit.Controllers
             }
 
             //User u = new UserBLL().SearchModelObjectByID<User>(idGuid);
-            User u = SessionManager.OpenSession().Query<User>().SingleOrDefault<User>(ux => ux.f_id == idGuid);
+            User user = SessionManager.OpenSession().Query<User>().SingleOrDefault<User>(ux => ux.f_id == idGuid);
             if (user == null)
             {
                 Log4NetUtils.Error(this, "查询用户信息，根据uid查询用户信息失败！");
