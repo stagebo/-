@@ -33,6 +33,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NHibernate, Version=3.3.1.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Common.NHibernate\Lib\NHibernate.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -50,6 +54,14 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Base\Base.csproj">
+      <Project>{4bb7d0f1-08f9-4028-bd32-e0812f1c37d5}</Project>
+      <Name>Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BussinessLogicLayer\BussinessLogicLayer.csproj">
+      <Project>{C06B5391-2C0B-4D5D-B214-F754FBD0AB05}</Project>
+      <Name>BussinessLogicLayer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common.Log4Net\Common.Log4Net.csproj">
       <Project>{d8f1b0ba-2633-4e0d-b6dd-6ca0096ea2b3}</Project>
       <Name>Common.Log4Net</Name>

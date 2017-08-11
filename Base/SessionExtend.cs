@@ -16,6 +16,31 @@ namespace Base
     /// </summary>
     public static class SessionExtend
     {
+        /// <summary>
+        ///  Object Extend Method, Add Model To Database.
+        /// </summary>
+        /// <typeparam name="Model">实体类</typeparam>
+        /// <param name="m">实体参数</param>
+        /// <returns></returns>
+        public static bool Add<Model>(this object model, Model m) where Model:BaseModel
+        {
+            ISession session = null;
+            try
+            {
+                session = SessionManager.OpenSession();
+                session.Save(m);
+                session.Flush();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+            finally
+            {
+                SessionManager.CloseSession(session);
+            }
+        }
         public static bool Add<Model>(this Model model, Model m) {
             ISession session = null;
             try
@@ -169,4 +194,5 @@ namespace Base
             return criteria;
         }
     }
+    
 }

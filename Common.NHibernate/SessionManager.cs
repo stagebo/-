@@ -52,10 +52,10 @@ namespace Common.NHibernate
             //    if (m_session == null)
             //        m_session = _sessionFactory.OpenSession();
             //    if (!m_session.IsOpen)
-            //        m_session = _sessionFactory.OpenSession();
+            //        m_session.Reconnect();
             //    return m_session;
             //}
-            //catch
+            //catch(Exception ex)
             //{
             //    return null;
             //}

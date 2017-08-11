@@ -9,7 +9,7 @@ using Model;
 
 namespace BussinessLogicLayer
 {
-    public class MessageBLL:BaseBLL
+    public class MessageBLL : BaseBLL
     {
         public List<Message> SearchAllMessage()
         {

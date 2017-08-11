@@ -12,6 +12,7 @@ using WebBlog.Filter;
 using Common.NHibernate;
 using NHibernate;
 using Base;
+using NHibernate.Linq;
 
 namespace MyWebSit.Controllers
 {
@@ -65,7 +66,8 @@ namespace MyWebSit.Controllers
                 Log4NetUtils.Error(this, "检测到非法入侵！！！！！！！！！！！！");
                 return Content(errorJsonString);
             }
-            User u = new UserBLL().SearchModelObjectByID<User>(idGuid);
+            //User u = new UserBLL().SearchModelObjectByID<User>(idGuid);
+            User u = SessionManager.OpenSession().Query<User>().SingleOrDefault<User>(ux => ux.f_id == idGuid);
             if (u == null)
             {
                 Log4NetUtils.Error(this, "查询用户信息，无法检索到用户信息！");
@@ -99,7 +101,8 @@ namespace MyWebSit.Controllers
                 return Content(errorJsonString);
             }
 
-            User user = new UserBLL().SearchModelObjectByID<User>(idGuid);
+            //User u = new UserBLL().SearchModelObjectByID<User>(idGuid);
+            User u = SessionManager.OpenSession().Query<User>().SingleOrDefault<User>(ux => ux.f_id == idGuid);
             if (user == null)
             {
                 Log4NetUtils.Error(this, "查询用户信息，根据uid查询用户信息失败！");
@@ -153,7 +156,9 @@ namespace MyWebSit.Controllers
                 genderInt = -1;
             }
             UserBLL userBll = new UserBLL();
-            User user = userBll.SearchModelObjectByID<User>(idGuid);
+            //User user = userBll.SearchModelObjectByID<User>(idGuid);
+            //User u = new UserBLL().SearchModelObjectByID<User>(idGuid);
+            User user = SessionManager.OpenSession().Query<User>().SingleOrDefault<User>(ux => ux.f_id == idGuid);
             if (user == null)
             {
                 Log4NetUtils.Error(this, "修改个人信息，查询用户模型失败！");
@@ -247,7 +252,8 @@ namespace MyWebSit.Controllers
                 Log4NetUtils.Error(this, "重置密码，转换用户id失败！");
                 return Content(errorJsonString);
             }
-            User user = new UserBLL().SearchModelObjectByID<User>(idGuid);
+            //User user = new UserBLL().SearchModelObjectByID<User>(idGuid);
+            User user = SessionManager.OpenSession().Query<User>().SingleOrDefault<User>(ux => ux.f_id == idGuid);
             if (user == null)
             {
                 Log4NetUtils.Error(this, "重置密码，查询用户失败！");
@@ -320,6 +326,9 @@ namespace MyWebSit.Controllers
         public ActionResult Test()
         {
             ISession session = SessionManager.OpenSession();
+            Guid id = Guid.Parse(""); ;
+            User ux=session.Get<User>(id);
+
             User u=session.SearchUniqueModelObjectByCondition<User>(null,null);
             User uu = new User();
             uu.f_id = Guid.NewGuid();
@@ -328,7 +337,7 @@ namespace MyWebSit.Controllers
             uu.f_pwd = "213";
             uu.f_exist = 1;
 
-            bool fff = new User().Add<User>(uu);
+            bool fff =this.Add<User>(uu);
 
 
 
