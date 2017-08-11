@@ -43,10 +43,17 @@ namespace Common.NHibernate
                 Log4NetUtils.Error("Common.NHibernate.SessionManager", "数据库连接失败", exception);
             }
         }
-
+        /// <summary>
+        /// 单例模式下的session对象
+        /// </summary>
         private static ISession m_session = null;
+        /// <summary>
+        /// 打开Session
+        /// </summary>
+        /// <returns></returns>
         public static ISession OpenSession()
         {
+            /*单例模式*/
             //try
             //{
             //    if (m_session == null)
@@ -59,7 +66,8 @@ namespace Common.NHibernate
             //}
             try
             {
-                return _sessionFactory.OpenSession(new ShowSQLInterceptor());
+                return _sessionFactory.OpenSession(new ShowSQLInterceptor());//带中断器
+                //return _sessionFactory.OpenSession();//不带中断器
             }
             catch (Exception exception)
             {
@@ -67,6 +75,11 @@ namespace Common.NHibernate
                 return null;
             }
         }
+        /// <summary>
+        ///  /*带中断器的Session*/
+        /// </summary>
+        /// <param name="r"></param>
+        /// <returns></returns>
         public static ISession OpenSession(IInterceptor r)
         {
             try
