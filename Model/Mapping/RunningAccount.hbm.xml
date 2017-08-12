@@ -1,0 +1,19 @@
+﻿<?xml version="1.0"  encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="Model" namespace="Model">
+	<class name="Model.RunningAccount, Model" table="t_running_account">
+		<id name="f_id" column="f_id" type="Guid" unsaved-value="00000000-0000-0000-0000-000000000000">
+      			      			
+    	</id>      		
+		<property name="f_user_id" column="f_user_id" type="Guid"  />
+		<property name="f_time" column="f_time" type="DateTime"  />
+		<property name="f_year" column="f_year" type="int"  />
+		<property name="f_month" column="f_month" type="int"  />
+		<property name="f_day" column="f_day" type="int"  />
+		<property name="f_money" column="f_money" type="decimal"  />
+		<property name="f_purpose_id" column="f_purpose_id" type="Guid"  />
+		<property name="f_remark" column="f_remark" type="string"  />
+		<property name="f_address" column="f_address" type="string"  />
+		<property name="f_exist" column="f_exist" type="int"  />
+				
+	</class>
+</hibernate-mapping>
