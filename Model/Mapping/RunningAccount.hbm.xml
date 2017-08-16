@@ -9,7 +9,8 @@
 		<property name="f_year" column="f_year" type="int"  />
 		<property name="f_month" column="f_month" type="int"  />
 		<property name="f_day" column="f_day" type="int"  />
-		<property name="f_money" column="f_money" type="decimal"  />
+    <property name="f_money" column="f_money" type="decimal"  />
+    <property name="f_type" column="f_type" type="int"  />
 		<property name="f_purpose_id" column="f_purpose_id" type="Guid"  />
 		<property name="f_remark" column="f_remark" type="string"  />
 		<property name="f_address" column="f_address" type="string"  />

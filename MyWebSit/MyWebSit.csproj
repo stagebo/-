@@ -3503,6 +3503,7 @@
     <Compile Include="Controllers\Game\GameController.cs" />
     <Compile Include="Controllers\MainPage\MainPageController.cs" />
     <Compile Include="Controllers\NoteManage\NoteController.cs" />
+    <Compile Include="Controllers\QuicklyInterface\QController.cs" />
     <Compile Include="Controllers\RunningAccount\RunningAccountController.cs" />
     <Compile Include="Controllers\User\UserManagementController.cs" />
     <Compile Include="Filter\GlobalHandleErrorAttribute.cs" />
@@ -3566,6 +3567,7 @@
     <Content Include="Views\Game\Page_Game_GaoZiQi.cshtml" />
     <Content Include="Scripts\Needs\Game\GaoZiQiScript\fonts\SimHei_Regular.json" />
     <Content Include="Views\RunningAccount\Page_Running_Account.cshtml" />
+    <Content Include="Views\Q\Page_Quickly_Account.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

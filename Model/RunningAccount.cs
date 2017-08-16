@@ -73,7 +73,14 @@ namespace Model
             get;
             set;
         }
-
+        /// <summary>
+        /// f_type 
+        /// </summary>
+        public virtual int? f_type
+        {
+            get;
+            set;
+        }
         /// <summary>
         /// f_purpose_id
         /// </summary>
@@ -131,6 +138,7 @@ namespace Model
                 .Append("\"f_month\":\"").Append(Uri.EscapeDataString(this.f_month.ToString())).Append("\",")
                 .Append("\"f_day\":\"").Append(Uri.EscapeDataString(this.f_day.ToString())).Append("\",")
                 .Append("\"f_money\":\"").Append(Uri.EscapeDataString(this.f_money.ToString())).Append("\",")
+                .Append("\"f_type\":\"").Append(Uri.EscapeDataString(this.f_type.ToString())).Append("\",")
                 .Append("\"f_purpose_id\":\"").Append(Uri.EscapeDataString(this.f_purpose_id.ToString())).Append("\",")
                 .Append("\"f_remark\":").Append(this.f_remark == null ? "null" : ("\"" + Uri.EscapeDataString(this.f_remark.ToString()) + "\"")).Append(",")
                 .Append("\"f_address\":").Append(this.f_address == null ? "null" : ("\"" + Uri.EscapeDataString(this.f_address.ToString()) + "\"")).Append(",")
