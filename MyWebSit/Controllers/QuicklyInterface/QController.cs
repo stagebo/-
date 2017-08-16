@@ -11,7 +11,7 @@ namespace MyWebSit.Controllers
         // GET: Q
         public ActionResult Index()
         {
-            return View();
+            return View("Page_Quickly_Account");
         }
 
         /// <summary>

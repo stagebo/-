@@ -43,12 +43,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="RunningAccountDAL.cs" />
     <Compile Include="Class1.cs" />
     <Compile Include="MessageDAL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="AccountPurposeDAL.cs" />
     <Compile Include="UserDAL.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Base\Base.csproj">
+      <Project>{4bb7d0f1-08f9-4028-bd32-e0812f1c37d5}</Project>
+      <Name>Base</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common.Log4Net\Common.Log4Net.csproj">
       <Project>{d8f1b0ba-2633-4e0d-b6dd-6ca0096ea2b3}</Project>
       <Name>Common.Log4Net</Name>

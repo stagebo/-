@@ -172,5 +172,50 @@ namespace MyWebSit.Controllers
                             ";
             return Content(result);
         }
+
+        /// <summary>
+        /// POST /RunningAccount/SearchAccountListByUser
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult SearchAccountListByUser()
+        {
+            string errorJsonString = $"{{\"result\":\"{CommonEnum.AjaxResult.ERROR}\"}}";
+            Guid userIDGuid;
+            if (!Guid.TryParse(Session["id"]?.ToString(), out userIDGuid))
+            {
+                Log4NetUtils.Error(this,"查询流水账，无登陆信息。");
+                return Content(errorJsonString);
+            }
+            Dictionary<string, object> condition = new Dictionary<string, object>();
+            List<object[]> accountInfoList = new RunningAccountBLL().SearchAccountInfoListByCondition(condition);
+
+            StringBuilder re = new StringBuilder();
+            re.Append("{\"result\":\""+CommonEnum.AjaxResult.SUCCESS+"\",");
+            re.Append("\"data\":[");
+            bool isStart = true;
+            foreach (object[] o in accountInfoList)
+            {
+                RunningAccount ra = o[0] as RunningAccount;
+                AccountPurpose ap = o[1] as AccountPurpose;
+                User u = o[2] as User;
+                if (ra == null || ap == null || User == null)
+                {
+                    continue;
+                }
+
+                re.Append(isStart?"{":",{");
+                isStart = false;
+                re.Append("\"f_type\":\""+ra.f_type+"\",");
+                re.Append("\"f_time\":\""+ra.f_time+"\",");
+                re.Append("\"f_money\":\""+ra.f_money+"\",");
+                re.Append("\"f_purpose_name\":\""+ap.f_name+"\",");
+                re.Append("\"f_remark\":\""+ra.f_remark+"\"");
+                re.Append("}");
+                
+
+            }
+            re.Append("]}");
+            return Content(re.ToString());
+        }
     }
 }

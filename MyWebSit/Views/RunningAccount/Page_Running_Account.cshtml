@@ -4,17 +4,64 @@
 <script src="~/Scripts/jQuery/jquery-3.2.1.min.js"></script>
 @Html.Partial("~/Views/Shared/Script_MiniUI.cshtml")
 @Html.Partial("~/Views/Shared/Script_JBox.cshtml")
+<script src="~/Scripts/Common/CommonFunction.js"></script>
 <script type="text/javascript">
     $(function () {
-
+        mini.parse();
+        searchRunningAccountList();
+      
     });
+    function searchRunningAccountList() {
+        $.ajax({
+            type: 'post',
+            url: '/RunningAccount/SearchAccountListByUser',
+            data: {},
+            dataType: 'json',
+            success: function (data) {
+                data = $CommonFunction.decodeObject(data);
+                if (data['result'] == "@Common.CommonEnum.AjaxResult.SUCCESS") {
+                    var datagrid = mini.get("account_datagrid_div");
+                    datagrid.setData(data["data"]);
+                    $ShowMessageDialog.ShowTipsRightTop({ "message": "查询成功！" });
+                } else {
+                    $ShowMessageDialog.ShowTipsRightTop({ "message": "查询失败！" });                    
+                }
+            },
+            error: function () {
+                $ShowMessageDialog.ShowTipsRightTop({ "message": "查询失败！" });
+            }
+
+        });
+    }
+
+    function accountDatagridOnDrawcell(e) {
+        if (e.field == "f_type") {
+            console.log(e.value);
+            switch (e.value) {
+                case "@Common.CommonEnum.RunningAccountType.INCOME": e.cellHtml = "@Common.CommonEnum.RunningAccountType.INCOME_STRING";
+                    break;
+                case "@Common.CommonEnum.RunningAccountType.OUTCOME": e.cellHtml="@Common.CommonEnum.RunningAccountType.OUTCOME_STRING";
+            }
+        }
+
+    }
 </script>
 <div>
     <div class="mini-toolbar">
-        <div class="mini-button">刷新</div>
+        <div class="mini-button" onclick="searchRunningAccountList">刷新</div>
+        <div class="mini-button" onclick="window.location='/q'">添加</div>
     </div>
-    <div id="account_datagrid_div" class="mini-datagrid">
-
+    <div id="account_datagrid_div" class="mini-datagrid" ondrawcell="accountDatagridOnDrawcell"
+         onbeforeload ="searchRunningAccountList">
+        <div property="columns">           
+            <div type="indexcolumn"></div>
+            <div field="f_type" width="120" headerAlign="center" allowSort="true">类型</div>
+            <div field="f_time" width="120" headerAlign="center" allowSort="true">时间</div>
+            <div field="f_money" width="120" headerAlign="center" >数量</div>
+            <div field="f_purpose_name" width="120" headerAlign="center">用途</div>
+            <div field="f_remark" width="120" headerAlign="center">备注</div>
+            <div field="f_address" width="120" headerAlign="center">地点</div>
+        </div>
     </div>
 
 </div>

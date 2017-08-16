@@ -40,9 +40,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="RunningAccountBLL.cs" />
     <Compile Include="Class1.cs" />
     <Compile Include="MessageBLL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="AccountPurposeBLL.cs" />
     <Compile Include="UserBLL.cs" />
   </ItemGroup>
   <ItemGroup>

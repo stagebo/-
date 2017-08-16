@@ -59,7 +59,12 @@ namespace Common
         public static class RunningAccountType
         {
             public static int INCOME = 0;
+
             public static int OUTCOME = 1;
+
+            public static string INCOME_STRING = "收入";
+
+            public static string OUTCOME_STRING = "支出";
         }
     }
 }
