@@ -48,9 +48,18 @@ namespace Common
         {
             public static string DEFAULT_PASSWORD = "000000";
         }
+        /// <summary>
+        /// 找不到页面URL
+        /// </summary>
         public static class ErrorPageUrl
         {
             public static string DEFAULT_URL = "/Common/NotFondPage";
+        }
+
+        public static class RunningAccountType
+        {
+            public static int INCOME = 0;
+            public static int OUTCOME = 1;
         }
     }
 }

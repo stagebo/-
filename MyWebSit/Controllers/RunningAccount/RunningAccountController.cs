@@ -109,17 +109,20 @@ namespace MyWebSit.Controllers
             string purposeString = Request.Form["purpose"];
             string numString = Request.Form["num"];
             string desString = Request.Form["descript"];
+            string typeString = Request.Form["type"];
 
             /*数据验证*/
             Guid purposeGuid;
             Decimal numDecimal;
+            int type;
             bool purposeValidate = Guid.TryParse(purposeString, out purposeGuid);
             User user = session.Query<User>().SingleOrDefault<User>(u => u.f_uid == uidString
             &&u.f_exist==CommonEnum.DataExist.EXIST);
             AccountPurpose ap = SessionManager.OpenSession().
                 Query<AccountPurpose>().SingleOrDefault<AccountPurpose>(u => u.f_id == purposeGuid);
 
-            if (!purposeValidate || !Decimal.TryParse(numString, out numDecimal) || user == null || ap == null)
+            if (!purposeValidate || !Decimal.TryParse(numString, out numDecimal) || user == null || ap == null
+                ||!int.TryParse(typeString,out type))
             {
                 Log4NetUtils.Error(this, "插入流水账，接收参数失败！");
                 return Content(errorJsonString);
@@ -142,7 +145,7 @@ namespace MyWebSit.Controllers
 
             ra.f_remark = desString;
             ra.f_user_id = user.f_id;
-            ra.f_type = ap.f_type;
+            ra.f_type = type;//TODO
 
             if (!new UserBLL().AddModel<RunningAccount>(ra))
             {
@@ -154,6 +157,20 @@ namespace MyWebSit.Controllers
             string re = $"{{\"result\":\"{CommonEnum.AjaxResult.SUCCESS}\"}}"; ;
             return Content(re);
 
+        }
+
+        /// <summary>
+        /// GET /RunningAccount/GetAccountType
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult GetAccountType() {
+            string result = $@"
+                            [
+                            {{'id':'{CommonEnum.RunningAccountType.INCOME}','text':'收入'}}
+                            ,{{'id':'{CommonEnum.RunningAccountType.OUTCOME}','text':'支出'}}
+                            ]
+                            ";
+            return Content(result);
         }
     }
 }

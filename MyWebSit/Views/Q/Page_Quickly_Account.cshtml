@@ -15,6 +15,7 @@
     <script type="text/javascript">
         $(function () {
             mini.parse();
+            mini.get("type_check_box_div").setValue('1');
             refreshUserNameSelect('');
 
 
@@ -24,21 +25,25 @@
                 var purpose = mini.get("choose_purpose_div").getSelected();
                 var num = mini.get("account_num_div").getValue();
                 var descript = mini.get("account_descript_div").getValue();
-
+                var type = mini.get("type_check_box_div").getValue();
+                console.log(JSON.stringify(type));
                 /* 2、数据验证*/
                 if (uid == undefined || uid == "") {
                     $ShowMessageDialog.ShowTipsRightTop({ "message": "用户名不能为空" });
                     mini.get("input_user_name_div").focus();
                     return;
                 }
-                if (purpose == undefined)
-                {
+                if (purpose == undefined) {
                     $ShowMessageDialog.ShowTipsRightTop({ "message": "请选择用途！" });
                     return;
                 }
-                if (num == undefined || num == "" ) {
+                if (num == undefined || num == "") {
                     $ShowMessageDialog.ShowTipsRightTop({ "message": "数量填写不正确！" });
                     mini.get("account_num_div").focus();
+                    return;
+                }
+                if (type == null || type == undefined || type == "") {
+                    $ShowMessageDialog.ShowTipsRightTop({ "message": "请选择类型！" });
                     return;
                 }
                 /* 3、数据提交*/
@@ -46,7 +51,8 @@
                     'uid': uid,
                     'purpose': purpose["id"],
                     'num': num,
-                    'descript':descript
+                    'descript': descript,
+                    'type': type
                 };
                 $.ajax({
                     type: 'post',
@@ -59,7 +65,7 @@
                             mini.get("choose_purpose_div").getSelected();
                             mini.get("account_num_div").setValue();
                             mini.get("account_descript_div").setValue();
-                            $ShowMessageDialog.ShowTipsRightTop({"message":"插入成功！请到管理页面查看！"});
+                            $ShowMessageDialog.ShowTipsRightTop({ "message": "插入成功！请到管理页面查看！" });
                         } else {
                             $ShowMessageDialog.ShowTipsRightTop({ "message": "插入失败！" });
                         }
@@ -75,10 +81,10 @@
             $.ajax({
                 type: 'post',
                 url: '/RunningAccount/SearchAccountPurposeList',
-                data:{'uid':uid},
+                data: { 'uid': uid },
                 dataType: 'json',
                 success: function (data) {
-                    console.log(JSON.stringify(data));                    
+                    console.log(JSON.stringify(data));
                     if (data["result"] == "@Common.CommonEnum.AjaxResult.SUCCESS") {
                         mini.get("choose_purpose_div").setData(data["data"]);
                     }
@@ -91,24 +97,31 @@
     </script>
 </head>
 <body>
-    <div> 
+    <div>
         <div>
-           <div style="clear:both;">
-               <div>用户名：</div>
-               <div id="input_user_name_div"class="mini-textbox"></div>
-           </div>
+            <div style="clear:both;">
+                <div>用户名：</div>
+                <div id="input_user_name_div" class="mini-textbox"></div>
+            </div><br />
             <div style="clear:both;">
                 <div>用途</div>
                 <div id="choose_purpose_div" class="mini-combobox" url="/RunningAccount/SearchAccountPurposeList"></div>
-            </div>
+            </div><br />
             <div style="clear:both;">
                 <div>数量</div>
                 <div id="account_num_div" class="mini-textbox" vtype="float"></div>
-            </div>
+            </div><br />
+            <div style="clear:both;">
+                <div>类型</div>
+                <div id="type_check_box_div" class="mini-checkboxlist" textField="text" valueField="id" multiSelect="false"
+                     url="/RunningAccount/GetAccountType">
+                </div>
+            </div><br />
             <div style="clear:both;">
                 <div>描述</div>
                 <div id="account_descript_div" class="mini-textarea"></div>
-            </div>
+            </div><br />
+
             <div id="submit_account_div" class="mini-button">提交</div>
         </div>
     </div>
