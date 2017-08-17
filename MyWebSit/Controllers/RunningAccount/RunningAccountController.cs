@@ -19,6 +19,7 @@ namespace MyWebSit.Controllers
     {
         // GET: RunningAccount
         [HttpGet]
+        [Right]
         public ActionResult Index()
         {
             return View("Page_Running_Account");
@@ -196,6 +197,9 @@ namespace MyWebSit.Controllers
 
             string pageSizeString = string.IsNullOrWhiteSpace(Request.Form["pageSize"]) ? "20" : Request.Form["pageSize"];
             string pageIndexString = string.IsNullOrWhiteSpace(Request.Form["pageIndex"]) ? "0" : Request.Form["pageIndex"];
+            /*判断字段是否存在TODO*/
+            string sortField = string.IsNullOrWhiteSpace(Request.Form["sortField"]) ? "f_time" : Request.Form["sortField"];
+            string sortOrder = "asc".Equals(Request.Form["sortOrder"]) ? "acs" : "desc";
 
             /*页码处理，前端传过来从0开始，数据库从1开始*/
             int pageSize, pageIndex;
@@ -208,22 +212,22 @@ namespace MyWebSit.Controllers
                 a => a.f_user_id == userIDGuid && a.f_exist == CommonEnum.DataExist.EXIST).Count<RunningAccount>();
             pageSize = pageSize > 100 ? 100 : pageSize;
             pageSize = pageSize < 1 ? 20 : pageSize;
-            
+
 
             int totalPage = (totalCount - 1) / pageSize + 1;
             pageIndex = pageIndex < 0 ? 0 : pageIndex;
-            pageIndex = pageIndex > totalPage  ? totalPage  : pageIndex;
+            pageIndex = pageIndex > totalPage ? totalPage : pageIndex;
 
 
             Dictionary<string, object> condition = new Dictionary<string, object>()
             {
-                { "userID,Eq",userIDGuid}
-                , { "f_exist,Eq",CommonEnum.DataExist.EXIST}
+                  { "userID,Eq"     ,   userIDGuid                 }
+                , { "f_exist,Eq"    ,   CommonEnum.DataExist.EXIST }
             };
             List<string[]> orderList = new List<string[]>()
             {
                 new string[] {
-                    "R.f_type","asc"
+                    sortField , sortOrder
                 }
             };
 
@@ -252,12 +256,12 @@ namespace MyWebSit.Controllers
 
                 re.Append(isStart ? "{" : ",{");
                 isStart = false;
-                re.Append("\"f_id\":\"" + ra.f_id + "\",");
-                re.Append("\"f_type\":\"" + ra.f_type + "\",");
-                re.Append("\"f_time\":\"" + ra.f_time + "\",");
-                re.Append("\"f_money\":\"" + ra.f_money + "\",");
-                re.Append("\"f_purpose_name\":\"" + f_name + "\",");
-                re.Append("\"f_remark\":\"" + ra.f_remark + "\"");
+                re.Append("\"f_id\":\""     + ra.f_id + "\",");
+                re.Append("\"f_type\":\""   + ra.f_type + "\",");
+                re.Append("\"f_time\":\""   + ra.f_time + "\",");
+                re.Append("\"f_money\":\""  + ra.f_money + "\",");
+                re.Append("\"f_purpose_name\":\""   + f_name + "\",");
+                re.Append("\"f_remark\":\""         + ra.f_remark + "\"");
                 re.Append("}");
 
 
@@ -300,6 +304,34 @@ namespace MyWebSit.Controllers
 
         }
 
+        /// <summary>
+        /// POST /RunningAccount/InsertAccountPurpose  
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult InsertAccountPurpose()
+        {
+            string errorJsonString = $"{{\"result\":\"{CommonEnum.AjaxResult.ERROR}\"}}";
+            string name = Request.Form["name"];
+            string descript = Request.Form["descript"];
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                Log4NetUtils.Error(this,"插入类型，接收参数失败！");
+                return Content(errorJsonString);
+            }
+            AccountPurpose ap = new AccountPurpose();
+            ap.f_name = name;
+            ap.f_descript = descript;
+            ap.f_id = Guid.NewGuid();
+            ap.f_type = 1;
+
+            if (!new AccountPurposeBLL().AddModel<AccountPurpose>(ap)) {
+                Log4NetUtils.Error(this,"插入类型，插入模型失败！");
+                return Content(errorJsonString);
+            }
+
+            string result = $"{{\"result\":\"{CommonEnum.AjaxResult.SUCCESS}\"}}";
+            return Content(result);
+        }
 
     }
 }

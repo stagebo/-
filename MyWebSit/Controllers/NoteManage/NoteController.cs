@@ -18,7 +18,6 @@ using WebBlog.Filter;
 namespace MyWebSit.Controllers.NoteManage
 {
     [Right]
-
     public class NoteController : Controller
     {
         /// <summary>

@@ -1,0 +1,65 @@
+﻿
+@{
+    ViewBag.Title = "添加类型";
+}
+@*<link href="~/Scripts/Plugins/jQueryUI/jquery-ui.min.css" rel="stylesheet" />*@
+@*<script src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>*@
+<link href="~/Scripts/Plugins/jQueryUI/themes/smoothness/jquery-ui.css" rel="stylesheet" />
+<script src="~/Scripts/Plugins/jQueryUI/jquery-ui.min.js"></script>
+
+<div id="dialog_add_account_purpose_div" style="display:none;">
+    <div>
+        <div>名称：</div>
+        <div class="mini-textbox" id="account_purpose_name_div" width="200"></div>
+    </div>
+    <div>
+        <div>说明：</div>
+        <div class="mini-textarea" id="account_purpose_descript_div" width="200"></div>
+    </div>
+    <div class="mini-button" onclick="subAccountPurposeItem()">提交</div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $AddAccountPurposeDialog = {};
+
+        /*打开窗口*/
+        $AddAccountPurposeDialog.ShowAddAccountPurposeDialog = function () {
+            $("#dialog_add_account_purpose_div")
+                          //.dialog( "position", { my: "center", at: "center", of: "button" })
+                           .dialog();
+        }
+
+    });
+    function subAccountPurposeItem() {
+        var name = mini.get("account_purpose_name_div").getValue();
+        var descript = mini.get("account_purpose_descript_div").getValue();
+        if (name == "") {
+            $ShowMessageDialog.ShowTipsRightTop({ "message": "名称不能为空！" });
+            mini.get("account_purpose_name_div").focus();
+            return;
+        }
+
+        mini.get("account_purpose_name_div").setValue();
+        mini.get("account_purpose_descript_div").setValue();
+
+        $.ajax({
+            type: 'post',
+            url: '/RunningAccount/InsertAccountPurpose',
+            data: { 'name': name, 'descript': descript },
+            dataType: 'json',
+            success: function (data) {
+                if (data["result"] == "@Common.CommonEnum.AjaxResult.SUCCESS") {
+                    $ShowMessageDialog.ShowTipsRightTop({ "message": "添加成功！" });
+                    $("#dialog_add_account_purpose_div").dialog("close");
+                    return;
+                }
+                $ShowMessageDialog.ShowTipsRightTop({ "message": "提交失败！" });
+            },
+            error: function () {
+                $ShowMessageDialog.ShowTipsRightTop({ "message": "提交失败！" });
+            }
+        });
+    }
+</script>
+

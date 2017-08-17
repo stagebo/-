@@ -28,6 +28,8 @@ namespace MyWebSit.Controllers
         /// GET /UserManagement/ModifyUserPage  修改个人信息页面
         /// </summary>
         /// <returns></returns>
+        [HttpGet]
+        [Right]
         public ActionResult ModifyUserPage()
         {
             return View("Page_Modify_User_Info");
@@ -36,6 +38,8 @@ namespace MyWebSit.Controllers
         /// GET /UserManagement/CheckUserPage  查看个人信息页面
         /// </summary>
         /// <returns></returns>
+        [HttpGet]
+        [Right]
         public ActionResult CheckUserPage()
         {
             return View("Page_Check_User_Info");

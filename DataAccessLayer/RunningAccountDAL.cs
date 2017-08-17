@@ -46,7 +46,7 @@ namespace DataAccessLayer
             foreach (string[] order in orderList) {
                 sqlStringBuilder.Append(isStart?"":",");
                 isStart = false;
-                sqlStringBuilder.Append(order[0]+" "+order[1]);
+                sqlStringBuilder.Append(" R."+order[0]+" "+order[1]);
             }
             
 
