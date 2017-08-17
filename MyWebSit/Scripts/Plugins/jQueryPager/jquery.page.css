@@ -30,28 +30,26 @@ a {
     height: 30px;
 }
 
-    .pagingUl li {
-        float: left;
-        width: 30px;
-        height: 30px;
-        background: #337ab7;
-        text-align: center;
-        margin-right: 5px;
-        border-radius: 5px;
-        border: 1px solid #ddd;
-    }
+.pagingUl li {
+    float: left;
+    width: 30px;
+    height: 30px;
+    background: #fff;
+    text-align: center;
+    margin-right: 5px;
+    border-radius: 5px
+}
 
-        .pagingUl li a {
-            display: inline-block;
-            width: 30px;
-            height: 30px;
-            text-align: center;
-            line-height: 28px;
-            color: #666;
-            font-size: 12px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-        }
+.pagingUl li a {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    line-height: 28px;
+    color: #666;
+    font-size: 12px;
+    border-radius: 5px
+}
 
 .prv,
 .next {
@@ -60,39 +58,36 @@ a {
     text-align: center;
     line-height: 30px;
     cursor: pointer;
-    background: #337ab7;
+    background: #fff;
     padding: 0 5px;
     border-radius: 5px;
-    border: 1px solid #ddd;
 }
 
 .prv {
     margin-right: 10px;
-    border: 1px solid #ddd;
 }
 
 .first,
 .last {
-    width: 80px;
+    width: 30px;
     height: 30px;
     font-size: 12px;
     text-align: center;
     line-height: 30px;
-    border: 1px solid #ddd;
+    /*border: 1px solid #ddd;*/
     cursor: pointer;
-    background: #337ab7;
+    background: #fff;
     padding: 0 5px;
     border-radius: 5px;
     margin-right: 10px;
-    clear: both;
 }
 
-    .prv:hover,
-    .next:hover,
-    .first:hover,
-    .last:hover,
-    .pagingUl li a:hover,
-    .activP {
-        background-color: #000 !important;
-        color: #fff !important;
-    }
+.prv:hover,
+.next:hover,
+.first:hover,
+.last:hover,
+.pagingUl li a:hover,
+.activP {
+    background-color: #000!important;
+    color: #fff!important;
+}

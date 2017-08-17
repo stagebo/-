@@ -103,7 +103,7 @@
             border: solid 1px;
             border-radius: 5px;
             margin-left: 30%;
-            margin-top:5%;
+            margin-top: 5%;
         }
     </style>
 </head>
@@ -134,7 +134,10 @@
             </div><br />
 
             <div id="submit_account_div" class="mini-button mini-button-success">提交</div>
+            <div class="mini-button" onclick="$AddAccountPurposeDialog.ShowAddAccountPurposeDialog()"
+            style="float:right;margin-right:23%;">添加类型</div>
         </div>
     </div>
+    @Html.Partial("~/Views/RunningAccount/Dialog_Add_Account_Purpose.cshtml")
 </body>
 </html>
