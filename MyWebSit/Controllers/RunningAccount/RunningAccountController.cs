@@ -208,13 +208,11 @@ namespace MyWebSit.Controllers
                 a => a.f_user_id == userIDGuid && a.f_exist == CommonEnum.DataExist.EXIST).Count<RunningAccount>();
             pageSize = pageSize > 100 ? 100 : pageSize;
             pageSize = pageSize < 1 ? 20 : pageSize;
-
-            /*调试 稍后删除*/
-            pageSize = 1;
+            
 
             int totalPage = (totalCount - 1) / pageSize + 1;
             pageIndex = pageIndex < 0 ? 0 : pageIndex;
-            pageIndex = pageIndex > totalPage - 1 ? (totalPage - 1) : pageIndex;
+            pageIndex = pageIndex > totalPage  ? totalPage  : pageIndex;
 
 
             Dictionary<string, object> condition = new Dictionary<string, object>()
@@ -228,7 +226,6 @@ namespace MyWebSit.Controllers
                     "R.f_type","asc"
                 }
             };
-            pageSize = 1;
 
             List<object[]> accountInfoList = new RunningAccountBLL().SearchAccountInfoListByCondition(condition, orderList, pageIndex, pageSize);
             if (accountInfoList == null)
