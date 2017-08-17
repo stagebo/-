@@ -191,7 +191,10 @@ namespace MyWebSit.Controllers
             }
 
 
-            Dictionary<string, object> condition = new Dictionary<string, object>();
+            Dictionary<string, object> condition = new Dictionary<string, object>()
+            {
+                { "userID,Eq",userIDGuid}
+            };
             List<object[]> accountInfoList = new RunningAccountBLL().SearchAccountInfoListByCondition(condition);
             if (accountInfoList == null)
             {

@@ -18,6 +18,10 @@ namespace DataAccessLayer
     {
         public List<object[]> SearchAccountInfoListByCondition(Dictionary<string, object> condition)
         {
+            if (condition.ContainsKey("userID,Eq"))
+            {
+                return null;
+            }
             ISession session = null;
             string sql = $@"
                         SELECT R.*,A.*,U.* FROM
@@ -29,6 +33,7 @@ namespace DataAccessLayer
                         ON A.F_ID = R.f_purpose_id
 
                         WHERE  R.F_EXIST =1
+                        AND R.F_USER_ID = '{condition["userID,Eq"].ToString()}'
                         ";
             try
             {
