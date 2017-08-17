@@ -25,11 +25,8 @@ namespace DataAccessLayer
             ISession session = null;
             StringBuilder sqlStringBuilder =
                 new StringBuilder().Append(
-                $@"SELECT R.*,A.*,U.* 
-                FROM T_USER AS U
-
-                INNER JOIN t_running_account AS R
-                ON U.F_ID = R.f_user_id
+                $@"SELECT R.*,A.F_NAME,A.F_ID AS PID
+                FROM t_running_account AS R
 
                 INNER JOIN t_account_purpose AS A
                 ON A.F_ID = R.f_purpose_id
@@ -63,9 +60,9 @@ namespace DataAccessLayer
                     iSQLQuery.SetGuid("userID",Guid.Parse(condition["userID,Eq"].ToString()));
                 }
 
-                iSQLQuery.AddEntity(typeof(RunningAccount));
-                iSQLQuery.AddEntity(typeof(AccountPurpose));
-                iSQLQuery.AddEntity(typeof(User));
+                iSQLQuery.AddEntity(typeof(RunningAccount))
+                    .AddScalar("PID",NHibernateUtil.Guid)
+                    .AddScalar("F_NAME",NHibernateUtil.String);
                 return iSQLQuery
                     .SetFirstResult((pageIndex - 1) * pageSize)
                     .SetMaxResults(pageSize).List<object[]>().ToList<object[]>();

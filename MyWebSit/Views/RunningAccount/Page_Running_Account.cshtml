@@ -3,6 +3,10 @@
 }
 <script src="~/Scripts/jQuery/jquery-3.2.1.min.js"></script>
 <script src="~/Scripts/Common/CommonFunction.js"></script>
+<!--分页插件-->
+<link href="~/Scripts/Plugins/jQueryPager/jquery.page.css" rel="stylesheet" />
+<script src="~/Scripts/Plugins/jQueryPager/jquery.page.js"></script>
+
 @Html.Partial("~/Views/Shared/Script_MiniUI.cshtml")
 @Html.Partial("~/Views/Shared/Script_JBox.cshtml")
 <script type="text/javascript">
@@ -11,7 +15,8 @@
             "pageIndex": 1,
             "pageSize": "20",
             "totalCount": "",
-            "totalPage": ""
+            "totalPage": "",
+            "isInit":"0"
         };
         mini.parse();
         searchRunningAccountList();
@@ -21,27 +26,32 @@
     });
     function searchRunningAccountList(e) {
         var datagrid = mini.get("account_datagrid_div");
-        var pageSize = datagrid.getPageSize();
-        var pageIndex = datagrid.getPageIndex();
+        //var pageSize = datagrid.getPageSize();
+        //var pageIndex = datagrid.getPageIndex();
 
         var options = {
-            "pageSize": pageSize,
-            "pageIndex": pageIndex
+            "pageSize": 10,
+            "pageIndex": 1
         };
-        globalPagerParams = $.extend(globalPagerParams, options);
+        globalPagerParams = $.extend(options,globalPagerParams);
         $.ajax({
             type: 'post',
             url: '/RunningAccount/SearchAccountListByUser',
             data: globalPagerParams,
-            //dataType: 'json',
+            dataType: 'json',
             success: function (data) {
                 //console.log(JSON.stringify(data));
                 data = $CommonFunction.decodeObject(data);
+                console.log(data['result']);
                 if (data["result"] == "@Common.CommonEnum.AjaxResult.SUCCESS") {
-                    datagrid.setTotalCount(parseInt(data["totalCount"]));
-                   // datagrid.setPageSize(parseInt(1));
+                    //datagrid.setTotalCount(parseInt(data["totalCount"]));
+                    // datagrid.setPageSize(parseInt(1));
                     datagrid.setData(data["data"]);
                     $ShowMessageDialog.ShowTipsRightTop({ "message": "查询成功！" });
+                    if (globalPagerParams["isInit"] == "0") {
+                        refreshRunningPager(data['totalPage']);
+                        globalPagerParams["isInit"] = "1";
+                    }
                     return;
                 } else {
                     $ShowMessageDialog.ShowTipsRightTop({ "message": "查询失败.！" });
@@ -74,7 +84,7 @@
             data: {},
             dataType: 'json',
             success: function (data) {
-                
+
                 if (data["result"] == "@Common.CommonEnum.AjaxResult.SUCCESS") {
                     mini.get("remain_money_div").setValue(data["money"]);
                 } else {
@@ -83,6 +93,27 @@
             },
             error: function () {
                 $ShowMessageDialog.ShowTipsRightTop({ "message": "查询余额失败！" });
+            }
+        });
+    }
+
+    function refreshRunningPager(totalPage) {
+        console.log("totalPages:" + totalPage);
+        $("#running_account_pager_div").Page({
+            totalPages: parseInt(totalPage),//total Pages
+            liNums: 5,//the li numbers(advice use odd)
+            activeClass: 'activP', //active class style
+            firstPage: '<<首页',//first button name
+            lastPage: '末页>>',//last button name
+            prv: '<上一页',//prev button name
+            next: '下一页>',//next button name
+            hasFirstPage: true,//whether has first button
+            hasLastPage: true,//whether has last button
+            hasPrv: true,//whether has prev button
+            hasNext: true,//whether has next button
+            callBack: function (page) {
+                globalPagerParams["pageIndex"] = page;
+                searchRunningAccountList();
             }
         });
     }
@@ -98,8 +129,8 @@
         </div>
     </div>
     <div id="account_datagrid_div" class="mini-datagrid" ondrawcell="accountDatagridOnDrawcell" idfield="f_id" showloading="false"
-          showpager="true" allowsortcolumn="true" allowmovecolumn="false" allowresizecolumn="true" allowcellwrap="true" allowalternating="true" 
-         onbeforeload="searchRunningAccountList" sizeList="[10,20,50]" pagesize="1">
+         showpager="false" allowsortcolumn="true" allowmovecolumn="false" allowresizecolumn="true" allowcellwrap="true" allowalternating="true"
+         onbeforeload="searchRunningAccountList" sizeList="[10,20,50]" height="500">
         <div property="columns">
             <div type="indexcolumn"></div>
             <div field="f_type" width="120" headerAlign="center" allowSort="true">类型</div>
@@ -108,6 +139,10 @@
             <div field="f_purpose_name" width="120" headerAlign="center">用途</div>
             <div field="f_remark" width="120" headerAlign="center">备注</div>
             @*<div field="f_address" width="120" headerAlign="center">地点</div>*@
+        </div>
+    </div>
+    <div class="mini-toolbar">
+        <div id="running_account_pager_div">
         </div>
     </div>
 

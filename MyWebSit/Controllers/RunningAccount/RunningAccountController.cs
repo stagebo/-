@@ -208,10 +208,13 @@ namespace MyWebSit.Controllers
                 a => a.f_user_id == userIDGuid && a.f_exist == CommonEnum.DataExist.EXIST).Count<RunningAccount>();
             pageSize = pageSize > 100 ? 100 : pageSize;
             pageSize = pageSize < 1 ? 20 : pageSize;
+
+            /*调试 稍后删除*/
+            pageSize = 1;
+
             int totalPage = (totalCount - 1) / pageSize + 1;
             pageIndex = pageIndex < 0 ? 0 : pageIndex;
             pageIndex = pageIndex > totalPage - 1 ? (totalPage - 1) : pageIndex;
-            pageIndex = pageIndex + 1;
 
 
             Dictionary<string, object> condition = new Dictionary<string, object>()
@@ -243,9 +246,9 @@ namespace MyWebSit.Controllers
             foreach (object[] o in accountInfoList)
             {
                 RunningAccount ra = o[0] as RunningAccount;
-                AccountPurpose ap = o[1] as AccountPurpose;
-                User u = o[2] as User;
-                if (ra == null || ap == null || User == null)
+                string p_id = o[1].ToString();
+                string f_name = o[2].ToString();
+                if (ra == null || f_name == null || p_id == null)
                 {
                     continue;
                 }
@@ -256,7 +259,7 @@ namespace MyWebSit.Controllers
                 re.Append("\"f_type\":\"" + ra.f_type + "\",");
                 re.Append("\"f_time\":\"" + ra.f_time + "\",");
                 re.Append("\"f_money\":\"" + ra.f_money + "\",");
-                re.Append("\"f_purpose_name\":\"" + ap.f_name + "\",");
+                re.Append("\"f_purpose_name\":\"" + f_name + "\",");
                 re.Append("\"f_remark\":\"" + ra.f_remark + "\"");
                 re.Append("}");
 
