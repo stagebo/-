@@ -193,7 +193,7 @@ namespace MyWebSit.Controllers
 
             Dictionary<string, object> condition = new Dictionary<string, object>()
             {
-                { "userID,Eq",userIDGuid}
+                { "userID,Eq",userIDGuid} 
             };
             List<object[]> accountInfoList = new RunningAccountBLL().SearchAccountInfoListByCondition(condition);
             if (accountInfoList == null)
