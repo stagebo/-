@@ -34,7 +34,7 @@ a {
     float: left;
     width: 30px;
     height: 30px;
-    background: #fff;
+    background: #999;
     text-align: center;
     margin-right: 5px;
     border-radius: 5px
@@ -58,7 +58,7 @@ a {
     text-align: center;
     line-height: 30px;
     cursor: pointer;
-    background: #fff;
+    background: #999;
     padding: 0 5px;
     border-radius: 5px;
 }
@@ -76,7 +76,7 @@ a {
     line-height: 30px;
     /*border: 1px solid #ddd;*/
     cursor: pointer;
-    background: #fff;
+    background: #999;
     padding: 0 5px;
     border-radius: 5px;
     margin-right: 10px;
