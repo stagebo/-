@@ -11,6 +11,7 @@ using Common.NHibernate;
 using Model;
 using NHibernate;
 using NHibernate.Linq;
+using WebBlog.Filter;
 
 namespace MyWebSit.Controllers
 {
@@ -145,7 +146,7 @@ namespace MyWebSit.Controllers
 
             ra.f_remark = desString;
             ra.f_user_id = user.f_id;
-            ra.f_type = type;//TODO
+            ra.f_type = type;
 
             if (!new UserBLL().AddModel<RunningAccount>(ra))
             {
@@ -163,7 +164,8 @@ namespace MyWebSit.Controllers
         /// GET /RunningAccount/GetAccountType
         /// </summary>
         /// <returns></returns>
-        public ActionResult GetAccountType() {
+        public ActionResult GetAccountType()
+        {
             string result = $@"
                             [
                             {{'id':'{CommonEnum.RunningAccountType.INCOME}','text':'收入'}}
@@ -180,14 +182,22 @@ namespace MyWebSit.Controllers
         public ActionResult SearchAccountListByUser()
         {
             string errorJsonString = $"{{\"result\":\"{CommonEnum.AjaxResult.ERROR}\"}}";
+            
             Guid userIDGuid;
             if (!Guid.TryParse(Session["id"]?.ToString(), out userIDGuid))
             {
                 Log4NetUtils.Error(this,"查询流水账，无登陆信息。");
                 return Content(errorJsonString);
             }
+
+
             Dictionary<string, object> condition = new Dictionary<string, object>();
             List<object[]> accountInfoList = new RunningAccountBLL().SearchAccountInfoListByCondition(condition);
+            if (accountInfoList == null)
+            {
+                Log4NetUtils.Error(this,"查询流水账，列表为空。");
+                return Content(errorJsonString);
+            }
 
             StringBuilder re = new StringBuilder();
             re.Append("{\"result\":\""+CommonEnum.AjaxResult.SUCCESS+"\",");

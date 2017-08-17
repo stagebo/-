@@ -16,7 +16,7 @@
         $(function () {
             mini.parse();
             mini.get("type_check_box_div").setValue('1');
-            refreshUserNameSelect('');
+
 
 
             $("#submit_account_div").click(function () {
@@ -77,7 +77,7 @@
 
             });
         });
-        function refreshUserNameSelect(uid) {
+        @*function refreshUserNameSelect(uid) {
             $.ajax({
                 type: 'post',
                 url: '/RunningAccount/SearchAccountPurposeList',
@@ -93,33 +93,42 @@
 
                 }
             });
-        }
+        }*@
     </script>
+    <style type="text/css">
+        div.typein_account_form_div {
+            width: 300px;
+            height: 400px;
+            border: solid 1px;
+            border-radius: 5px;
+            margin-left: 20%;
+        }
+    </style>
 </head>
 <body>
-    <div>
-        <div>
+    <div class="typein_account_form_div">
+        <div style="margin-left:10%;">
             <div style="clear:both;">
                 <div>用户名：</div>
-                <div id="input_user_name_div" class="mini-textbox"></div>
+                <div id="input_user_name_div" class="mini-textbox" width="200"></div>
             </div><br />
             <div style="clear:both;">
                 <div>用途</div>
-                <div id="choose_purpose_div" class="mini-combobox" url="/RunningAccount/SearchAccountPurposeList"></div>
+                <div id="choose_purpose_div" class="mini-combobox" url="/RunningAccount/SearchAccountPurposeList" width="200"></div>
             </div><br />
             <div style="clear:both;">
                 <div>数量</div>
-                <div id="account_num_div" class="mini-textbox" vtype="float"></div>
+                <div id="account_num_div" class="mini-textbox" vtype="float" width="200"></div>
             </div><br />
             <div style="clear:both;">
                 <div>类型</div>
                 <div id="type_check_box_div" class="mini-checkboxlist" textField="text" valueField="id" multiSelect="false"
-                     url="/RunningAccount/GetAccountType">
+                     url="/RunningAccount/GetAccountType" width="200">
                 </div>
             </div><br />
             <div style="clear:both;">
                 <div>描述</div>
-                <div id="account_descript_div" class="mini-textarea"></div>
+                <div id="account_descript_div" class="mini-textarea" width="200"></div>
             </div><br />
 
             <div id="submit_account_div" class="mini-button">提交</div>
