@@ -1,30 +1,50 @@
 ﻿@{
-    ViewBag.Title = "我的流水账";
+    ViewBag.Title = "日常记账";
 }
 <script src="~/Scripts/jQuery/jquery-3.2.1.min.js"></script>
+<script src="~/Scripts/Common/CommonFunction.js"></script>
 @Html.Partial("~/Views/Shared/Script_MiniUI.cshtml")
 @Html.Partial("~/Views/Shared/Script_JBox.cshtml")
-<script src="~/Scripts/Common/CommonFunction.js"></script>
 <script type="text/javascript">
     $(function () {
+        globalPagerParams = {
+            "pageIndex": 1,
+            "pageSize": "20",
+            "totalCount": "",
+            "totalPage": ""
+        };
         mini.parse();
         searchRunningAccountList();
         getRemainMoney();
+        mini.get("account_datagrid_div").setPageSize(1);
+        //mini_debugger = false
     });
-    function searchRunningAccountList() {
+    function searchRunningAccountList(e) {
+        var datagrid = mini.get("account_datagrid_div");
+        var pageSize = datagrid.getPageSize();
+        var pageIndex = datagrid.getPageIndex();
+
+        var options = {
+            "pageSize": pageSize,
+            "pageIndex": pageIndex
+        };
+        globalPagerParams = $.extend(globalPagerParams, options);
         $.ajax({
             type: 'post',
             url: '/RunningAccount/SearchAccountListByUser',
-            data: {},
-            dataType: 'json',
+            data: globalPagerParams,
+            //dataType: 'json',
             success: function (data) {
+                //console.log(JSON.stringify(data));
                 data = $CommonFunction.decodeObject(data);
-                if (data['result'] == "@Common.CommonEnum.AjaxResult.SUCCESS") {
-                    var datagrid = mini.get("account_datagrid_div");
+                if (data["result"] == "@Common.CommonEnum.AjaxResult.SUCCESS") {
+                    datagrid.setTotalCount(parseInt(data["totalCount"]));
+                   // datagrid.setPageSize(parseInt(1));
                     datagrid.setData(data["data"]);
                     $ShowMessageDialog.ShowTipsRightTop({ "message": "查询成功！" });
+                    return;
                 } else {
-                    $ShowMessageDialog.ShowTipsRightTop({ "message": "查询失败！" });                    
+                    $ShowMessageDialog.ShowTipsRightTop({ "message": "查询失败.！" });
                 }
             },
             error: function () {
@@ -37,9 +57,11 @@
     function accountDatagridOnDrawcell(e) {
         if (e.field == "f_type") {
             switch (e.value) {
-                case "@Common.CommonEnum.RunningAccountType.INCOME": e.cellHtml = "@Common.CommonEnum.RunningAccountType.INCOME_STRING";
+                case "@Common.CommonEnum.RunningAccountType.INCOME":
+                    e.cellHtml = "@Common.CommonEnum.RunningAccountType.INCOME_STRING";
                     break;
-                case "@Common.CommonEnum.RunningAccountType.OUTCOME": e.cellHtml="@Common.CommonEnum.RunningAccountType.OUTCOME_STRING";
+                case "@Common.CommonEnum.RunningAccountType.OUTCOME":
+                    e.cellHtml = "@Common.CommonEnum.RunningAccountType.OUTCOME_STRING";
             }
         }
 
@@ -49,14 +71,15 @@
         $.ajax({
             type: 'post',
             url: '/RunningAccount/GetBalanceByUser',
-            data: '',
+            data: {},
             dataType: 'json',
             success: function (data) {
+                
                 if (data["result"] == "@Common.CommonEnum.AjaxResult.SUCCESS") {
                     mini.get("remain_money_div").setValue(data["money"]);
                 } else {
                     $ShowMessageDialog.ShowTipsRightTop({ "message": "查询余额失败！" });
-                }                
+                }
             },
             error: function () {
                 $ShowMessageDialog.ShowTipsRightTop({ "message": "查询余额失败！" });
@@ -71,19 +94,20 @@
 
         <div style="float:right">
             <div style="float:left">余额：</div>
-            <div id="remain_money_div" class="mini-textbox" width="80" allowInput="false"  style="float:left;"></div>
+            <div id="remain_money_div" class="mini-textbox" width="120" allowInput="false" style="float:left;"></div>
         </div>
     </div>
-    <div id="account_datagrid_div" class="mini-datagrid" ondrawcell="accountDatagridOnDrawcell"
-         onbeforeload ="searchRunningAccountList">
-        <div property="columns">           
+    <div id="account_datagrid_div" class="mini-datagrid" ondrawcell="accountDatagridOnDrawcell" idfield="f_id" showloading="false"
+          showpager="true" allowsortcolumn="true" allowmovecolumn="false" allowresizecolumn="true" allowcellwrap="true" allowalternating="true" 
+         onbeforeload="searchRunningAccountList" sizeList="[10,20,50]" pagesize="1">
+        <div property="columns">
             <div type="indexcolumn"></div>
             <div field="f_type" width="120" headerAlign="center" allowSort="true">类型</div>
             <div field="f_time" width="120" headerAlign="center" allowSort="true">时间</div>
-            <div field="f_money" width="120" headerAlign="center" >数量</div>
+            <div field="f_money" width="120" headerAlign="center">数量</div>
             <div field="f_purpose_name" width="120" headerAlign="center">用途</div>
             <div field="f_remark" width="120" headerAlign="center">备注</div>
-            <div field="f_address" width="120" headerAlign="center">地点</div>
+            @*<div field="f_address" width="120" headerAlign="center">地点</div>*@
         </div>
     </div>
 

@@ -18,6 +18,7 @@ namespace MyWebSit.Controllers
     public class RunningAccountController : Controller
     {
         // GET: RunningAccount
+        [HttpGet]
         public ActionResult Index()
         {
             return View("Page_Running_Account");
@@ -101,6 +102,7 @@ namespace MyWebSit.Controllers
         /// POST  /RunningAccount/InsertAccount
         /// </summary>
         /// <returns></returns>
+        [HttpPost]
         public ActionResult InsertAccount()
         {
             string errorJsonString = $"{{\"result\":\"{CommonEnum.AjaxResult.ERROR}\"}}";
@@ -118,12 +120,12 @@ namespace MyWebSit.Controllers
             int type;
             bool purposeValidate = Guid.TryParse(purposeString, out purposeGuid);
             User user = session.Query<User>().SingleOrDefault<User>(u => u.f_uid == uidString
-            &&u.f_exist==CommonEnum.DataExist.EXIST);
+            && u.f_exist == CommonEnum.DataExist.EXIST);
             AccountPurpose ap = SessionManager.OpenSession().
                 Query<AccountPurpose>().SingleOrDefault<AccountPurpose>(u => u.f_id == purposeGuid);
 
             if (!purposeValidate || !Decimal.TryParse(numString, out numDecimal) || user == null || ap == null
-                ||!int.TryParse(typeString,out type))
+                || !int.TryParse(typeString, out type))
             {
                 Log4NetUtils.Error(this, "插入流水账，接收参数失败！");
                 return Content(errorJsonString);
@@ -179,31 +181,63 @@ namespace MyWebSit.Controllers
         /// POST /RunningAccount/SearchAccountListByUser
         /// </summary>
         /// <returns></returns>
+        [Right]
+        [HttpPost]
         public ActionResult SearchAccountListByUser()
         {
             string errorJsonString = $"{{\"result\":\"{CommonEnum.AjaxResult.ERROR}\"}}";
-            
+
             Guid userIDGuid;
             if (!Guid.TryParse(Session["id"]?.ToString(), out userIDGuid))
             {
-                Log4NetUtils.Error(this,"查询流水账，无登陆信息。");
+                Log4NetUtils.Error(this, "查询流水账，无登陆信息。");
                 return Content(errorJsonString);
             }
+
+            string pageSizeString = string.IsNullOrWhiteSpace(Request.Form["pageSize"]) ? "20" : Request.Form["pageSize"];
+            string pageIndexString = string.IsNullOrWhiteSpace(Request.Form["pageIndex"]) ? "0" : Request.Form["pageIndex"];
+
+            /*页码处理，前端传过来从0开始，数据库从1开始*/
+            int pageSize, pageIndex;
+            if (!int.TryParse(pageSizeString, out pageSize) || !int.TryParse(pageIndexString, out pageIndex))
+            {
+                Log4NetUtils.Error(this, "查询日常记账，接收参数失败！");
+                return Content(errorJsonString);
+            }
+            int totalCount = SessionManager.OpenSession().Query<RunningAccount>().Where<RunningAccount>(
+                a => a.f_user_id == userIDGuid && a.f_exist == CommonEnum.DataExist.EXIST).Count<RunningAccount>();
+            pageSize = pageSize > 100 ? 100 : pageSize;
+            pageSize = pageSize < 1 ? 20 : pageSize;
+            int totalPage = (totalCount - 1) / pageSize + 1;
+            pageIndex = pageIndex < 0 ? 0 : pageIndex;
+            pageIndex = pageIndex > totalPage - 1 ? (totalPage - 1) : pageIndex;
+            pageIndex = pageIndex + 1;
 
 
             Dictionary<string, object> condition = new Dictionary<string, object>()
             {
-                { "userID,Eq",userIDGuid} 
+                { "userID,Eq",userIDGuid}
+                , { "f_exist,Eq",CommonEnum.DataExist.EXIST}
             };
-            List<object[]> accountInfoList = new RunningAccountBLL().SearchAccountInfoListByCondition(condition);
+            List<string[]> orderList = new List<string[]>()
+            {
+                new string[] {
+                    "R.f_type","asc"
+                }
+            };
+            pageSize = 1;
+
+            List<object[]> accountInfoList = new RunningAccountBLL().SearchAccountInfoListByCondition(condition, orderList, pageIndex, pageSize);
             if (accountInfoList == null)
             {
-                Log4NetUtils.Error(this,"查询流水账，列表为空。");
+                Log4NetUtils.Error(this, "查询流水账，列表为空。");
                 return Content(errorJsonString);
             }
 
             StringBuilder re = new StringBuilder();
-            re.Append("{\"result\":\""+CommonEnum.AjaxResult.SUCCESS+"\",");
+            re.Append("{\"result\":\"" + CommonEnum.AjaxResult.SUCCESS + "\",");
+            re.Append("\"totalCount\":\"" + totalCount + "\",");
+            re.Append("\"totalPage\":\"" + totalPage + "\",");
             re.Append("\"data\":[");
             bool isStart = true;
             foreach (object[] o in accountInfoList)
@@ -216,22 +250,27 @@ namespace MyWebSit.Controllers
                     continue;
                 }
 
-                re.Append(isStart?"{":",{");
+                re.Append(isStart ? "{" : ",{");
                 isStart = false;
-                re.Append("\"f_type\":\""+ra.f_type+"\",");
-                re.Append("\"f_time\":\""+ra.f_time+"\",");
-                re.Append("\"f_money\":\""+ra.f_money+"\",");
-                re.Append("\"f_purpose_name\":\""+ap.f_name+"\",");
-                re.Append("\"f_remark\":\""+ra.f_remark+"\"");
+                re.Append("\"f_id\":\"" + ra.f_id + "\",");
+                re.Append("\"f_type\":\"" + ra.f_type + "\",");
+                re.Append("\"f_time\":\"" + ra.f_time + "\",");
+                re.Append("\"f_money\":\"" + ra.f_money + "\",");
+                re.Append("\"f_purpose_name\":\"" + ap.f_name + "\",");
+                re.Append("\"f_remark\":\"" + ra.f_remark + "\"");
                 re.Append("}");
-                
+
 
             }
             re.Append("]}");
             return Content(re.ToString());
         }
-
-
+        /// <summary>
+        /// POST /RunningAccount/GetBalanceByUser
+        /// </summary>
+        /// <returns></returns>
+        [Right]
+        [HttpPost]
         public ActionResult GetBalanceByUser()
         {
             string errorJsonString = $"{{\"result\":\"{CommonEnum.AjaxResult.ERROR}\"}}";
@@ -248,9 +287,9 @@ namespace MyWebSit.Controllers
                 { "userID,Eq",userIDGuid}
             };
             Dictionary<string, object> balanceInfo = new RunningAccountBLL().SearchBalanceInfoByCondition(condition);
-            if (balanceInfo == null||!balanceInfo.ContainsKey("money"))
+            if (balanceInfo == null || !balanceInfo.ContainsKey("money"))
             {
-                Log4NetUtils.Error(this,"查询余额，查询余额信息失败！");
+                Log4NetUtils.Error(this, "查询余额，查询余额信息失败！");
                 return Content(errorJsonString);
             }
 

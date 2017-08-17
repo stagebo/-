@@ -12,9 +12,9 @@ namespace BussinessLogicLayer
 {
     public class RunningAccountBLL : BaseBLL
     {
-        public List<object[]> SearchAccountInfoListByCondition(Dictionary<string, object> condition)
+        public List<object[]> SearchAccountInfoListByCondition(Dictionary<string, object> condition,List<string[]> orderList,int pageIndex,int pageSize)
         {
-            return new RunningAccountDAL().SearchAccountInfoListByCondition(condition);
+            return new RunningAccountDAL().SearchAccountInfoListByCondition(condition,orderList,pageIndex,pageSize);
         }
 
         public Dictionary<string, object> SearchBalanceInfoByCondition(Dictionary<string, object> condition)
