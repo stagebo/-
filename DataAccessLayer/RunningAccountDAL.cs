@@ -18,7 +18,7 @@ namespace DataAccessLayer
     {
         public List<object[]> SearchAccountInfoListByCondition(Dictionary<string, object> condition)
         {
-            if (condition.ContainsKey("userID,Eq"))
+            if (!condition.ContainsKey("userID,Eq"))
             {
                 return null;
             }
