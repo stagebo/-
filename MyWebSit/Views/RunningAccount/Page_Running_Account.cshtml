@@ -9,7 +9,7 @@
     $(function () {
         mini.parse();
         searchRunningAccountList();
-      
+        getRemainMoney();
     });
     function searchRunningAccountList() {
         $.ajax({
@@ -36,7 +36,6 @@
 
     function accountDatagridOnDrawcell(e) {
         if (e.field == "f_type") {
-            console.log(e.value);
             switch (e.value) {
                 case "@Common.CommonEnum.RunningAccountType.INCOME": e.cellHtml = "@Common.CommonEnum.RunningAccountType.INCOME_STRING";
                     break;
@@ -45,11 +44,35 @@
         }
 
     }
+    function getRemainMoney() {
+        /*remain_money_div*/
+        $.ajax({
+            type: 'post',
+            url: '/RunningAccount/GetBalanceByUser',
+            data: '',
+            dataType: 'json',
+            success: function (data) {
+                if (data["result"] == "@Common.CommonEnum.AjaxResult.SUCCESS") {
+                    mini.get("remain_money_div").setValue(data["money"]);
+                } else {
+                    $ShowMessageDialog.ShowTipsRightTop({ "message": "查询余额失败！" });
+                }                
+            },
+            error: function () {
+                $ShowMessageDialog.ShowTipsRightTop({ "message": "查询余额失败！" });
+            }
+        });
+    }
 </script>
 <div>
     <div class="mini-toolbar">
         <div class="mini-button" onclick="searchRunningAccountList">刷新</div>
         <div class="mini-button" onclick="window.location='/q'">添加</div>
+
+        <div style="float:right">
+            <div style="float:left">余额：</div>
+            <div id="remain_money_div" class="mini-textbox" width="80" allowInput="false"  style="float:left;"></div>
+        </div>
     </div>
     <div id="account_datagrid_div" class="mini-datagrid" ondrawcell="accountDatagridOnDrawcell"
          onbeforeload ="searchRunningAccountList">

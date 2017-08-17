@@ -41,7 +41,40 @@ namespace DataAccessLayer
             }
             catch (Exception ex)
             {
-                Log4NetUtils.Error(this,"查询流水账，查询失败！");
+                Log4NetUtils.Error(this, "查询流水账，查询失败！",ex);
+                return null;
+            }
+            finally
+            {
+                SessionManager.CloseSession(session);
+            }
+        }
+
+        public List<object[]> selectBalanceInfoByCondition(Dictionary<string, object> condition)
+        {
+            if (!condition.ContainsKey("userID,Eq"))
+            {
+                return null;
+            }
+            ISession session = null;
+            string sql = $@"
+                         SELECT F_TYPE AS TYPE
+                         ,SUM(F_MONEY) AS MONEY
+                         FROM T_RUNNING_ACCOUNT
+                         WHERE F_USER_ID = '{condition["userID,Eq"].ToString()}'
+                         GROUP BY F_TYPE 
+                        ";
+            try
+            {
+                session = SessionManager.OpenSession();
+                ISQLQuery iSQLQuery = session.CreateSQLQuery(sql);
+                iSQLQuery.AddScalar("TYPE", NHibernateUtil.Int32)
+                   .AddScalar("MONEY", NHibernateUtil.Decimal);
+                return iSQLQuery.List<object[]>().ToList<object[]>();
+            }
+            catch (Exception ex)
+            {
+                Log4NetUtils.Error(this, "查询流水账，查询失败！",ex);
                 return null;
             }
             finally

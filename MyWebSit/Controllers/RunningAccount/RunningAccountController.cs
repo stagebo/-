@@ -227,5 +227,37 @@ namespace MyWebSit.Controllers
             re.Append("]}");
             return Content(re.ToString());
         }
+
+
+        public ActionResult GetBalanceByUser()
+        {
+            string errorJsonString = $"{{\"result\":\"{CommonEnum.AjaxResult.ERROR}\"}}";
+
+            Guid userIDGuid;
+            if (!Guid.TryParse(Session["id"]?.ToString(), out userIDGuid))
+            {
+                Log4NetUtils.Error(this, "查询余额，无登陆信息。");
+                return Content(errorJsonString);
+            }
+
+            Dictionary<string, object> condition = new Dictionary<string, object>()
+            {
+                { "userID,Eq",userIDGuid}
+            };
+            Dictionary<string, object> balanceInfo = new RunningAccountBLL().SearchBalanceInfoByCondition(condition);
+            if (balanceInfo == null||!balanceInfo.ContainsKey("money"))
+            {
+                Log4NetUtils.Error(this,"查询余额，查询余额信息失败！");
+                return Content(errorJsonString);
+            }
+
+            StringBuilder re = new StringBuilder();
+            re.Append($"{{\"result\":\"{CommonEnum.AjaxResult.SUCCESS}\",");
+            re.Append($"\"money\":\"{balanceInfo["money"]}\"}}");
+            return Content(re.ToString());
+
+        }
+
+
     }
 }

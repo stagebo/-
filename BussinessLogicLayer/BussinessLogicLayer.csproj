@@ -60,6 +60,10 @@
       <Project>{7a082982-563b-4e5a-aeb7-4f91fbd1354c}</Project>
       <Name>Common.NHibernate</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{9510F8A5-3FCD-4073-9A11-75B804D6E25D}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DataAccessLayer\DataAccessLayer.csproj">
       <Project>{6740b930-0f3f-44b2-ba97-66a5db46d688}</Project>
       <Name>DataAccessLayer</Name>
