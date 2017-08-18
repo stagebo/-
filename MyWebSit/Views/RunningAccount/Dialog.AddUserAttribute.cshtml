@@ -1,0 +1,76 @@
+﻿<div id="add_userAttribute_dialog" style="display:none;">
+    <div class="add-userAttribute-dialog-setting-div">
+        
+        <div class="add-item-row not-first-add-item-row">
+            <div>属性名称</div>
+            <div><input id="UserAttributeName" class="per-add-item-setting userAttribute-name-style " /> </div>
+            <div class="tooltip-text-div" id="user_attribute_name_tooltip">请输入名称</div>
+        </div>
+        <div class="add-item-row not-first-add-item-row">
+            <div>属性类型</div>
+            <div>
+                <input id="UserAttributeType" class="mini-combobox per-add-item-setting" textfield="textfield" valuefield="valuefield" />
+            </div>
+            <div class="tooltip-text-div" id="user_attribute_type_tooltip">请选择属性类型</div>
+        </div>
+        <div class="add-item-row not-first-add-item-row">
+            <div>备注</div>
+            <div><input id="UserAttributeRemark" class="mini-textarea per-add-item-setting userAttribute-remark-textarea" height="80" /> </div>
+        </div>
+    </div>
+</div>
+<div id="hidden_user_attribute_type_list_div">
+    
+</div>
+    
+
+<!-- 页面初始化 -->
+<script type="text/javascript">
+    $(function () {
+
+    });
+    (function ($) {
+        if (!$.isPlainObject($.userAttribute)) {
+            $.userAttribute = {};
+            $.userAttribute.showAddUserAttributeDialog = function (callbackFunction) {
+
+
+                $("#add_userAttribute_dialog").dialog({
+                    autoOpen: false,
+                    closeText: "关闭",
+                    height: 450,
+                    width: 430,
+                    resizable: false,
+                    modal: true,
+                    title: "添加用户属性信息",
+                    open: function () {
+                    },
+                    focus: function (ev, data) {
+                    },
+                    buttons: [{
+                        text: "保存",
+                        icons: {
+                            primary: "dialog-button-icon-save"
+                        },
+                        click: function () {
+                            _saveUserAttribute(callbackFunction);
+                        }
+                    }, {
+                        text: "取消",
+                        icons: {
+                            primary: "dialog-button-icon-cancel"
+                        },
+                        click: function () {
+                            $("#add_userAttribute_dialog").dialog("close");
+                        }
+                    }],
+                    close: function (event, ui) {
+                    }
+                })
+                .dialog("open");
+                mini.parse();
+            };
+        }
+           
+    })(jQuery);
+</script>

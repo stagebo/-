@@ -9,6 +9,7 @@
 
 @Html.Partial("~/Views/Shared/Script_MiniUI.cshtml")
 @Html.Partial("~/Views/Shared/Script_JBox.cshtml")
+
 <script type="text/javascript">
     $(function () {
         globalPagerParams = {
@@ -125,9 +126,10 @@
     <!--数据表格-->
     <div>
         <div class="mini-toolbar">
-            <div class="mini-button" onclick="searchRunningAccountList">刷新</div>
-            <div class="mini-button" onclick="window.location='/q'">添加</div>
-            <div class="mini-button" onclick="$AddAccountPurposeDialog.ShowAddAccountPurposeDialog()">添加类型</div>
+            <div class="mini-button" onclick="searchRunningAccountList" iconCls="icon-reload" ">刷新</div>
+            <div class="mini-button" onclick="window.location='/q'" iconCls="icon-add">添加</div>
+            <div class="mini-button" onclick="$AddAccountPurposeDialog.ShowAddAccountPurposeDialog()" iconCls="icon-add">添加类型</div>
+            <div class="mini-button" onclick="$AccountStatisticsChartDialog.ShowAccountChartDialog()">查看统计详情</div>
 
             <div style="float:right">
                 <div style="float:left">余额：</div>
@@ -153,7 +155,6 @@
     </div>
     <br /><br />
     <!--图像展示-->
-    <script src="~/Scripts/Plugins/ECharts/echarts.js"></script>
     <script type="text/javascript">
         $(function () {
             initEChar();
@@ -249,22 +250,29 @@
             };
             ajaxSearchData(ajaxData);
         }
+    </script>
+    <script src="~/Scripts/Plugins/ECharts/echarts.js"></script>
+    <script type="text/javascript">
         /*搜索数据集成函数*/
         function ajaxSearchData(options) {
             console.log(options["color"]);
             var ajaxData = {
                 'method': options['method'],
                 'count': options['count'],
-                'type': options['type'],
+                'type': options['type']
+            };
+            /*默认参数设置*/
+            var defaultParams = {
                 'color': ['#3398DB'],
                 'title': '图表标题',
                 'domID': 'echarts_default_place_div',
                 'dataName': '数据名称'
             };
-            if (options["domID"] || options["domID"] == undefined) {
+
+            if (!options["domID"] || options["domID"] == undefined) {
                 $("body").append('<div id="echarts_default_place_div" style="width:500px;height:500px;"></div>');
             }
-            options = $.extend(ajaxData, options);
+            options = $.extend(defaultParams, options);
             $.ajax({
                 type: 'post',
                 url: '/RunningAccount/GetRunningAccountDataByCondition',
@@ -371,3 +379,4 @@
     </div>
 </div>
 @Html.Partial("~/Views/RunningAccount/Dialog_Add_Account_Purpose.cshtml")
+@Html.Partial("~/Views/RunningAccount/Dialog_Show_Account_Statistics_Chart.cshtml")

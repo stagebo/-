@@ -3571,6 +3571,8 @@
     <Content Include="Views\RunningAccount\Page_Running_Account.cshtml" />
     <Content Include="Views\Q\Page_Quickly_Account.cshtml" />
     <Content Include="Views\RunningAccount\Dialog_Add_Account_Purpose.cshtml" />
+    <Content Include="Views\RunningAccount\Dialog_Show_Account_Statistics_Chart.cshtml" />
+    <Content Include="Views\RunningAccount\Dialog.AddUserAttribute.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
