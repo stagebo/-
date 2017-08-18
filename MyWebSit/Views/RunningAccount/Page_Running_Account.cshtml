@@ -172,6 +172,7 @@
                 'method': 'day',
                 'count': 7,
                 'type': '@Common.CommonEnum.RunningAccountType.OUTCOME',
+                'color': ['#f00'],
                 'title': '最近一周支出',
                 'domID': 'last_week_outcome',
                 'dataName': '支出'
@@ -198,6 +199,7 @@
                 'method': 'day',
                 'count': 30,
                 'type': '@Common.CommonEnum.RunningAccountType.OUTCOME',
+                'color': ['#f00'],
                 'title': '最近一月支出',
                 'domID': 'last_month_outcome',
                 'dataName': '支出'
@@ -229,7 +231,8 @@
                 'type': '@Common.CommonEnum.RunningAccountType.OUTCOME',
                 'title': '最近一年支出',
                 'domID': 'last_year_outcome',
-                'dataName': '支出'
+                'dataName': '支出',
+                'color': ['#f00']
             };
             ajaxSearchData(ajaxData);
         }
@@ -248,11 +251,20 @@
         }
         /*搜索数据集成函数*/
         function ajaxSearchData(options) {
+            console.log(options["color"]);
             var ajaxData = {
                 'method': options['method'],
                 'count': options['count'],
-                'type': options['type']
+                'type': options['type'],
+                'color': ['#3398DB'],
+                'title': '图表标题',
+                'domID': 'echarts_default_place_div',
+                'dataName': '数据名称'
             };
+            if (options["domID"] || options["domID"] == undefined) {
+                $("body").append('<div id="echarts_default_place_div" style="width:500px;height:500px;"></div>');
+            }
+            options = $.extend(ajaxData, options);
             $.ajax({
                 type: 'post',
                 url: '/RunningAccount/GetRunningAccountDataByCondition',
@@ -273,6 +285,7 @@
                     console.log(jsonData["dL"]);
                     console.log(jsonData["tL"]);
                     var option = {
+                        color: options["color"],
                         title: {
                             text: options["title"]
                         },
