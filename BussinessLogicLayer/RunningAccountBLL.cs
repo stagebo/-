@@ -12,9 +12,9 @@ namespace BussinessLogicLayer
 {
     public class RunningAccountBLL : BaseBLL
     {
-        public List<object[]> SearchAccountInfoListByCondition(Dictionary<string, object> condition,List<string[]> orderList,int pageIndex,int pageSize)
+        public List<object[]> SearchAccountInfoListByCondition(Dictionary<string, object> condition, List<string[]> orderList, int pageIndex, int pageSize)
         {
-            return new RunningAccountDAL().SearchAccountInfoListByCondition(condition,orderList,pageIndex,pageSize);
+            return new RunningAccountDAL().SearchAccountInfoListByCondition(condition, orderList, pageIndex, pageSize);
         }
 
         public Dictionary<string, object> SearchBalanceInfoByCondition(Dictionary<string, object> condition)
@@ -43,7 +43,28 @@ namespace BussinessLogicLayer
                     money -= count;
                 }
             }
-            result.Add("money",money);
+            result.Add("money", money);
+            return result;
+        }
+
+        public Dictionary<int, decimal> SearchRunningAccountDataInfoListByCondition(Dictionary<string, object> condition)
+        {
+            List<object[]> raInfoList = new RunningAccountDAL().SelectRunningAccountDataInfoListByConditon(condition);
+            if (raInfoList == null)
+            {
+                return null;
+            }
+            Dictionary<int, decimal> result = new Dictionary<int, decimal>();
+            foreach (object[] o in raInfoList)
+            {
+                int field = int.Parse(o[0].ToString());
+                decimal money = decimal.Parse(o[1].ToString());
+                if (!result.ContainsKey(field))
+                {
+                    result.Add(field,money);
+                }
+
+            }
             return result;
         }
     }

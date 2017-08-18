@@ -78,6 +78,40 @@ namespace DataAccessLayer
             }
         }
 
+        public List<object[]> SelectRunningAccountDataInfoListByConditon(Dictionary<string, object> condition)
+        {
+            ISession session = null;
+            string sql = $@"
+                        SELECT
+                        {condition["field,Eq"]} as FIELD, SUM(F_MONEY) AS MONEY
+                        FROM T_RUNNING_ACCOUNT 
+                        WHERE F_TIME > :time
+                        AND F_TYPE = :type
+                        GROUP BY  {condition["field,Eq"]}
+                        ";
+            try
+            {
+                session = SessionManager.OpenSession();
+                ISQLQuery iSQLQuery = session.CreateSQLQuery(sql);
+                iSQLQuery.SetInt32("type",(int)condition["type,Eq"])
+                    .SetString("time",condition["datetime,Gt"].ToString());
+
+                iSQLQuery.AddScalar("field",NHibernateUtil.Int32)
+                    .AddScalar("money",NHibernateUtil.Decimal);
+
+                return iSQLQuery.List<object[]>().ToList<object[]>();
+            }
+            catch (Exception ex)
+            {
+                Log4NetUtils.Error(this, "查询流水账，查询失败！", ex);
+                return null;
+            }
+            finally
+            {
+                SessionManager.CloseSession(session);
+            }
+        }
+
         public List<object[]> selectBalanceInfoByCondition(Dictionary<string, object> condition)
         {
             if (!condition.ContainsKey("userID,Eq"))

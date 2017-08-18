@@ -256,12 +256,12 @@ namespace MyWebSit.Controllers
 
                 re.Append(isStart ? "{" : ",{");
                 isStart = false;
-                re.Append("\"f_id\":\""     + ra.f_id + "\",");
-                re.Append("\"f_type\":\""   + ra.f_type + "\",");
-                re.Append("\"f_time\":\""   + ra.f_time + "\",");
-                re.Append("\"f_money\":\""  + ra.f_money + "\",");
-                re.Append("\"f_purpose_name\":\""   + f_name + "\",");
-                re.Append("\"f_remark\":\""         + ra.f_remark + "\"");
+                re.Append("\"f_id\":\"" + ra.f_id + "\",");
+                re.Append("\"f_type\":\"" + ra.f_type + "\",");
+                re.Append("\"f_time\":\"" + ra.f_time + "\",");
+                re.Append("\"f_money\":\"" + ra.f_money + "\",");
+                re.Append("\"f_purpose_name\":\"" + f_name + "\",");
+                re.Append("\"f_remark\":\"" + ra.f_remark + "\"");
                 re.Append("}");
 
 
@@ -315,7 +315,7 @@ namespace MyWebSit.Controllers
             string descript = Request.Form["descript"];
             if (string.IsNullOrWhiteSpace(name))
             {
-                Log4NetUtils.Error(this,"插入类型，接收参数失败！");
+                Log4NetUtils.Error(this, "插入类型，接收参数失败！");
                 return Content(errorJsonString);
             }
             AccountPurpose ap = new AccountPurpose();
@@ -324,13 +324,133 @@ namespace MyWebSit.Controllers
             ap.f_id = Guid.NewGuid();
             ap.f_type = 1;
 
-            if (!new AccountPurposeBLL().AddModel<AccountPurpose>(ap)) {
-                Log4NetUtils.Error(this,"插入类型，插入模型失败！");
+            if (!new AccountPurposeBLL().AddModel<AccountPurpose>(ap))
+            {
+                Log4NetUtils.Error(this, "插入类型，插入模型失败！");
                 return Content(errorJsonString);
             }
 
             string result = $"{{\"result\":\"{CommonEnum.AjaxResult.SUCCESS}\"}}";
             return Content(result);
+        }
+
+        /// <summary>
+        /// POST  /RunningAccount/GetRunningAccountDataByCondition
+        /// </summary>
+        /// <returns></returns>
+        //[Right]
+        //[HttpPost]
+        public ActionResult GetRunningAccountDataByCondition()
+        {
+            string errorJsonString = $"{{\"result\":\"{CommonEnum.AjaxResult.ERROR}\"}}";
+
+            /*参数接收以及验证*/
+            string methodString = Request.Form["method"];
+            string countString = Request.Form["count"];
+            string typeString = Request.Form["type"];
+
+            /*测试*/
+            //methodString = "day";
+            //countString = "7";
+            //typeString = "1";
+
+            int type, count;
+            string field = null;
+            DateTime time;
+            if (string.IsNullOrWhiteSpace(methodString) || string.IsNullOrWhiteSpace(countString) || string.IsNullOrWhiteSpace(typeString)
+                || !int.TryParse(typeString, out type) || !int.TryParse(countString, out count))
+            {
+                Log4NetUtils.Error(this, "查询流水账数据集，接收参数失败！");
+                return Content(errorJsonString);
+            }
+            count = count - 1;
+            List<object[]> fieldNameInfo = new List<object[]>();
+            string timeString;
+            switch (methodString)
+            {
+                case "day":
+                    field = "f_day";
+                    time = DateTime.Now.AddDays(-count);
+                    for (int i = count; i >= 0; i--)
+                    {
+                        fieldNameInfo.Add(new object[] {
+                            DateTime.Now.AddDays(-i).Day,DateTime.Now.AddDays(-i)
+                        });
+                    }
+                    timeString = $"{time.Year}-{time.Month}-{time.Day}";
+                    break;
+                case "month":
+                    field = "f_month";
+                    time = DateTime.Now.AddMonths(-count);
+                    for (int i = count; i >= 0; i--)
+                    {
+                        fieldNameInfo.Add(new object[] {
+                            DateTime.Now.AddMonths(-i).Month,DateTime.Now.AddMonths(-i)
+                        });
+                    }
+                    timeString = $"{time.Year}-{time.Month}-{1}";
+                    break;
+                case "year":
+                    field = "f_year";
+                    time = DateTime.Now.AddYears(-count+1);
+                    for (int i = count; i >= 0; i--)
+                    {
+                        fieldNameInfo.Add(new object[] {
+                            DateTime.Now.AddYears(-i).Year,DateTime.Now.AddYears(-i)
+                        });
+                    }
+                    timeString = $"{time.Year}-{1}-{1}";
+                    break;
+                default:
+                    Log4NetUtils.Error(this, "查询流水账数据集，接收参数存在问题！");
+                    return Content(errorJsonString);
+            }
+            count += 1;
+            Dictionary<string, object> condition = new Dictionary<string, object>();
+            condition.Add("field,Eq", field);
+            condition.Add("type,Eq", type);
+            condition.Add("datetime,Gt", timeString);
+            Dictionary<int, decimal> raList = new RunningAccountBLL().SearchRunningAccountDataInfoListByCondition(condition);
+            //var rraList = SessionManager.OpenSession().Query<RunningAccount>().Where<RunningAccount>(r =>
+            //r.f_type == 1).ToList<RunningAccount>();
+            if (raList == null)
+            {
+                Log4NetUtils.Error(this, "查询流水账数据集，查询Dictionary失败！");
+                return Content(errorJsonString);
+            }
+
+            StringBuilder result = new StringBuilder();
+            result.Append($"{{\"result\":\"{CommonEnum.AjaxResult.SUCCESS}\",");
+            result.Append("\"dataList\":[");
+            bool isStart = true;
+            StringBuilder dL = new StringBuilder("[");
+            StringBuilder tL = new StringBuilder("[");
+            for (int i = 0; i < count; i++)
+            {
+                result.Append(isStart ? "{" : ",{");
+                tL.Append(isStart ? "" : ",");
+                dL.Append(isStart ? "" : ",");
+                isStart = false;
+                decimal resultMoney = -1;
+                if (raList.ContainsKey((int)fieldNameInfo[i][0]))
+                {
+                    resultMoney = raList[(int)fieldNameInfo[i][0]];
+                }
+
+                result.Append("\"dateTime\":\"" + fieldNameInfo[i][1] + "\",");
+                result.Append("\"money\":\"" + resultMoney + "\"");
+                tL.Append($"\"{fieldNameInfo[i][1]}\"");
+                dL.Append($"\"{resultMoney}\"");
+                result.Append("}");
+            }
+            tL.Append("]");
+            dL.Append("]");
+            result.Append("],");
+            result.Append("\"dL\":" + dL.ToString() + ",");
+            result.Append("\"tL\":" + tL.ToString() + "");
+            result.Append("}");
+            return Content(result.ToString());
+
         }
 
     }

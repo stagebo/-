@@ -94,6 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Files\Images\img-head-bgimg.jpg" />
+    <Content Include="Files\sql\批量添加RunningAccount.sql" />
     <Content Include="Global.asax" />
     <Content Include="life.html" />
     <Content Include="Scripts\Common\CommonEnum.js" />
@@ -107,6 +108,7 @@
     <Content Include="Scripts\Plugins\Bootstrap\js\bootstrap.js" />
     <Content Include="Scripts\Plugins\Bootstrap\js\bootstrap.min.js" />
     <Content Include="Scripts\Plugins\Bootstrap\js\npm.js" />
+    <Content Include="Scripts\Plugins\ECharts\echarts.js" />
     <Content Include="Scripts\Plugins\jBox\audio\beep1.mp3" />
     <Content Include="Scripts\Plugins\jBox\audio\beep2.mp3" />
     <Content Include="Scripts\Plugins\jBox\audio\beep3.mp3" />

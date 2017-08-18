@@ -16,7 +16,7 @@
             "pageSize": "20",
             "totalCount": "",
             "totalPage": "",
-            "isInit":"0"
+            "isInit": "0"
         };
         mini.parse();
         searchRunningAccountList();
@@ -34,9 +34,9 @@
             "pageSize": 20,
             "pageIndex": 1,
             "sortField": sortField,
-            "sortOrder":sortOrder
+            "sortOrder": sortOrder
         };
-        globalPagerParams = $.extend(options,globalPagerParams);
+        globalPagerParams = $.extend(options, globalPagerParams);
         $.ajax({
             type: 'post',
             url: '/RunningAccount/SearchAccountListByUser',
@@ -122,32 +122,239 @@
     }
 </script>
 <div style="background-color:#fff;">
-    <div class="mini-toolbar">
-        <div class="mini-button" onclick="searchRunningAccountList">刷新</div>
-        <div class="mini-button" onclick="window.location='/q'">添加</div>
-        <div class="mini-button" onclick="$AddAccountPurposeDialog.ShowAddAccountPurposeDialog()">添加类型</div>
+    <!--数据表格-->
+    <div>
+        <div class="mini-toolbar">
+            <div class="mini-button" onclick="searchRunningAccountList">刷新</div>
+            <div class="mini-button" onclick="window.location='/q'">添加</div>
+            <div class="mini-button" onclick="$AddAccountPurposeDialog.ShowAddAccountPurposeDialog()">添加类型</div>
 
-        <div style="float:right">
-            <div style="float:left">余额：</div>
-            <div id="remain_money_div" class="mini-textbox" width="120" allowInput="false" style="float:left;"></div>
+            <div style="float:right">
+                <div style="float:left">余额：</div>
+                <div id="remain_money_div" class="mini-textbox" width="120" allowInput="false" style="float:left;"></div>
+            </div>
         </div>
-    </div>
-    <div id="account_datagrid_div" class="mini-datagrid" ondrawcell="accountDatagridOnDrawcell" idfield="f_id" showloading="false"
-         showpager="false" allowsortcolumn="true" allowmovecolumn="false" allowresizecolumn="true" allowcellwrap="true" allowalternating="true"
-         onbeforeload="searchRunningAccountList" sizeList="[10,20,50]" height="500">
-        <div property="columns">
-            <div type="indexcolumn"></div>
-            <div field="f_type" width="120" headerAlign="center" @*allowSort="true"*@>类型</div>
-            <div field="f_time" width="120" headerAlign="center" @*allowSort="true"*@>时间</div>
-            <div field="f_money" width="120" headerAlign="center" @*allowSort="true"*@>数量</div>
-            <div field="f_purpose_name" width="120" headerAlign="center">用途</div>
-            <div field="f_remark" width="120" headerAlign="center">备注</div>
-            @*<div field="f_address" width="120" headerAlign="center">地点</div>*@
+        <div id="account_datagrid_div" class="mini-datagrid" ondrawcell="accountDatagridOnDrawcell" idfield="f_id" showloading="false"
+             showpager="false" allowsortcolumn="true" allowmovecolumn="false" allowresizecolumn="true" allowcellwrap="true" allowalternating="true"
+             onbeforeload="searchRunningAccountList" sizeList="[10,20,50]" height="500">
+            <div property="columns">
+                <div type="indexcolumn"></div>
+                <div field="f_type" width="50" headerAlign="center" @*allowSort="true"*@>类型</div>
+                <div field="f_time" width="90" headerAlign="center" @*allowSort="true"*@>时间</div>
+                <div field="f_money" width="50" headerAlign="center" @*allowSort="true"*@>数量</div>
+                <div field="f_purpose_name" width="60" headerAlign="center">用途</div>
+                <div field="f_remark" width="120" headerAlign="center">备注</div>
+                @*<div field="f_address" width="120" headerAlign="center">地点</div>*@
+            </div>
         </div>
-    </div>
-    <br />
+        <br />
         <div id="running_account_pager_div">
         </div>
+    </div>
+    <br /><br />
+    <!--图像展示-->
+    <script src="~/Scripts/Plugins/ECharts/echarts.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            initEChar();
+        });
+        function initEChar() {
+            drawLastWeekOutCome();
+            drawLastMonthOutCome();
+            drawLastYearOutCome();
+            drawLastWeekInCome();
+            drawLastMonthInCome();
+            drawLastYearInCome();
+        }
+        /*上周支出*/
+        function drawLastWeekOutCome() {
+            var ajaxData = {
+                'method': 'day',
+                'count': 7,
+                'type': '@Common.CommonEnum.RunningAccountType.OUTCOME',
+                'title': '最近一周支出',
+                'domID': 'last_week_outcome',
+                'dataName': '支出'
+            };
+            ajaxSearchData(ajaxData);
 
+        }
+        /*上周收入*/
+        function drawLastWeekInCome() {
+            var ajaxData = {
+                'method': 'day',
+                'count': 7,
+                'type': '@Common.CommonEnum.RunningAccountType.INCOME',
+                'title': '最近一周收入',
+                'domID': 'last_week_income',
+                'dataName': '收入'
+            };
+            ajaxSearchData(ajaxData);
+        }
+
+        /*最近一月支出*/
+        function drawLastMonthOutCome() {
+            var ajaxData = {
+                'method': 'day',
+                'count': 30,
+                'type': '@Common.CommonEnum.RunningAccountType.OUTCOME',
+                'title': '最近一月支出',
+                'domID': 'last_month_outcome',
+                'dataName': '支出'
+            };
+            ajaxSearchData(ajaxData);
+
+        }
+
+        /*最近一月收入*/
+        function drawLastMonthInCome() {
+            var ajaxData = {
+                'method': 'day',
+                'count': 30,
+                'type': '@Common.CommonEnum.RunningAccountType.INCOME',
+                'title': '最近一月收入',
+                'domID': 'last_month_income',
+                'dataName': '收入'
+            };
+            ajaxSearchData(ajaxData);
+
+        }
+
+
+        /*最近一年支出*/
+        function drawLastYearOutCome() {
+            var ajaxData = {
+                'method': 'month',
+                'count': 12,
+                'type': '@Common.CommonEnum.RunningAccountType.OUTCOME',
+                'title': '最近一年支出',
+                'domID': 'last_year_outcome',
+                'dataName': '支出'
+            };
+            ajaxSearchData(ajaxData);
+        }
+
+        /*最近一年收入*/
+        function drawLastYearInCome() {
+            var ajaxData = {
+                'method': 'month',
+                'count': 12,
+                'type': '@Common.CommonEnum.RunningAccountType.INCOME',
+                'title': '最近一年收入',
+                'domID': 'last_year_income',
+                'dataName': '收入'
+            };
+            ajaxSearchData(ajaxData);
+        }
+        /*搜索数据集成函数*/
+        function ajaxSearchData(options) {
+            var ajaxData = {
+                'method': options['method'],
+                'count': options['count'],
+                'type': options['type']
+            };
+            $.ajax({
+                type: 'post',
+                url: '/RunningAccount/GetRunningAccountDataByCondition',
+                data: ajaxData,
+                dataType: 'json',
+                success: function (jsonData) {
+                    jsonData = $CommonFunction.decodeObject(jsonData);
+                    if (jsonData["result"] == "@Common.CommonEnum.AjaxResult.ERROR") {
+                        $ShowMessageDialog.ShowTipsRightTop({ "message": "查询" + options["title"] + "失败！" });
+                    }
+                    var dataList = jsonData["dataList"];
+                    var dataListArray = new Array();
+                    var dataNameArray = new Array();
+                    for (var item in dataList) {
+                        dataListArray[dataListArray.length] = item["money"];
+                        dataNameArray[dataNameArray.length] = item["dateTime"];
+                    }
+                    console.log(jsonData["dL"]);
+                    console.log(jsonData["tL"]);
+                    var option = {
+                        title: {
+                            text: options["title"]
+                        },
+                        tooltip: {},
+                        legend: {
+                            data: [options["dataName"]]
+                        },
+                        xAxis: {
+                            data: jsonData["tL"]
+                        },
+                        yAxis: {},
+                        series: [{
+                            name: options["dataName"],
+                            type: 'bar',
+                            data: jsonData["dL"]
+                        }]
+                    };
+
+                    var myChart = echarts.init(document.getElementById(options["domID"]));
+                    myChart.setOption(option);
+                    $ShowMessageDialog.ShowTipsRightTop({ "message": "查询" + options["title"] + "成功！" });
+                },
+                error: function () {
+                    $ShowMessageDialog.ShowTipsRightTop({ "message": "查询" + options["title"] + "失败！" });
+                }
+            });
+        }
+    </script>
+
+    <style type="text/css">
+        div.show-item-left-div {
+            background-color: #ccc;
+            width: 50%;
+            float: left;
+            height: 500px;
+        }
+
+        div.show-item-right-div {
+            background-color: #aaa;
+            width: 50%;
+            float: left;
+            height: 500px;
+        }
+    </style>
+
+    <div>
+        <div>
+            <h1 style="width:100%;text-align:center;background-color:#555;">最近一周</h1>
+            <div class="show-item-left-div">
+                <div id="last_week_outcome" style="width:100%;height:400px;">
+                </div>
+            </div>
+            <div class="show-item-right-div">
+                <div id="last_week_income" style="width:100%;height:400px;">
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h1>最近一月</h1>
+            <div class="show-item-left-div">
+                <div id="last_month_outcome" style="width:100%;height:400px;">
+                </div>
+            </div>
+            <div class="show-item-right-div">
+                <div id="last_month_income" style="width:100%;height:400px;">
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h1>最近一年</h1>
+            <div class="show-item-left-div">
+                <div id="last_year_outcome" style="width:100%;height:400px;">
+                </div>
+            </div>
+            <div class="show-item-right-div">
+                <div id="last_year_income" style="width:100%;height:400px;">
+                </div>
+            </div>
+        </div>
+
+    </div>
 </div>
 @Html.Partial("~/Views/RunningAccount/Dialog_Add_Account_Purpose.cshtml")
