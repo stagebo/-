@@ -1,9 +1,5 @@
-﻿
-@{
-    ViewBag.Title = "账户统计";
-}
-<script src="~/Scripts/Plugins/ECharts/echarts.js"></script>
-<div id="dialog_show_account_statistics_chart" style="display:none;width:900px;height:600px;">
+﻿<script src="~/Scripts/Plugins/ECharts/echarts.js"></script>
+<div id="dialog_show_account_statistics_chart" style="display:none;">
 
     123
 
@@ -12,25 +8,24 @@
     $(function () {
             $AccountStatisticsChartDialog = {};
             $AccountStatisticsChartDialog.ShowAccountChartDialog = function () {
-                alert("click");
-                $("dialog_show_account_statistics_chart").dialog({
-                    autoOpen: false,
-                    closeText: "关闭",
-                    height: 600,
-                    width: 900,
-                    resizable: false,
-                    modal: true,
-                    title: "查看账户统计详情",
-                    open: function () {
-                    },
-                    focus: function (ev, data) {
-                    },
-                    buttons: [],
-                    close: function (event, ui) {
-                    }
-                })
-                .dialog("open");
-                mini.parse();
+                $("dialog_show_account_statistics_chart")
+                //    .dialog({
+                //    autoOpen: false,
+                //    closeText: "关闭",
+                //    height: 600,
+                //    width: 900,
+                //    resizable: false,
+                //    modal: true,
+                //    title: "查看账户统计详情",
+                //    open: function () {
+                //    },
+                //    focus: function (ev, data) {
+                //    },
+                //    buttons: [],
+                //    close: function (event, ui) {
+                //    }
+                //})
+                .dialog();
             };
 
     });
