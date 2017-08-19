@@ -8,7 +8,7 @@
     <link href="~/Scripts/Plugins/Bootstrap/css/bootstrap.css" rel="stylesheet" />
     <link href="~/Scripts/Plugins/slimScroll/prettify.css" rel="stylesheet" />
 
-    <script src="~/Scripts/jQuery/jquery-3.2.1.min.js"></script>
+    @Html.Partial("~/Views/Shared/Script_JQuery-2.1.1.cshtml")
     <script src="~/Scripts/Plugins/Bootstrap/js/bootstrap.min.js"></script>
     <script src="~/Scripts/Plugins/slimScroll/prettify.js"></script>
     <script src="~/Scripts/Plugins/slimScroll/jquery.slimscroll.min.js"></script>
@@ -76,8 +76,6 @@
         a.left-menu-item {
             text-align: center;
         }
-
-      
     </style>
 </head>
 <body>
@@ -87,7 +85,7 @@
                 <div style="font-size:25px;">
                     <div style="float:left;">欢迎您：</div>
                     <a id="uid_a" style="float:left;" href="/UserManagement/CheckUserPage"></a>
-                   
+
                     <div id="gender_div" style="float:left;"></div>
                 </div>
             </div>

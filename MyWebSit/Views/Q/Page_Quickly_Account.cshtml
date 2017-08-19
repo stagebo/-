@@ -9,10 +9,12 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>快捷录入</title>
-    <script src="~/Scripts/jQuery/jquery-3.2.1.min.js"></script>
+    @*<script src="~/Scripts/jQuery/jquery-3.2.1.min.js"></script>*@
+    @Html.Partial("~/Views/Shared/Script_JQuery-2.1.1.cshtml")
     <script src="~/Scripts/Plugins/Bootstrap/js/bootstrap.js"></script>
     @Html.Partial("~/Views/Shared/Script_MiniUI.cshtml")
     @Html.Partial("~/Views/Shared/Script_JBox.cshtml")
+
     <script type="text/javascript">
         $(function () {
             mini.parse();
@@ -135,9 +137,10 @@
 
             <div id="submit_account_div" class="mini-button mini-button-success">提交</div>
             <div class="mini-button" onclick="$AddAccountPurposeDialog.ShowAddAccountPurposeDialog()"
-            style="float:right;margin-right:23%;">添加类型</div>
+                 style="float:right;margin-right:23%;">添加类型</div>
         </div>
     </div>
     @Html.Partial("~/Views/RunningAccount/Dialog_Add_Account_Purpose.cshtml")
+    
 </body>
 </html>

@@ -124,6 +124,7 @@ namespace DataAccessLayer
                          ,SUM(F_MONEY) AS MONEY
                          FROM T_RUNNING_ACCOUNT
                          WHERE F_USER_ID = '{condition["userID,Eq"].ToString()}'
+                         AND F_EXIST = 1
                          GROUP BY F_TYPE 
                         ";
             try

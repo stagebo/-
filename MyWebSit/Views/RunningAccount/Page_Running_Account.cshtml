@@ -1,7 +1,8 @@
 ﻿@{
     ViewBag.Title = "日常记账";
 }
-<script src="~/Scripts/jQuery/jquery-3.2.1.min.js"></script>
+@*<script src="~/Scripts/jQuery/jquery-3.2.1.min.js"></script>*@
+@Html.Partial("~/Views/Shared/Script_JQuery-2.1.1.cshtml")
 <script src="~/Scripts/Common/CommonFunction.js"></script>
 <!--分页插件-->
 <link href="~/Scripts/Plugins/jQueryPager/jquery.page.css" rel="stylesheet" />
@@ -47,9 +48,7 @@
             data: globalPagerParams,
             dataType: 'json',
             success: function (data) {
-                //console.log(JSON.stringify(data));
                 data = $CommonFunction.decodeObject(data);
-                console.log(data['result']);
                 if (data["result"] == "@Common.CommonEnum.AjaxResult.SUCCESS") {
                     //datagrid.setTotalCount(parseInt(data["totalCount"]));
                     // datagrid.setPageSize(parseInt(1));
@@ -105,7 +104,6 @@
     }
 
     function refreshRunningPager(totalPage) {
-        console.log("totalPages:" + totalPage);
         $("#running_account_pager_div").Page({
             totalPages: parseInt(totalPage),//total Pages
             liNums: 5,//the li numbers(advice use odd)
@@ -132,7 +130,7 @@
             <div class="mini-button" onclick="searchRunningAccountList" iconCls="icon-reload" ">刷新</div>
             <div class="mini-button" onclick="window.location='/q'" iconCls="icon-add">添加</div>
             <div class="mini-button" onclick="$AddAccountPurposeDialog.ShowAddAccountPurposeDialog()" iconCls="icon-add">添加类型</div>
-            <div class="mini-button" onclick="$AccountStatisticsChartDialog.ShowAccountChartDialog()">查看统计详情</div>
+            <div class="mini-button" onclick="$AccountChartsDialog.showAccountChartsDialog()">查看统计详情</div>
 
             <div style="float:right">
                 <div style="float:left">余额：</div>
@@ -258,7 +256,6 @@
     <script type="text/javascript">
         /*搜索数据集成函数*/
         function ajaxSearchData(options) {
-            console.log(options["color"]);
             var ajaxData = {
                 'method': options['method'],
                 'count': options['count'],
@@ -293,8 +290,6 @@
                         dataListArray[dataListArray.length] = item["money"];
                         dataNameArray[dataNameArray.length] = item["dateTime"];
                     }
-                    console.log(jsonData["dL"]);
-                    console.log(jsonData["tL"]);
                     var option = {
                         color: options["color"],
                         title: {
