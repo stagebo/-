@@ -338,8 +338,8 @@ namespace MyWebSit.Controllers
         /// POST  /RunningAccount/GetRunningAccountDataByCondition
         /// </summary>
         /// <returns></returns>
-        //[Right]
-        //[HttpPost]
+        [Right]
+        [HttpPost]
         public ActionResult GetRunningAccountDataByCondition()
         {
             string errorJsonString = $"{{\"result\":\"{CommonEnum.AjaxResult.ERROR}\"}}";
@@ -349,6 +349,13 @@ namespace MyWebSit.Controllers
             string countString = Request.Form["count"];
             string typeString = Request.Form["type"];
 
+            /*获取当前登录用户信息*/
+            string userIDString = Session["id"].ToString();
+            Guid userIDGuid;
+            if (!Guid.TryParse(userIDString, out userIDGuid))
+            {
+                Log4NetUtils.Error(this,"查询流水账信息，获取登陆用户信息失败！");
+            }
             /*测试*/
             //methodString = "day";
             //countString = "7";
@@ -410,6 +417,7 @@ namespace MyWebSit.Controllers
             condition.Add("field,Eq", field);
             condition.Add("type,Eq", type);
             condition.Add("datetime,Gt", timeString);
+            condition.Add("userID,Eq",userIDGuid);
             Dictionary<int, decimal> raList = new RunningAccountBLL().SearchRunningAccountDataInfoListByCondition(condition);
             //var rraList = SessionManager.OpenSession().Query<RunningAccount>().Where<RunningAccount>(r =>
             //r.f_type == 1).ToList<RunningAccount>();

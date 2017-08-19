@@ -87,6 +87,7 @@ namespace DataAccessLayer
                         FROM T_RUNNING_ACCOUNT 
                         WHERE F_TIME > :time
                         AND F_TYPE = :type
+                        AND F_USER_ID = :userID
                         GROUP BY  {condition["field,Eq"]}
                         ";
             try
@@ -94,7 +95,8 @@ namespace DataAccessLayer
                 session = SessionManager.OpenSession();
                 ISQLQuery iSQLQuery = session.CreateSQLQuery(sql);
                 iSQLQuery.SetInt32("type",(int)condition["type,Eq"])
-                    .SetString("time",condition["datetime,Gt"].ToString());
+                    .SetString("time",condition["datetime,Gt"].ToString())
+                    .SetGuid("userID",(Guid)condition["userID,Eq"]);
 
                 iSQLQuery.AddScalar("field",NHibernateUtil.Int32)
                     .AddScalar("money",NHibernateUtil.Decimal);
