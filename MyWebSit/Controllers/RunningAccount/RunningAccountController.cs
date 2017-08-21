@@ -354,7 +354,7 @@ namespace MyWebSit.Controllers
             Guid userIDGuid;
             if (!Guid.TryParse(userIDString, out userIDGuid))
             {
-                Log4NetUtils.Error(this,"查询流水账信息，获取登陆用户信息失败！");
+                Log4NetUtils.Error(this, "查询流水账信息，获取登陆用户信息失败！");
             }
             /*测试*/
             //methodString = "day";
@@ -399,7 +399,7 @@ namespace MyWebSit.Controllers
                     break;
                 case "year":
                     field = "f_year";
-                    time = DateTime.Now.AddYears(-count+1);
+                    time = DateTime.Now.AddYears(-count + 1);
                     for (int i = count; i >= 0; i--)
                     {
                         fieldNameInfo.Add(new object[] {
@@ -417,7 +417,7 @@ namespace MyWebSit.Controllers
             condition.Add("field,Eq", field);
             condition.Add("type,Eq", type);
             condition.Add("datetime,Gt", timeString);
-            condition.Add("userID,Eq",userIDGuid);
+            condition.Add("userID,Eq", userIDGuid);
             Dictionary<int, decimal> raList = new RunningAccountBLL().SearchRunningAccountDataInfoListByCondition(condition);
             //var rraList = SessionManager.OpenSession().Query<RunningAccount>().Where<RunningAccount>(r =>
             //r.f_type == 1).ToList<RunningAccount>();
@@ -456,6 +456,170 @@ namespace MyWebSit.Controllers
             result.Append("],");
             result.Append("\"dL\":" + dL.ToString() + ",");
             result.Append("\"tL\":" + tL.ToString() + "");
+            result.Append("}");
+            return Content(result.ToString());
+
+        }
+        /// <summary>
+        /// POST  /RunningAccount/GetAllRunningAccountDataByCondition
+        /// </summary>
+        /// <returns></returns>
+        //[Right]
+        //[HttpPost]
+        public ActionResult GetAllRunningAccountDataByCondition()
+        {
+            string errorJsonString = $"{{\"result\":\"{CommonEnum.AjaxResult.ERROR}\"}}";
+
+            /*参数接收以及验证*/
+            string methodString = Request.Form["method"];
+            string countString = Request.Form["count"];
+
+            Session["id"] = "3162231B-42F9-4BF3-902F-386B1C8F598C";
+            /*获取当前登录用户信息*/
+            string userIDString = Session["id"].ToString();
+            Guid userIDGuid;
+            if (!Guid.TryParse(userIDString, out userIDGuid))
+            {
+                Log4NetUtils.Error(this, "查询流水账信息，获取登陆用户信息失败！");
+            }
+            /*测试*/
+            methodString = "month";
+            countString = "7";
+
+            int count;
+            string field = null;
+            DateTime time;
+            if (string.IsNullOrWhiteSpace(methodString) || string.IsNullOrWhiteSpace(countString) || !int.TryParse(countString, out count))
+            {
+                Log4NetUtils.Error(this, "查询流水账数据集，接收参数失败！");
+                return Content(errorJsonString);
+            }
+            count = count - 1;
+            List<object[]> fieldNameInfo = new List<object[]>();
+            string timeString;
+            switch (methodString)
+            {
+                case "day":
+                    field = "f_day";
+                    time = DateTime.Now.AddDays(-count);
+                    for (int i = count; i >= 0; i--)
+                    {
+                        fieldNameInfo.Add(new object[] {
+                            DateTime.Now.AddDays(-i).Day,DateTime.Now.AddDays(-i)
+                        });
+                    }
+                    timeString = $"{time.Year}-{time.Month}-{time.Day}";
+                    break;
+                case "month":
+                    field = "f_month";
+                    time = DateTime.Now.AddMonths(-count);
+                    for (int i = count; i >= 0; i--)
+                    {
+                        fieldNameInfo.Add(new object[] {
+                            DateTime.Now.AddMonths(-i).Month,DateTime.Now.AddMonths(-i)
+                        });
+                    }
+                    timeString = $"{time.Year}-{time.Month}-{1}";
+                    break;
+                case "year":
+                    field = "f_year";
+                    time = DateTime.Now.AddYears(-count + 1);
+                    for (int i = count; i >= 0; i--)
+                    {
+                        fieldNameInfo.Add(new object[] {
+                            DateTime.Now.AddYears(-i).Year,DateTime.Now.AddYears(-i)
+                        });
+                    }
+                    timeString = $"{time.Year}-{1}-{1}";
+                    break;
+                default:
+                    Log4NetUtils.Error(this, "查询流水账数据集，接收参数存在问题！");
+                    return Content(errorJsonString);
+            }
+            count += 1;
+            Dictionary<string, object> condition = new Dictionary<string, object>();
+            condition.Add("field,Eq", field);
+            condition.Add("type,Eq", CommonEnum.RunningAccountType.INCOME);
+            condition.Add("datetime,Gt", timeString);
+            condition.Add("userID,Eq", userIDGuid);
+            Dictionary<int, decimal> raInList = new RunningAccountBLL().SearchRunningAccountDataInfoListByCondition(condition);
+            //var rraList = SessionManager.OpenSession().Query<RunningAccount>().Where<RunningAccount>(r =>
+            //r.f_type == 1).ToList<RunningAccount>();
+            if (raInList == null)
+            {
+                Log4NetUtils.Error(this, "查询流水账数据集，查询Dictionary失败！");
+                return Content(errorJsonString);
+            }
+            condition["type,Eq"] = CommonEnum.RunningAccountType.OUTCOME;
+            Dictionary<int, decimal> raOutList = new RunningAccountBLL().SearchRunningAccountDataInfoListByCondition(condition);
+            if (raOutList == null)
+            {
+                Log4NetUtils.Error(this, "查询流水账数据集，查询Dictionary失败！");
+                return Content(errorJsonString);
+            }
+
+            StringBuilder result = new StringBuilder();
+            result.Append($"{{\"result\":\"{CommonEnum.AjaxResult.SUCCESS}\",");
+            /*收入数据*/
+            result.Append("\"allInDataList\":[");
+            bool isStart = true;
+            StringBuilder inDataList = new StringBuilder("[");
+            StringBuilder inTextList = new StringBuilder("[");
+            StringBuilder outDataList = new StringBuilder("[");
+            StringBuilder outTextList = new StringBuilder("[");
+            for (int i = 0; i < count; i++)
+            {
+                result.Append(isStart ? "{" : ",{");
+                inDataList.Append(isStart ? "" : ",");
+                inTextList.Append(isStart ? "" : ",");
+                isStart = false;
+                decimal resultInMoney = -1;
+                if (raInList.ContainsKey((int)fieldNameInfo[i][0]))
+                {
+                    resultInMoney = raInList[(int)fieldNameInfo[i][0]];
+                }
+
+
+                result.Append("\"dateTime\":\"" + fieldNameInfo[i][1] + "\",");
+                result.Append("\"money\":\"" + resultInMoney + "\"");
+                inTextList.Append($"\"{fieldNameInfo[i][1]}\"");
+                inDataList.Append($"\"{resultInMoney}\"");
+                result.Append("}");
+            }
+            result.Append("],");
+            inTextList.Append("]");
+            inDataList.Append("]");
+
+            /*支出数据*/
+            result.Append("\"allOutDataList\":[");
+            isStart = true;
+            for (int i = 0; i < count; i++)
+            {
+                result.Append(isStart ? "{" : ",{");
+                outDataList.Append(isStart ? "" : ",");
+                outTextList.Append(isStart ? "" : ",");
+                isStart = false;
+                decimal resultOutMoney = -1;
+                if (raOutList.ContainsKey((int)fieldNameInfo[i][0]))
+                {
+                    resultOutMoney = raOutList[(int)fieldNameInfo[i][0]];
+                }
+                result.Append("\"dateTime\":\"" + fieldNameInfo[i][1] + "\",");
+                result.Append("\"money\":\"" + resultOutMoney + "\"");
+                outTextList.Append($"\"{fieldNameInfo[i][1]}\"");
+                outDataList.Append($"\"{resultOutMoney}\"");
+                result.Append("}");
+            }
+            result.Append("],");
+            outTextList.Append("]");
+            outDataList.Append("]");
+
+            
+            result.Append("\"inDataList\":" + inDataList.ToString() + ",");
+            result.Append("\"inTextList\":" + inTextList.ToString() + ",");
+            result.Append("\"outDataList\":" + outDataList.ToString() + ",");
+            result.Append("\"outTextList\":" + outTextList.ToString() + "");
+
             result.Append("}");
             return Content(result.ToString());
 

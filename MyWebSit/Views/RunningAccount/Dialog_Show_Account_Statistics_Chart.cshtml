@@ -4,28 +4,46 @@
 <script src="~/Scripts/Plugins/jQueryUI/jquery-ui.js"></script>
 <div id="dialog_show_account_chart_div" style="display:none;">
     <div style="width:30%;float:left;background-color:#eee">
-        <div>
-            <div>查看方式</div>
-            <div>按月查看</div>
+        <div style="margin-top:30px;">
+            <span @*class="label label-primary"*@ style="font-size:16px;">时间：</span>
+            <div id="btn_time_group_div" class="btn-group btn-group-sm">
+                <button type="button" class="btn btn-primary" group="timebutton" timevalue="1">最近一周</button>
+                <button type="button" class="btn btn-success" group="timebutton" timevalue="2">最近一月</button>
+                <button type="button" class="btn btn-primary" group="timebutton" timevalue="3">最近一年</button>
+            </div>
         </div>
+        <br /><br />
         <div>
-            <div>查看时间段</div>
-            <div>按天</div>
-            <div>按月</div>
-            <div>按年</div>
-            <div>查看某时间段</div>
+            <span @*class="label label-primary"*@ style="font-size:16px;">类型：</span>
+            <div id="btn_type_group_div" class="btn-group btn-group-sm">
+                <button type="button" class="btn btn-success" group="typebutton" typevalue="1">柱状图</button>
+                <button type="button" class="btn btn-primary" group="typebutton" typevalue="2">扇形图</button>
+                <button type="button" class="btn btn-primary" group="typebutton" typevalue="3">阶梯图</button>
+            </div>
+
         </div>
     </div>
     <div style="width:70%;float:left;background-color:#fff;">
-        <div style="width:400px;height:400px;background-color:#bbb;margin-left:10%;margin-top:10%;"></div>
+        <div id="dialog_chart_div" style="width:400px;height:400px;background-color:#bbb;margin-left:10%;margin-top:10%;"></div>
     </div>
 
 </div>
 
 <script type="text/javascript">
+
     $(function () {
+        /*初始化*/
         $AccountChartsDialog = {};
+        $AccountChartsDialog.options = {
+            'timevalue': '2',
+            'timetext':'最近一月',
+            'typevalue': '1',
+            'typetext':'柱状图'
+        };
         mini.parse();
+        shouLashWeekStatisticsData();
+
+
         /*打开窗口*/
         $AccountChartsDialog.showAccountChartsDialog = function () {
             $("#dialog_show_account_chart_div").dialog({
@@ -55,9 +73,205 @@
             .dialog("open");
         }
 
+        /*时间按钮组点击事件*/
+        $("button[group='timebutton']").click(function () {
+            var broButtons = $(this).parent().children();
+            for (var i = 0; i < broButtons.length; i++) {
+                var brobutton = broButtons[i];
+                $(brobutton).addClass("btn-primary").removeClass("btn-success");
+            }
+            $(this).addClass("btn-success").removeClass("btn-primary");
+            $AccountChartsDialog.options["timevalue"] = $(this).attr("timevalue");
+            $AccountChartsDialog.options["timetext"] = $(this).html();
+            shouLashWeekStatisticsData();
+        });
+
+        /*类型按钮组点击事件*/
+        $("button[group='typebutton']").click(function () {
+            var broButtons = $(this).parent().children();
+            for (var i = 0; i < broButtons.length; i++) {
+                var brobutton = broButtons[i];
+                $(brobutton).addClass("btn-primary").removeClass("btn-success");
+            }
+            $(this).addClass("btn-success").removeClass("btn-primary");
+            $AccountChartsDialog.options["typevalue"] = $(this).attr("typevalue");
+            $AccountChartsDialog.options["typetext"] = $(this).html();
+            shouLashWeekStatisticsData();
+        });
 
 
     });
 
+    var shouLashWeekStatisticsData = function () {
+        var typevalue=$AccountChartsDialog.options["typevalue"];
+        var typetext= $AccountChartsDialog.options["typetext"];
+        var timevalue=$AccountChartsDialog.options["timevalue"];
+        var timetext =$AccountChartsDialog.options["timetext"] ;
+        var method, count;
+        switch (timevalue) {
+            case "1":
+                method = 'day';
+                count = 7;
+                break;
+            case "2":
+                method = 'day';
+                count = 30;
+                break;
+            case "3":
+                method = 'month';
+                count = 12;
+                break;            
+
+            default: return;
+        }
+        var ajaxData = {
+            'method': method,
+            'count': count
+        };
+        $.ajax({
+            type: 'post',
+            url: '/RunningAccount/GetRunningAccountDataByCondition',
+            data: ajaxData,
+            dataType: 'json',
+            success: function (jsonData) {
+                if (jsonData["result"] == "@Common.CommonEnum.AjaxResult.ERROR") {
+                    $ShowMessageDialog.ShowTipsRightTop({ "message": "查询" + timevalue+typevalue + "失败！" });
+                    return;
+                }
+                var options = {
+                    title: {
+                        text: timevalue,
+                        subtext: typevalue
+                    },
+                    legend: {
+                        data: ["收入", '支出']
+                    },
+                    xAxis: [
+                        {
+                            type: 'category',
+                            data: jsonData["inTextList"]
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            type: 'value'
+                        }
+                    ],
+                    series: [
+                        {
+                            name: '收入',
+                            type: 'bar',
+                            data: jsonData["inDataList"],
+                            markPoint: {
+                                data: [
+                                    { type: 'max', name: '最大值' },
+                                    { type: 'min', name: '最小值' }
+                                ]
+                            },
+                            markLine: {
+                                data: [
+                                    { type: 'average', name: '平均值' }
+                                ]
+                            }
+                        },
+                        {
+                            name: '支出',
+                            type: 'bar',
+                            data: jsonData["outDataList"],
+                            //markPoint: {  //标记点
+                            //    data: [
+                            //        { name: '年最高', value: 182.2, xAxis: 7, yAxis: 183 },
+                            //        { name: '年最低', value: 2.3, xAxis: 11, yAxis: 3 }
+                            //    ]
+                            //},
+                            markLine: {
+                                data: [
+                                    { type: 'average', name: '平均值' }
+                                ]
+                            }
+                        }
+                    ]
+                };
+                drawStatisticsChart(options);
+            },
+            error: function () {
+
+            }
+        });
+    }
+
+    var drawStatisticsChart = function (options) {
+        defaultParams = {
+            title: {
+                text: '标题',
+                subtext: '副标题'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['数据组1', '数据组2']
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    dataView: { show: true, readOnly: false },
+                    magicType: { show: true, type: ['line', 'bar'] },
+                    restore: { show: true },
+                    saveAsImage: { show: true }
+                }
+            },
+            calculable: true,
+            xAxis: [
+                {
+                    type: 'category',
+                    data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value'
+                }
+            ],
+            series: [
+                {
+                    name: '数据组1',
+                    type: 'bar',
+                    data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3],
+                    markPoint: {
+                        data: [
+                            { type: 'max', name: '最大值' },
+                            { type: 'min', name: '最小值' }
+                        ]
+                    },
+                    markLine: {
+                        data: [
+                            { type: 'average', name: '平均值' }
+                        ]
+                    }
+                },
+                {
+                    name: '数据组2',
+                    type: 'bar',
+                    data: [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3],
+                    //markPoint: {  //标记点
+                    //    data: [
+                    //        { name: '年最高', value: 182.2, xAxis: 7, yAxis: 183 },
+                    //        { name: '年最低', value: 2.3, xAxis: 11, yAxis: 3 }
+                    //    ]
+                    //},
+                    markLine: {
+                        data: [
+                            { type: 'average', name: '平均值' }
+                        ]
+                    }
+                }
+            ]
+        };
+
+        defaultParams = $.extend(defaultParams, options);
+        var myChart = echarts.init(document.getElementById(options["dialog_chart_div"]));
+        myChart.setOption(defaultParams);
+    }
 </script>
 
