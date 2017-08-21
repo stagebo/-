@@ -473,9 +473,10 @@ namespace MyWebSit.Controllers
             /*参数接收以及验证*/
             string methodString = Request.Form["method"];
             string countString = Request.Form["count"];
-            User u = SessionManager.OpenSession().Query<User>().SingleOrDefault<User>
-                (us => us.f_uid == "c");
-            Session["id"] = u.f_id;
+            /*测试*/
+            //User u = SessionManager.OpenSession().Query<User>().SingleOrDefault<User>
+            //    (us => us.f_uid == "c");
+            //Session["id"] = u.f_id;
             /*获取当前登录用户信息*/
             string userIDString = Session["id"].ToString();
             Guid userIDGuid;
@@ -484,8 +485,8 @@ namespace MyWebSit.Controllers
                 Log4NetUtils.Error(this, "查询流水账信息，获取登陆用户信息失败！");
             }
             /*测试*/
-            methodString = "day";
-            countString = "10";
+            //methodString = "day";
+            //countString = "10";
 
             int count;
             string field = null;
