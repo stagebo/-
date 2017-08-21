@@ -3,15 +3,29 @@
 <link href="~/Scripts/Plugins/jQueryUI/jquery-ui.css" rel="stylesheet" />
 <script src="~/Scripts/Plugins/jQueryUI/jquery-ui.js"></script>
 <div id="dialog_show_account_chart_div" style="display:none;">
-    dialog
-    dialog
-    dialog
+    <div style="width:30%;float:left;background-color:#eee">
+        <div>
+            <div>查看方式</div>
+            <div>按月查看</div>
+        </div>
+        <div>
+            <div>查看时间段</div>
+            <div>按天</div>
+            <div>按月</div>
+            <div>按年</div>
+            <div>查看某时间段</div>
+        </div>
+    </div>
+    <div style="width:70%;float:left;background-color:#fff;">
+        <div style="width:400px;height:400px;background-color:#bbb;margin-left:10%;margin-top:10%;"></div>
+    </div>
+
 </div>
 
 <script type="text/javascript">
     $(function () {
         $AccountChartsDialog = {};
-
+        mini.parse();
         /*打开窗口*/
         $AccountChartsDialog.showAccountChartsDialog = function () {
             $("#dialog_show_account_chart_div").dialog({
@@ -26,7 +40,7 @@
                 },
                 focus: function (ev, data) {
                 },
-                buttons: [ {
+                buttons: [{
                     text: "退出",
                     icons: {
                         primary: "dialog-button-icon-cancel"
