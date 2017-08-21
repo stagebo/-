@@ -24,7 +24,11 @@
         </div>
     </div>
     <div style="width:70%;float:left;background-color:#fff;">
-        <div id="dialog_chart_div" style="width:400px;height:400px;background-color:#bbb;margin-left:10%;margin-top:10%;"></div>
+        <div id="dialog_chart_div" style="width:400px;height:400px;background-color:#bbb;margin-left:10%;margin-top:10%;">
+
+        </div>
+        <div id="last_month_income" style="width:100%;height:400px;">
+        </div>
     </div>
 
 </div>
@@ -130,7 +134,7 @@
         };
         $.ajax({
             type: 'post',
-            url: '/RunningAccount/GetRunningAccountDataByCondition',
+            url: '/RunningAccount/GetAllRunningAccountDataByCondition',
             data: ajaxData,
             dataType: 'json',
             success: function (jsonData) {
@@ -150,11 +154,6 @@
                         {
                             type: 'category',
                             data: jsonData["inTextList"]
-                        }
-                    ],
-                    yAxis: [
-                        {
-                            type: 'value'
                         }
                     ],
                     series: [
@@ -178,12 +177,6 @@
                             name: '支出',
                             type: 'bar',
                             data: jsonData["outDataList"],
-                            //markPoint: {  //标记点
-                            //    data: [
-                            //        { name: '年最高', value: 182.2, xAxis: 7, yAxis: 183 },
-                            //        { name: '年最低', value: 2.3, xAxis: 11, yAxis: 3 }
-                            //    ]
-                            //},
                             markLine: {
                                 data: [
                                     { type: 'average', name: '平均值' }
@@ -270,7 +263,7 @@
         };
 
         defaultParams = $.extend(defaultParams, options);
-        var myChart = echarts.init(document.getElementById(options["dialog_chart_div"]));
+        var myChart = echarts.init(document.getElementById("dialog_chart_div"));
         myChart.setOption(defaultParams);
     }
 </script>
