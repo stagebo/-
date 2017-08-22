@@ -95,6 +95,7 @@
   <ItemGroup>
     <Content Include="Files\Images\img-head-bgimg.jpg" />
     <Content Include="Files\sql\批量添加RunningAccount.sql" />
+    <Compile Include="Controllers\Common\ManagerInterfaceController.cs" />
     <Compile Include="Filter\SessionRefreshAttribute.cs" />
     <Content Include="Global.asax" />
     <Content Include="life.html" />
@@ -3613,6 +3614,7 @@
     <Folder Include="Scripts\Plugins\MiniUI\themes\metro-orange\images\button\" />
     <Folder Include="Scripts\Plugins\MiniUI\themes\metro\images\button\" />
     <Folder Include="Style\" />
+    <Folder Include="Views\ManagerInterface\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Base\Base.csproj">
