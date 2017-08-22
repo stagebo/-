@@ -3,9 +3,9 @@
 <link href="~/Scripts/Plugins/jQueryUI/jquery-ui.css" rel="stylesheet" />
 <script src="~/Scripts/Plugins/jQueryUI/jquery-ui.js"></script>
 <div id="dialog_show_account_chart_div" style="display:none;">
-    <div style="width:30%;float:left;background-color:#eee">
+    <div style="width:30%;height:100%;float:left;background-color:#eee;margin-top:10px;">
         <div style="margin-top:30px;">
-            <span @*class="label label-primary"*@ style="font-size:16px;">时间：</span>
+            <span @*class="label label-primary"*@ style="font-size:16px;">时间：</span><br />
             <div id="btn_time_group_div" class="btn-group btn-group-sm">
                 <button type="button" class="btn btn-primary" group="timebutton" timevalue="1">最近一周</button>
                 <button type="button" class="btn btn-success" group="timebutton" timevalue="2">最近一月</button>
@@ -14,7 +14,7 @@
         </div>
         <br /><br />
         <div>
-            <span @*class="label label-primary"*@ style="font-size:16px;">类型：</span>
+            <span @*class="label label-primary"*@ style="font-size:16px;">类型：</span><br />
             <div id="btn_type_group_div" class="btn-group btn-group-sm">
                 <button type="button" class="btn btn-success" group="typebutton" typevalue="1">柱状图</button>
                 <button type="button" class="btn btn-primary" group="typebutton" typevalue="2">扇形图</button>
@@ -23,8 +23,12 @@
 
         </div>
     </div>
-    <div style="width:70%;float:left;background-color:#fff;">
-        <div id="dialog_chart_div" style="width:400px;height:400px;background-color:#bbb;margin-left:10%;margin-top:10%;"></div>
+    <div style="width:1px;height:100%;background-color:#000;float:left;"></div>
+    <div style="width:69%;float:left;background-color:#fff;margin-top:10px;">
+        <div id="dialog_chart_div" style="width:500px;height:500px;background-color:#bbb;margin-left:10%;margin-top:10px;">
+
+        </div>
+        </div>
     </div>
 
 </div>
@@ -131,7 +135,7 @@
 
         $.ajax({
             type: 'post',
-            url: '/RunningAccount/GetRunningAccountDataByCondition',
+            url: '/RunningAccount/GetAllRunningAccountDataByCondition',
             data: ajaxData,
             dataType: 'json',
             success: function (jsonData) {
@@ -154,8 +158,8 @@
                 }
                 var options = {
                     title: {
-                        text: timevalue,
-                        subtext: typevalue
+                        text: timetext,
+                        subtext: typetext
                     },
                     legend: {
                         data: ["收入", '支出']
@@ -164,11 +168,6 @@
                         {
                             type: 'category',
                             data: jsonData["inTextList"]
-                        }
-                    ],
-                    yAxis: [
-                        {
-                            type: 'value'
                         }
                     ],
                     series: [
@@ -192,12 +191,12 @@
                             name: '支出',
                             type: 'bar',
                             data: jsonData["outDataList"],
-                            //markPoint: {  //标记点
-                            //    data: [
-                            //        { name: '年最高', value: 182.2, xAxis: 7, yAxis: 183 },
-                            //        { name: '年最低', value: 2.3, xAxis: 11, yAxis: 3 }
-                            //    ]
-                            //},
+                            markPoint: {
+                                data: [
+                                    { type: 'max', name: '最大值' },
+                                    { type: 'min', name: '最小值' }
+                                ]
+                            },
                             markLine: {
                                 data: [
                                     { type: 'average', name: '平均值' }
@@ -206,10 +205,12 @@
                         }
                     ]
                 };
-                drawStatisticsChart(options);
+                
+                drawStatisticsChart(optionsColumnChart);
             },
             error: function () {
-
+                $ShowMessageDialog.ShowTipsRightTop({ "message": "查询" + timetext + typetext + "失败！" });
+                return;
             }
         });
     }
@@ -284,13 +285,99 @@
         };
 
         defaultParams = $.extend(defaultParams, options);
-        var myChart = echarts.init(document.getElementById(options["dialog_chart_div"]));
+        var myChart = echarts.init(document.getElementById("dialog_chart_div"));
         myChart.setOption(defaultParams);
     }
 
-    var drawStatisticsSectorChart = function (jsonData) {
-        
-
+    var drawStatisticsSectorChart = function (options) {
+        var defaultParams = {
+            title: {
+                text: '标题',
+                subtext: '副标题',
+                sublink: '#?name=副标题超链接'
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                    type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                },
+                formatter: function (params) {
+                    var tar;
+                    if (params[1].value != '-') {
+                        tar = params[1];
+                    }
+                    else {
+                        tar = params[0];
+                    }
+                    return tar.name + '<br/>' + tar.seriesName + ' : ' + tar.value;
+                }
+            },
+            legend: {
+                data: ['支出', '收入']
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                splitLine: { show: false },
+                data: function () {
+                    var list = [];
+                    for (var i = 1; i <= 11; i++) {
+                        list.push('11月' + i + '日');
+                    }
+                    return list;
+                }()
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [
+                {
+                    name: '辅助',
+                    type: 'bar',
+                    stack: '总量',
+                    itemStyle: {
+                        normal: {
+                            barBorderColor: 'rgba(0,0,0,0)',
+                            color: 'rgba(0,0,0,0)'
+                        },
+                        emphasis: {
+                            barBorderColor: 'rgba(0,0,0,0)',
+                            color: 'rgba(0,0,0,0)'
+                        }
+                    },
+                    data: [0, 900, 1245, 1530, 1376, 1376, 1511, 1689, 1856, 1495, 1292]
+                },
+                {
+                    name: '收入',
+                    type: 'bar',
+                    stack: '总量',
+                    label: {
+                        normal: {
+                            show: true,
+                            position: 'top'
+                        }
+                    },
+                    data: [900, 345, 393, '-', '-', 135, 178, 286, '-', '-', '-']
+                },
+                {
+                    name: '支出',
+                    type: 'bar',
+                    stack: '总量',
+                    label: {
+                        normal: {
+                            show: true,
+                            position: 'bottom'
+                        }
+                    },
+                    data: ['-', '-', '-', 108, 154, '-', '-', '-', 119, 361, 203]
+                }
+            ]
+        };
     }
 </script>
 
