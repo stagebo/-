@@ -95,6 +95,7 @@
   <ItemGroup>
     <Content Include="Files\Images\img-head-bgimg.jpg" />
     <Content Include="Files\sql\批量添加RunningAccount.sql" />
+    <Compile Include="Filter\SessionRefreshAttribute.cs" />
     <Content Include="Global.asax" />
     <Content Include="life.html" />
     <Content Include="Scripts\Common\CommonEnum.js" />

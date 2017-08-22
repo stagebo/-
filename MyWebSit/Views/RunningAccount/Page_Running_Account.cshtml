@@ -79,8 +79,45 @@
                 case "@Common.CommonEnum.RunningAccountType.OUTCOME":
                     e.cellHtml = "@Common.CommonEnum.RunningAccountType.OUTCOME_STRING";
             }
+        } else if (e.field == "f_opera") {
+            // e.cellHtml = e.record.f_id;
+            var splitSpan = '<span style="width:10px;height:100%;"></span>';
+            var deleteButtonHtml = '<span style="margin-left:20px;" class="mini-button" width="80" iconCls="icon-delete" onclick="deleteSingleAccountItem(\'' + e.record.f_id + '\')">删除</span>';
+            var editButtonHtml = '<span style="margin-left:20px;"  class="mini-button" width="80" iconCls="icon-delete" onclick="modifySingleAccountItem(\'' + e.record.f_id + '\')">修改</span>';
+            //var modifyButtonHtml = "<span id=\"modify_button_" + userInfoData["UserInfoID"] + "\"class=\"modify-user-info-button\"  title=\"修改用户信息\" onclick=\"showModifyUserInfoDialog('" + userInfoData["UserInfoID"] + "')\"></span>";
+
+            e.cellHtml = editButtonHtml + splitSpan + deleteButtonHtml;
         }
 
+    }
+    var deleteSingleAccountItem = function (id) {        
+        $ShowMessageDialog.ShowConfirmMessage({
+            'title': '删除记录',
+            'message': '确认删除该条记录吗？',
+            'confirm': function () {
+                $.ajax({
+                    type: 'post',
+                    url: '/RunningAccount/DeleteSingleAccount',
+                    data: { "f_id": id },
+                    dataType: 'json',
+                    success: function (jsonData) {
+                        if (jsonData["result"] == "@Common.CommonEnum.AjaxResult.ERROR") {
+                            $ShowMessageDialog.ShowTipsRightTop({ "message": "修改失败！" });
+                            return;
+                        }
+                        searchRunningAccountList();
+                    },
+                    error: function () {
+                        $ShowMessageDialog.ShowTipsRightTop({ "message": "修改失败！" });
+                    }
+                });
+                
+            }
+        });
+        console.log(id);
+    }
+    var modifySingleAccountItem = function (id) {
+        console.log("修改：" + id);
     }
     function getRemainMoney() {
         /*remain_money_div*/
@@ -147,7 +184,8 @@
                 <div field="f_money" width="50" headerAlign="center" @*allowSort="true"*@>数量</div>
                 <div field="f_purpose_name" width="60" headerAlign="center">用途</div>
                 <div field="f_remark" width="120" headerAlign="center">备注</div>
-                @*<div field="f_address" width="120" headerAlign="center">地点</div>*@
+                <div field="f_opera" width="120" headerAlign="center">操作</div>
+
             </div>
         </div>
         <br />

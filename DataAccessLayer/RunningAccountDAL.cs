@@ -78,6 +78,43 @@ namespace DataAccessLayer
             }
         }
 
+        public List<object[]> SelectAccountTypeDataListByCondition(Dictionary<string, object> condition)
+        {
+            ISession session = null;
+            string sql = $@"
+                        SELECT 
+                        SUM(T.F_MONEY) AS VALUE, 
+                        A.F_NAME AS NAME
+                        FROM[T_RUNNING_ACCOUNT] AS T
+                        INNER JOIN T_ACCOUNT_PURPOSE A
+                        ON T.F_PURPOSE_ID = A.F_ID
+                        WHERE  T.F_USER_ID = '{condition["f_user_id,Eq"]}'
+                        AND T.F_TIME < '{condition["f_time,Lt"]}'
+                        AND T.F_TIME > '{condition["f_time,Gt"]}'
+                        AND T.F_EXIST = {condition["f_exist,Eq"]}
+                        AND T.F_TYPE = '{condition["f_type,Eq"]}'
+                        GROUP BY A.F_NAME";
+            try
+            {
+                session = SessionManager.OpenSession();
+                ISQLQuery iSQLQuery = session.CreateSQLQuery(sql);
+
+                iSQLQuery.AddScalar("NAME", NHibernateUtil.String)
+                    .AddScalar("VALUE", NHibernateUtil.Decimal);
+
+                return iSQLQuery.List<object[]>().ToList<object[]>();
+            }
+            catch (Exception ex)
+            {
+                Log4NetUtils.Error(this, "按类型查询流水账，查询失败！", ex);
+                return null;
+            }
+            finally
+            {
+                SessionManager.CloseSession(session);
+            }
+        }
+
         public List<object[]> SelectRunningAccountDataInfoListByConditon(Dictionary<string, object> condition)
         {
             ISession session = null;

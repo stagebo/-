@@ -334,6 +334,42 @@ namespace MyWebSit.Controllers
             return Content(result);
         }
 
+
+        /// <summary>
+        /// POST /RunningAccount/DeleteSingleAccount 删除记录
+        /// </summary>
+        /// <returns></returns>
+        //[Right]
+        //[HttpPost]
+        public ActionResult DeleteSingleAccount()
+        {
+            string errorJsonString = $"{{\"result\":\"{CommonEnum.AjaxResult.ERROR}\"}}";
+            string idString = Request.Form["f_id"];
+            Guid idGuid;
+            if (string.IsNullOrWhiteSpace(idString) ||!Guid.TryParse(idString, out idGuid))
+            {
+                Log4NetUtils.Error(this, "删除记录，读取参数失败！");
+                return Content(errorJsonString);
+            }
+
+            RunningAccount ra = new RunningAccountBLL().SearchModelObjectByID<RunningAccount>(idGuid);
+            if (ra == null)
+            {
+                Log4NetUtils.Error(this, "删除记录，查询记录失败！");
+                return Content(errorJsonString);
+            }
+            ra.f_exist = CommonEnum.DataExist.NOT_EXIST;
+            if (!new RunningAccountBLL().ModifyModel<RunningAccount>(ra))
+            {
+                Log4NetUtils.Error(this, "删除记录，修改记录字段失败！");
+                return Content(errorJsonString);
+            }
+            StringBuilder result = new StringBuilder();
+            result.Append("{\"result\":\"" + CommonEnum.AjaxResult.SUCCESS + "\"}");
+
+            return Content(result.ToString());
+        }
+
         /// <summary>
         /// POST  /RunningAccount/GetRunningAccountDataByCondition
         /// </summary>
@@ -464,8 +500,8 @@ namespace MyWebSit.Controllers
         /// POST  /RunningAccount/GetAllRunningAccountDataByCondition
         /// </summary>
         /// <returns></returns>
-        //[Right]
-        //[HttpPost]
+        [Right]
+        [HttpPost]
         public ActionResult GetAllRunningAccountDataByCondition()
         {
             string errorJsonString = $"{{\"result\":\"{CommonEnum.AjaxResult.ERROR}\"}}";
@@ -616,7 +652,7 @@ namespace MyWebSit.Controllers
             outTextList.Append("]");
             outDataList.Append("]");
 
-            
+
             result.Append("\"inDataList\":" + inDataList.ToString() + ",");
             result.Append("\"inTextList\":" + inTextList.ToString() + ",");
             result.Append("\"outDataList\":" + outDataList.ToString() + ",");
@@ -627,5 +663,99 @@ namespace MyWebSit.Controllers
 
         }
 
+        /// <summary>
+        /// POST /RunningAccount/GetRunningAccountDataByType 
+        /// </summary>
+        /// <returns></returns>
+        [Right]
+        [HttpPost]
+        public ActionResult GetRunningAccountDataByType()
+        {
+            string errorJsonString = $"{{\"result\":\"{CommonEnum.AjaxResult.ERROR}\"}}";
+
+            /*参数接收以及验证*/
+            string methodString = Request.Form["method"];
+            string countString = Request.Form["count"];
+            /*测试*/
+            //User u = SessionManager.OpenSession().Query<User>().SingleOrDefault<User>
+            //    (us => us.f_uid == "1");
+            //Session["id"] = u.f_id;
+            /*获取当前登录用户信息*/
+            string userIDString = Session["id"].ToString();
+            Guid userIDGuid;
+            if (!Guid.TryParse(userIDString, out userIDGuid))
+            {
+                Log4NetUtils.Error(this, "查询流水账信息，获取登陆用户信息失败！");
+            }
+            /*测试*/
+            //methodString = "day";
+            //countString = "10";
+
+            int count;
+            DateTime time;
+            if (string.IsNullOrWhiteSpace(methodString) || string.IsNullOrWhiteSpace(countString) || !int.TryParse(countString, out count))
+            {
+                Log4NetUtils.Error(this, "查询流水账数据集，接收参数失败！");
+                return Content(errorJsonString);
+            }
+            string timeString;
+            switch (methodString)
+            {
+                case "day":
+                    time = DateTime.Now.AddDays(-count);
+                    timeString = $"{time.Year}-{time.Month}-{time.Day}";
+                    break;
+                case "month":
+                    time = DateTime.Now.AddMonths(-count);
+                    timeString = $"{time.Year}-{time.Month}-{1}";
+                    break;
+                case "year":
+                    time = DateTime.Now.AddYears(-count + 1);
+                    timeString = $"{time.Year}-{1}-{1}";
+                    break;
+                default:
+                    Log4NetUtils.Error(this, "查询流水账数据集，接收参数存在问题！");
+                    return Content(errorJsonString);
+            }
+
+            Dictionary<string, object> condition = new Dictionary<string, object>()
+            {
+                { "f_time,Gt",timeString},
+                { "f_time,Lt",DateTime.Now.ToString()},
+                {"f_user_id,Eq",userIDGuid },
+                { "f_exist,Eq",CommonEnum.DataExist.EXIST},
+                { "f_type,Eq",CommonEnum.RunningAccountType.OUTCOME}
+            };
+            Dictionary<string, decimal> accountTypeDataList = new RunningAccountBLL().SearchAccountTypeDataListByCondition(condition);
+            if (accountTypeDataList == null)
+            {
+                Log4NetUtils.Error(this, "查询流水账数据集，查询失败！");
+                return Content(errorJsonString);
+            }
+
+            StringBuilder result = new StringBuilder();
+            result.Append($"{{\"result\":\"{CommonEnum.AjaxResult.SUCCESS}\",");
+            result.Append("\"data\":[");
+            bool isStart = true;
+            StringBuilder keyDataList = new StringBuilder("[");
+            foreach (var kp in accountTypeDataList)
+            {
+
+                result.Append(isStart?"{":",{");
+                keyDataList.Append(isStart?"":",");
+                isStart = false;
+
+                keyDataList.Append($"\"{kp.Key}\"");
+                result.Append($"\"name\":\"{kp.Key}\",");
+                result.Append($"\"value\":\"{kp.Value}\"");
+                result.Append("}");
+            }
+            result.Append("],");
+            keyDataList.Append("]");
+            result.Append($"\"keyDataList\":");
+            result.Append(keyDataList.ToString());
+            result.Append("}");
+            return Content(result.ToString());            
+        }
     }
 }

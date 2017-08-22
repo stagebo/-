@@ -2,6 +2,7 @@
 using System.Web;
 using System.Web.Mvc;
 using MyWebSit;
+using WebBlog.Filter;
 
 namespace MyWebSit
 {
@@ -12,6 +13,7 @@ namespace MyWebSit
             filters.Add(new HandleErrorAttribute());
             filters.Add(new GlobalHandleErrorAttribute());
             filters.Add(new GlobalInfomationAttribute());
+            filters.Add(new SessionRefreshAttribute());
         }
     }
 }

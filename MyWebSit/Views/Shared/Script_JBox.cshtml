@@ -115,9 +115,11 @@
             });
         }
         /***********************************************************************
-         * function      右下角提示消息
+         * function      确认框
          * params：      options["title"]        string        提示消息标题
          * params：      options["message"]      string        提示消息
+         * params:       options["confirm"]      Function      确认回调函数
+         * params:       options["cancle"]       Function      取消回调函数
          *
          ***********************************************************************/
         $ShowMessageDialog.ShowConfirmMessage = function (options) {
@@ -126,16 +128,20 @@
                 cancelButton: '否',
                 confirmButton: '是',
                 confirm: function () {
-                    options["confirm"]();
+                    if (options['confirm'] && $.isFunction(options['confirm'])) {
+                        options['confirm']();
+                    }
                 },
                 cancel: function () {
-                    options['cancel']();
+                    if (options['cancel'] && $.isFunction(options['cancel'])) {
+                        options['cancel']();
+                    }
                 }
             }).open();
         }
 
         /***********************************************************************
-         * function      右下角提示消息
+         * function      提示信息
          * params：      options["title"]        string        提示消息标题
          * params：      options["message"]      string        提示消息
          *
@@ -150,8 +156,6 @@
             }).open();
 
         }
-
-
         /************************************************************************/
 
     });

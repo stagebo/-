@@ -61,9 +61,33 @@ namespace BussinessLogicLayer
                 decimal money = decimal.Parse(o[1].ToString());
                 if (!result.ContainsKey(field))
                 {
-                    result.Add(field,money);
+                    result.Add(field, money);
                 }
 
+            }
+            return result;
+        }
+
+        public Dictionary<string, decimal> SearchAccountTypeDataListByCondition(Dictionary<string, object> condition)
+        {
+            List<object[]> raList = new RunningAccountDAL().SelectAccountTypeDataListByCondition(condition);
+            if (raList == null)
+            {
+                return null;
+            }
+            Dictionary<string, decimal> result = new Dictionary<string, decimal>();
+            foreach(object[] o in raList)
+            {
+                string name = o[0]?.ToString();
+                decimal value = decimal.Parse(o[1]?.ToString());
+                if (string.IsNullOrWhiteSpace(name))
+                {
+                    continue;
+                }
+                if (!result.ContainsKey(name))
+                {
+                    result.Add(name,value);
+                }
             }
             return result;
         }
