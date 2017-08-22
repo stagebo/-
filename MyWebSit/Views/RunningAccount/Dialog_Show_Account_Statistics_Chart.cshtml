@@ -36,9 +36,9 @@
         $AccountChartsDialog = {};
         $AccountChartsDialog.options = {
             'timevalue': '2',
-            'timetext':'最近一月',
+            'timetext': '最近一月',
             'typevalue': '1',
-            'typetext':'柱状图'
+            'typetext': '柱状图'
         };
         mini.parse();
         shouLashWeekStatisticsData();
@@ -103,10 +103,10 @@
     });
 
     var shouLashWeekStatisticsData = function () {
-        var typevalue=$AccountChartsDialog.options["typevalue"];
-        var typetext= $AccountChartsDialog.options["typetext"];
-        var timevalue=$AccountChartsDialog.options["timevalue"];
-        var timetext =$AccountChartsDialog.options["timetext"] ;
+        var typevalue = $AccountChartsDialog.options["typevalue"];
+        var typetext = $AccountChartsDialog.options["typetext"];
+        var timevalue = $AccountChartsDialog.options["timevalue"];
+        var timetext = $AccountChartsDialog.options["timetext"];
         var method, count;
         switch (timevalue) {
             case "1":
@@ -120,7 +120,7 @@
             case "3":
                 method = 'month';
                 count = 12;
-                break;            
+                break;
 
             default: return;
         }
@@ -128,6 +128,7 @@
             'method': method,
             'count': count
         };
+
         $.ajax({
             type: 'post',
             url: '/RunningAccount/GetRunningAccountDataByCondition',
@@ -135,8 +136,21 @@
             dataType: 'json',
             success: function (jsonData) {
                 if (jsonData["result"] == "@Common.CommonEnum.AjaxResult.ERROR") {
-                    $ShowMessageDialog.ShowTipsRightTop({ "message": "查询" + timevalue+typevalue + "失败！" });
+                    $ShowMessageDialog.ShowTipsRightTop({ "message": "查询" + timevalue + typevalue + "失败！" });
                     return;
+                }
+                switch (typevalue) {
+                    case "1":
+                        //drawStatisticsChart(jsonData);
+                        break;
+                    case "2":
+
+                            break;
+                    case "3":
+
+                        break;
+
+                    default: return;
                 }
                 var options = {
                     title: {
@@ -272,6 +286,11 @@
         defaultParams = $.extend(defaultParams, options);
         var myChart = echarts.init(document.getElementById(options["dialog_chart_div"]));
         myChart.setOption(defaultParams);
+    }
+
+    var drawStatisticsSectorChart = function (jsonData) {
+        
+
     }
 </script>
 
