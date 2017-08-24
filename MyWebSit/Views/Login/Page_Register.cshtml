@@ -18,6 +18,12 @@
     <script type="text/javascript">
         $(function () {
             mini.parse();
+            /*注册键盘事件*/
+            $(document).bind('keypress', function (event) {
+                if (event.keyCode == "13") {
+                    $('#register_div').click();
+                }
+            });
         });
         function registerUser() {
             var uid = mini.get("uid_div").getValue();
@@ -62,13 +68,13 @@
     </script>
 </head>
 <body>
-    <div style="width:300px;height:180px;margin:20% 0 0 50%;background-color:#4d6082">
-        <div style="margin:20px 0 0 30px; ">
-            <br /><br />
+    <div style="width:300px;height:220px;margin:20% 0 0 50%;background-color:#7f93b5;border-radius:5px;">
+        <div style="margin-left:20px; ">
+            <br />
             用　　户　　名： <div id="uid_div" class="mini-textbox"></div><br /><br />
             密　　　　　码： <div id="pwd_div" class="mini-password"></div><br /><br />
             请再次输入密码： <div id="re_pwd_div" class="mini-password"></div><br /><br />
-            <div id="login_div" class="mini-button" onclick="registerUser()">注册</div>
+            <div id="register_div" class="mini-button" onclick="registerUser()">注册</div>
         </div>
     </div>
 </body>

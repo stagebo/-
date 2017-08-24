@@ -26,6 +26,12 @@
                 cancelButton: 'Nope',
                 confirmButton: 'Sure do!'
             });
+            /*注册键盘事件*/
+            $(document).bind('keypress', function (event) {
+                if (event.keyCode == "13") {
+                    $('#login_div').click();
+                }
+            });
         });
 
         function validateUser() {
@@ -64,7 +70,7 @@
     </script>
 </head>
 <body>
-    <div style="width:300px;height:180px;margin:20% 0 0 50%;background-color:#4d6082">
+    <div style="width:300px;height:180px;margin:20% 0 0 50%;background-color:#6f82a4;border-radius:6px;">
         <div style="margin:20px 0 0 30px; ">
             <br /><br />
             用户名： <div id="uid_div" class="mini-textbox"></div><br /><br />
