@@ -6,10 +6,9 @@
 <script src="~/Scripts/Plugins/jQueryUI/jquery-ui.js"></script>
 <style type="text/css">
     div.typein_account_form_div {
-            border: solid 1px;
-            border-radius: 5px;
-           
-        }
+        border: solid 1px;
+        border-radius: 5px;
+    }
 </style>
 <div id="dialog_add_account_record_div" style="display:none;">
     <div class="typein_account_form_div">
@@ -46,7 +45,10 @@
         $AddAccountRecordDialog.div = $($AddAccountRecordDialog.$divID);
         mini.parse();
         /*打开窗口*/
-        $AddAccountRecordDialog.showAddAccountRecordDialog = function () {
+        $AddAccountRecordDialog.showAddAccountRecordDialog = function () {           
+            mini.get("account_num_div").setValue();
+            mini.get("account_descript_div").setValue();
+            mini.get("type_check_box_div").setValue('1');
             $AddAccountRecordDialog.div.dialog({
                 autoOpen: false,
                 closeText: "关闭",
@@ -66,7 +68,7 @@
                     },
                     click: function () {
                         /*保存代码*/
-                        saveAccountRecordInDialog();                        
+                        saveAccountRecordInDialog();
                     }
                 },
                 {
@@ -116,13 +118,23 @@
                 data: option,
                 dataType: 'json',
                 success: function (jsonData) {
-                    if (jsonData["result"] == "@Common.CommonEnum.AjaxResult.ERROR")
-                    {
+                    if (jsonData["result"] == "@Common.CommonEnum.AjaxResult.ERROR") {
                         $ShowMessageDialog.ShowTipsRightTop({ "message": "添加流水账记录失败！" });
                         return;
                     }
                     /*添加成功，清空对应输入框，提示是否继续添加*/
-                    $AddAccountRecordDialog.div.dialog("close");
+                    $ShowMessageDialog.ShowConfirmMessage({
+                        'title': '添加成功',
+                        'message': '是否继续添加？',
+                        'confirm': function () {
+                            mini.get("account_num_div").setValue();
+                            mini.get("account_descript_div").setValue();
+                            mini.get("type_check_box_div").setValue('1');
+                        },
+                        'cancel': function () {
+                            $AddAccountRecordDialog.div.dialog("close");
+                        }
+                    });
                 },
                 error: function () {
                     $ShowMessageDialog.ShowTipsRightTop({ "message": "添加流水账记录失败！" });

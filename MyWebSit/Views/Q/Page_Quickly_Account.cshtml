@@ -16,7 +16,7 @@
     @Html.Partial("~/Views/Shared/Script_JBox.cshtml")
 
     <script type="text/javascript">
-        $(function () {
+        @*$(function () {
             mini.parse();
             mini.get("type_check_box_div").setValue('1');
 
@@ -79,7 +79,7 @@
                 });
 
             });
-        });
+        });*@
         @*function refreshUserNameSelect(uid) {
             $.ajax({
                 type: 'post',
@@ -108,39 +108,57 @@
             margin-top: 5%;
         }
     </style>
+    <script type="text/javascript">
+        $(function () {
+            mini.parse();
+            var tree = mini.get("tree_grid_div");
+            var data = [
+	                { "name": "行政部", "id": "xz", expanded: true },
+	                { "name": "人事部", "id": "rs", "pid": "xz" },
+	                { "name": "财务部", "id": "cw", "pid": "xz" },
+
+	                { "name": "业务部", "id": "yw", expanded: true },
+	                { "name": "市场销售部", "id": "sc", "pid": "yw" },
+	                { "name": "技术部", "id": "js", "pid": "yw" }
+            ]
+            console.log(tree);
+
+            tree.loadData(data,"id","pid");
+        });
+    </script>
 </head>
 <body>
     <div class="typein_account_form_div">
-        <div style="margin-left:13%;">
-            <div style="clear:both;">
-                <div>用户名：</div>
-                <div id="input_user_name_div" class="mini-textbox" width="200"></div>
-            </div><br />
-            <div style="clear:both;">
-                <div>用途</div>
-                <div id="choose_purpose_div" class="mini-combobox" url="/RunningAccount/SearchAccountPurposeList" width="200"></div>
-            </div><br />
-            <div style="clear:both;">
-                <div>数量</div>
-                <div id="account_num_div" class="mini-textbox" vtype="float" width="200"></div>
-            </div><br />
-            <div style="clear:both;">
-                <div>类型</div>
-                <div id="type_check_box_div" class="mini-checkboxlist" textField="text" valueField="id" multiSelect="false"
-                     url="/RunningAccount/GetAccountType" width="200">
-                </div>
-            </div><br />
-            <div style="clear:both;">
-                <div>描述</div>
-                <div id="account_descript_div" class="mini-textarea" width="200"></div>
-            </div><br />
+        <ul id="tree_grid_div" class="mini-tree" showTreeIcon="true" textField="name" idField="id" parentField="pid" resultAsTree="false">
 
-            <div id="submit_account_div" class="mini-button mini-button-success">提交</div>
-            <div class="mini-button" onclick="$AddAccountPurposeDialog.ShowAddAccountPurposeDialog()"
-                 style="float:right;margin-right:23%;">添加类型</div>
-        </div>
+        </ul>
+        @*<div style="margin-left:13%;">
+                <div style="clear:both;">
+                    <div>用户名：</div>
+                    <div id="input_user_name_div" class="mini-textbox" width="200"></div>
+                </div><br />
+                <div style="clear:both;">
+                    <div>用途</div>
+                    <div id="choose_purpose_div" class="mini-combobox" url="/RunningAccount/SearchAccountPurposeList" width="200"></div>
+                </div><br />
+                <div style="clear:both;">
+                    <div>数量</div>
+                    <div id="account_num_div" class="mini-textbox" vtype="float" width="200"></div>
+                </div><br />
+                <div style="clear:both;">
+                    <div>类型</div>
+                    <div id="type_check_box_div" class="mini-checkboxlist" textField="text" valueField="id" multiSelect="false"
+                         url="/RunningAccount/GetAccountType" width="200">
+                    </div>
+                </div><br />
+                <div style="clear:both;">
+                    <div>描述</div>
+                    <div id="account_descript_div" class="mini-textarea" width="200"></div>
+                </div><br />
+
+                <div id="submit_account_div" class="mini-button mini-button-success">提交</div>
+            </div>*@
     </div>
-    @Html.Partial("~/Views/RunningAccount/Dialog_Add_Account_Purpose.cshtml")
-    
+
 </body>
 </html>
