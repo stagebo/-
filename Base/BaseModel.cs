@@ -25,7 +25,7 @@ namespace Base
         {
             if (!(this is T))
             {
-                Log4NetUtils.Error(this, "泛型类型与当前this对象类型不符");
+                LogUtils.Error(this, "泛型类型与当前this对象类型不符");
                 return null;
             }
             try
@@ -35,7 +35,7 @@ namespace Base
             }
             catch (Exception exception)
             {
-                Log4NetUtils.Error(this, "初始化Model对象失败，jsonString：" + jsonString, exception);
+                LogUtils.Error(this, "初始化Model对象失败，jsonString：" + jsonString, exception);
                 return (T)this;
             }
         }
@@ -86,7 +86,7 @@ namespace Base
             }
             catch (Exception exception)
             {
-                Log4NetUtils.Error(this, "初始化Model对象失败", exception);
+                LogUtils.Error(this, "初始化Model对象失败", exception);
                 return (T)this;
             }
         }
@@ -106,7 +106,7 @@ namespace Base
             }
             catch (Exception exception)
             {
-                Log4NetUtils.Error("Common.BaseModel", "初始化Model对象集合失败，jsonString：" + jsonString, exception);
+                LogUtils.Error("Common.BaseModel", "初始化Model对象集合失败，jsonString：" + jsonString, exception);
                 return null;
             }
             try
@@ -128,7 +128,7 @@ namespace Base
             }
             catch (Exception exception)
             {
-                Log4NetUtils.Error("Common.BaseModel", "初始化Model对象集合失败，jsonString：" + jsonString, exception);
+                LogUtils.Error("Common.BaseModel", "初始化Model对象集合失败，jsonString：" + jsonString, exception);
                 return null;
             }
         }
@@ -160,7 +160,7 @@ namespace Base
             }
             catch (Exception exception)
             {
-                Log4NetUtils.Error("Common.BaseModel", "初始化Model对象集合失败", exception);
+                LogUtils.Error("Common.BaseModel", "初始化Model对象集合失败", exception);
                 return null;
             }
         }
@@ -208,7 +208,7 @@ namespace Base
             }
             catch (Exception exception)
             {
-                Log4NetUtils.Error(this, "初始化Model对象失败", exception);
+                LogUtils.Error(this, "初始化Model对象失败", exception);
                 return null;
             }
         }

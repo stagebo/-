@@ -41,12 +41,12 @@ namespace MyWebSit.Controllers.Common
             string pwd = Request.Form["pwd"];
             if (string.IsNullOrWhiteSpace(uid))
             {
-                Log4NetUtils.Error(this, "注册用户，接收前端用户名失败！");
+                LogUtils.Error(this, "注册用户，接收前端用户名失败！");
                 return Content(errorJsonString);
             }
             if (string.IsNullOrWhiteSpace(pwd))
             {
-                Log4NetUtils.Error(this, "注册用户，接收前端用户密码失败！");
+                LogUtils.Error(this, "注册用户，接收前端用户密码失败！");
                 return Content(errorJsonString);
             }
             UserBLL userBLL=new UserBLL();
@@ -55,12 +55,12 @@ namespace MyWebSit.Controllers.Common
                     { "f_uid,Eq",uid}
                 });
             if (uCount == null) {
-                Log4NetUtils.Error(this,"注册用户，查询已存在该用户名失败！");
+                LogUtils.Error(this,"注册用户，查询已存在该用户名失败！");
                 return Content(errorJsonString);
             }
             if (uCount > 0)
             {
-                Log4NetUtils.Error(this,"注册用户，该用户名已存在~");
+                LogUtils.Error(this,"注册用户，该用户名已存在~");
                 return Content(errorJsonString);
             }
             User u = new User();
@@ -71,7 +71,7 @@ namespace MyWebSit.Controllers.Common
             u.f_reg_date = DateTime.Now;
             if (!userBLL.AddModel<User>(u))
             {
-                Log4NetUtils.Error(this, "注册用户，添加User实体失败！");
+                LogUtils.Error(this, "注册用户，添加User实体失败！");
                 return Content(errorJsonString);
             }
             return Content(successString);
@@ -90,7 +90,7 @@ namespace MyWebSit.Controllers.Common
                });
             if (uCount == null)
             {
-                Log4NetUtils.Error(this, "注册用户，查询已存在该用户名失败！");
+                LogUtils.Error(this, "注册用户，查询已存在该用户名失败！");
                 return Content(errorJsonString);
             }
             string result;
@@ -115,12 +115,12 @@ namespace MyWebSit.Controllers.Common
             string pwd = Request.Form["pwd"];
             if (string.IsNullOrWhiteSpace(uid))
             {
-                Log4NetUtils.Error(this, "验证用户，接收前端用户名失败！");
+                LogUtils.Error(this, "验证用户，接收前端用户名失败！");
                 return Content(errorJsonString);
             }
             if (string.IsNullOrWhiteSpace(pwd))
             {
-                Log4NetUtils.Error(this, "验证用户，接收前端用户密码失败！");
+                LogUtils.Error(this, "验证用户，接收前端用户密码失败！");
                 return Content(errorJsonString);
             }
             Dictionary<string, object> condition = new Dictionary<string, object>() {
@@ -129,7 +129,7 @@ namespace MyWebSit.Controllers.Common
             };
             User u = new UserBLL().SearchUniqueModelObjectByCondition<User>(condition);
             if (u == null) {
-                Log4NetUtils.Error(this,"验证用户，用户名或密码错误，用户名："+uid);
+                LogUtils.Error(this,"验证用户，用户名或密码错误，用户名："+uid);
                 return Content(errorJsonString);
             }
             /*登记登录信息*/

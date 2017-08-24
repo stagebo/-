@@ -41,7 +41,7 @@ namespace MyWebSit.Controllers.NoteManage
             content = Server.UrlDecode(content);
             if (string.IsNullOrWhiteSpace(content))
             {
-                Log4NetUtils.Error(this, "提交留言，接收前端留言内容失败!");
+                LogUtils.Error(this, "提交留言，接收前端留言内容失败!");
                 return Content(errorJsonString);
             }
 
@@ -56,7 +56,7 @@ namespace MyWebSit.Controllers.NoteManage
             m.f_content = content;
             if (!new MessageBLL().AddModel<Message>(m))
             {
-                Log4NetUtils.Error(this, "提交留言，添加Message实体失败！");
+                LogUtils.Error(this, "提交留言，添加Message实体失败！");
                 return Content(errorJsonString);
             }
             return Content(successString);
@@ -89,7 +89,7 @@ namespace MyWebSit.Controllers.NoteManage
             int? totalCount = new MessageBLL().SearchModelObjectCountByCondition<Message>(condition);
             if (totalCount == null)
             {
-                Log4NetUtils.Error(this, "查询留言，查询留言总数失败！");
+                LogUtils.Error(this, "查询留言，查询留言总数失败！");
                 return Content(errorJsonString);
             }
             int totalPage = ((int)totalCount - 1) / pageSize + 1;
@@ -102,7 +102,7 @@ namespace MyWebSit.Controllers.NoteManage
             //                              select ms;
             if (messageList == null)
             {
-                Log4NetUtils.Error(this, "查询留言，查询MessageList失败！");
+                LogUtils.Error(this, "查询留言，查询MessageList失败！");
                 return Content(errorJsonString);
             }
             StringBuilder successStringBuilder = new StringBuilder();
@@ -124,20 +124,20 @@ namespace MyWebSit.Controllers.NoteManage
             string f_id = Request.Form["f_id"];
             if (string.IsNullOrWhiteSpace(f_id))
             {
-                Log4NetUtils.Error(this, "删除留言，接收前端参数失败~");
+                LogUtils.Error(this, "删除留言，接收前端参数失败~");
                 return Content(errorJsonString);
             }
             Guid f_idGuid;
             if (!Guid.TryParse(f_id, out f_idGuid))
             {
-                Log4NetUtils.Error(this, "删除留言，前端参数不是Guid类型！");
+                LogUtils.Error(this, "删除留言，前端参数不是Guid类型！");
                 return Content(errorJsonString);
             }
             MessageBLL messageBLL = new MessageBLL();
             Message message = messageBLL.SearchModelObjectByID<Message>(f_idGuid);
             if (message == null)
             {
-                Log4NetUtils.Error(this, $"删除留言，查询留言实体失败,实体id：{f_idGuid}");
+                LogUtils.Error(this, $"删除留言，查询留言实体失败,实体id：{f_idGuid}");
                 return Content(errorJsonString);
             }
             string uid = Session["uid"].ToString();
@@ -151,7 +151,7 @@ namespace MyWebSit.Controllers.NoteManage
             if (!messageBLL.ModifyModel<Message>(message))
             {
                 errorJsonString = "{\"result\":\"" + CommonEnum.AjaxResult.ERROR + "\",\"state\":\"2\"}"; ;
-                Log4NetUtils.Error(this, $"删除留言，修改留言逻辑列失败！");
+                LogUtils.Error(this, $"删除留言，修改留言逻辑列失败！");
             }
             string successString = $"{{\"result\":\"{CommonEnum.AjaxResult.SUCCESS}\"}}";
             return Content(successString);

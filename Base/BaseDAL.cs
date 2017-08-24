@@ -27,7 +27,7 @@ namespace Base
             }
             catch (Exception exception)
             {
-                Log4NetUtils.Error(this, "删除实体失败，Model类型：" + modelObject.GetType().FullName, exception);
+                LogUtils.Error(this, "删除实体失败，Model类型：" + modelObject.GetType().FullName, exception);
                 return false;
             }
             finally
@@ -48,7 +48,7 @@ namespace Base
             }
             catch (Exception exception)
             {
-                Log4NetUtils.Error(this, "删除实体失败，Model类型：" + modelObject.GetType().FullName, exception);
+                LogUtils.Error(this, "删除实体失败，Model类型：" + modelObject.GetType().FullName, exception);
                 return false;
             }
             finally
@@ -69,7 +69,7 @@ namespace Base
             }
             catch (Exception exception)
             {
-                Log4NetUtils.Error(this, "更新实体失败，Model类型：" + modelObject.GetType().FullName, exception);
+                LogUtils.Error(this, "更新实体失败，Model类型：" + modelObject.GetType().FullName, exception);
                 return false;
             }
             finally
@@ -126,7 +126,7 @@ namespace Base
             catch (Exception exception)
             {
                 transaction.Rollback();
-                Log4NetUtils.Error("Common.BaseDAL", "事务执行失败，modelList：");// + Common.SerializeJsonString(modelObjectList), exception);
+                LogUtils.Error("Common.BaseDAL", "事务执行失败，modelList：");// + Common.SerializeJsonString(modelObjectList), exception);
                 return false;
             }
             finally
@@ -154,7 +154,7 @@ namespace Base
             }
             catch (Exception exception)
             {
-                Log4NetUtils.Error(this, "查询自增长主键ID失败，Model类型：" + typeof(Model).FullName, exception);
+                LogUtils.Error(this, "查询自增长主键ID失败，Model类型：" + typeof(Model).FullName, exception);
                 return null;
             }
             finally
@@ -183,7 +183,7 @@ namespace Base
             }
             catch (Exception exception)
             {
-                Log4NetUtils.Error(this, "查询实体数量失败，实体类型：" + typeof(Model).FullName, exception);
+                LogUtils.Error(this, "查询实体数量失败，实体类型：" + typeof(Model).FullName, exception);
                 return null;
             }
             finally
@@ -204,7 +204,7 @@ namespace Base
             }
             catch (Exception exception)
             {
-                Log4NetUtils.Error(
+                LogUtils.Error(
                     this,
                     "查询实体ID是否存在失败，实体类型：" + typeof(Model).FullName + "，" +
                         "主键：" + modelObjectID.ToString(),
@@ -233,7 +233,7 @@ namespace Base
             }
             catch (Exception exception)
             {
-                Log4NetUtils.Error(
+                LogUtils.Error(
                     this,
                     "查询实体是否存在失败，实体类型：" + typeof(Model).FullName + "，" +
                         "查询条件：",// + Common.SerializeJsonString(conditionDictionary),
@@ -259,7 +259,7 @@ namespace Base
             }
             catch (Exception exception)
             {
-                Log4NetUtils.Error(
+                LogUtils.Error(
                     this,
                     "查询实体信息失败，实体类型：" + typeof(Model).FullName + "，" +
                         "主键：" + modelObjectID.ToString(),
@@ -304,7 +304,7 @@ namespace Base
             }
             catch (Exception exception)
             {
-                Log4NetUtils.Error(
+                LogUtils.Error(
                     this,
                     "查询实体信息失败，实体类型：" + typeof(Model).FullName + "，" +
                         "查询条件：" + //Common.SerializeJsonString(conditionDictionary) + "，" +
@@ -350,7 +350,7 @@ namespace Base
             }
             catch (Exception exception)
             {
-                Log4NetUtils.Error(
+                LogUtils.Error(
                     this,
                     "查询实体集合信息失败，实体类型：" + typeof(Model).FullName + "，" +
                         "查询条件：" +// + Common.SerializeJsonString(conditionDictionary) + "，" +
@@ -389,7 +389,7 @@ namespace Base
             }
             catch (Exception exception)
             {
-                Log4NetUtils.Error(
+                LogUtils.Error(
                     this,
                     "查询实体分页信息失败，实体类型：" + typeof(Model).FullName + "，" +
                         "查询条件：" +// Common.SerializeJsonString(conditionDictionary) + "，" +

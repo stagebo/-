@@ -7,6 +7,7 @@
     <property name="f_name" column="f_name" type="string"  />
     <property name="f_type" column="f_type" type="int"  />
     <property name="f_descript" column="f_descript" type="string"  />
+    <property name="f_user_id" column="f_user_id" type="Guid"  />
 
   </class>
 </hibernate-mapping>

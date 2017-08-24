@@ -109,7 +109,7 @@ namespace Common
             }
             catch(Exception exception)
             {
-                Log4NetUtils.Error("Common.Common", "json格式转换失败，item：" + item, exception);
+                LogUtils.Error("Common.Common", "json格式转换失败，item：" + item, exception);
                 return null;
             }
         }
@@ -128,7 +128,7 @@ namespace Common
             }
             catch (Exception exception)
             {
-                Log4NetUtils.Error("Common.Common", "json格式转换失败，jsonString：" + jsonString, exception);
+                LogUtils.Error("Common.Common", "json格式转换失败，jsonString：" + jsonString, exception);
                 return default(T);
             }
         }
@@ -238,7 +238,7 @@ namespace Common
         //    }
         //    catch (Exception exception)
         //    {
-        //        Log4NetUtils.Error("Common.Common", "上传文件错误", exception);
+        //        LogUtils.Error("Common.Common", "上传文件错误", exception);
         //        return null;
         //    }
         //}
@@ -265,7 +265,7 @@ namespace Common
             }
             catch (Exception exception)
             {
-                Log4NetUtils.Error("Common.Common", "序列化数据失败：" + parameter.ToString(), exception);
+                LogUtils.Error("Common.Common", "序列化数据失败：" + parameter.ToString(), exception);
                 return null;
             }
         }
@@ -288,7 +288,7 @@ namespace Common
             }
             catch (Exception exception)
             {
-                Log4NetUtils.Error("Common.Common", "反序列化数据失败", exception);
+                LogUtils.Error("Common.Common", "反序列化数据失败", exception);
                 return null;
             }
         }
@@ -326,7 +326,7 @@ namespace Common
             }
             catch(Exception exception)
             {
-                Log4NetUtils.Error("Common.Common", "HttpWebReuqestGet访问失败，url：" + url, exception);
+                LogUtils.Error("Common.Common", "HttpWebReuqestGet访问失败，url：" + url, exception);
                 return null;
             }
         }
@@ -382,7 +382,7 @@ namespace Common
             }
             catch (Exception exception)
             {
-                Log4NetUtils.Error("Common.Common", "HttpWebReuqestPost访问失败，url：" + url, exception);
+                LogUtils.Error("Common.Common", "HttpWebReuqestPost访问失败，url：" + url, exception);
                 return null;
             }
         }

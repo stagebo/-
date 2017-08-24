@@ -3594,6 +3594,7 @@
     <Content Include="Scripts\Plugins\jQuery\jquery-2.1.1.js" />
     <Content Include="Scripts\Plugins\jQuery\jquery-2.1.1.min.js" />
     <Content Include="Views\Shared\Script_JQuery-2.1.1.cshtml" />
+    <Content Include="Views\RunningAccount\Dialog_Add_Account_Record.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -39,7 +39,7 @@ namespace DataAccessLayer
             }
             catch (Exception e)
             {
-                Log4NetUtils.Error(this, "根据条件查询用户信息失败", e);
+                LogUtils.Error(this, "根据条件查询用户信息失败", e);
                 return null;
             }
             finally

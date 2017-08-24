@@ -12,13 +12,13 @@ using log4net.Repository.Hierarchy;
 
 namespace Common.Log4Net
 {
-    public class Log4NetUtils
+    public class LogUtils
     {
         private static ILog fileLogger = LogManager.GetLogger("FileLogLogger");
 
         private static ILog debugLogger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        static Log4NetUtils()
+        static LogUtils()
         {
             string binPath = System.AppDomain.CurrentDomain.BaseDirectory;
             string webFfileName = binPath + @"bin\Config\log4net.cfg.xml";

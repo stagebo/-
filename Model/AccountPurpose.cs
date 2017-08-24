@@ -47,7 +47,14 @@ namespace Model
             set;
         }
 
-
+        /// <summary>
+        /// f_user_id 用户ID
+        /// </summary>
+        public virtual Guid f_user_id
+        {
+            get;
+            set;
+        }
         #endregion
 
         #region ToJsonString
@@ -62,6 +69,7 @@ namespace Model
             return new System.Text.StringBuilder(string.Empty)
              .Append(isClose ? "{" : "")
                 .Append("\"f_id\":\"").Append(Uri.EscapeDataString(this.f_id.ToString())).Append("\",")
+                .Append("\"f_user_id\":\"").Append(Uri.EscapeDataString(this.f_user_id.ToString())).Append("\",")
                 .Append("\"f_name\":\"").Append(Uri.EscapeDataString(this.f_name.ToString())).Append("\",")
                 .Append("\"f_type\":").Append(this.f_type == null ? "null" : ("\"" + Uri.EscapeDataString(this.f_type.ToString()) + "\"")).Append(",")
                 .Append("\"f_descript\":").Append(this.f_descript == null ? "null" : ("\"" + Uri.EscapeDataString(this.f_descript.ToString()) + "\"")).Append("")

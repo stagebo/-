@@ -18,7 +18,7 @@ namespace MyWebSit
         {
             if (!filterContext.ExceptionHandled)
             {
-                Log4NetUtils.Error(filterContext.Controller, "GlobalHandleErrorAttribute捕获异常信息", filterContext.Exception);
+                LogUtils.Error(filterContext.Controller, "GlobalHandleErrorAttribute捕获异常信息", filterContext.Exception);
                 ContentResult contentResult = new ContentResult();
                 contentResult.Content = "{\"result\":\"" + CommonEnum.AjaxResult.ERROR+ "\"}";
                 RedirectResult redirectResult = new RedirectResult(CommonEnum.ErrorPageUrl.DEFAULT_URL);

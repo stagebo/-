@@ -107,7 +107,7 @@ namespace Base
             }
             catch (Exception exception)
             {
-                Log4NetUtils.Error(
+                LogUtils.Error(
                    "ISession",
                     "查询实体信息失败，实体类型：" + typeof(Model).FullName + "，" +
                         "查询条件：" + //Common.SerializeJsonString(conditionDictionary) + "，" +

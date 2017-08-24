@@ -69,7 +69,7 @@ namespace DataAccessLayer
             }
             catch (Exception ex)
             {
-                Log4NetUtils.Error(this, "查询流水账，查询失败！",ex);
+                LogUtils.Error(this, "查询流水账，查询失败！",ex);
                 return null;
             }
             finally
@@ -106,7 +106,7 @@ namespace DataAccessLayer
             }
             catch (Exception ex)
             {
-                Log4NetUtils.Error(this, "按类型查询流水账，查询失败！", ex);
+                LogUtils.Error(this, "按类型查询流水账，查询失败！", ex);
                 return null;
             }
             finally
@@ -142,7 +142,7 @@ namespace DataAccessLayer
             }
             catch (Exception ex)
             {
-                Log4NetUtils.Error(this, "查询流水账，查询失败！", ex);
+                LogUtils.Error(this, "查询流水账，查询失败！", ex);
                 return null;
             }
             finally
@@ -176,7 +176,7 @@ namespace DataAccessLayer
             }
             catch (Exception ex)
             {
-                Log4NetUtils.Error(this, "查询流水账，查询失败！",ex);
+                LogUtils.Error(this, "查询流水账，查询失败！",ex);
                 return null;
             }
             finally

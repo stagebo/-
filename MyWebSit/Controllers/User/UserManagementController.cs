@@ -67,14 +67,14 @@ namespace MyWebSit.Controllers
             Guid idGuid;
             if (!Guid.TryParse(id, out idGuid))
             {
-                Log4NetUtils.Error(this, "检测到非法入侵！！！！！！！！！！！！");
+                LogUtils.Error(this, "检测到非法入侵！！！！！！！！！！！！");
                 return Content(errorJsonString);
             }
             //User u = new UserBLL().SearchModelObjectByID<User>(idGuid);
             User u = SessionManager.OpenSession().Query<User>().SingleOrDefault<User>(ux => ux.f_id == idGuid);
             if (u == null)
             {
-                Log4NetUtils.Error(this, "查询用户信息，无法检索到用户信息！");
+                LogUtils.Error(this, "查询用户信息，无法检索到用户信息！");
                 return Content(errorJsonString);
             }
             StringBuilder re = new StringBuilder();
@@ -95,13 +95,13 @@ namespace MyWebSit.Controllers
             string id = Session["id"].ToString();
             if (string.IsNullOrWhiteSpace(id))
             {
-                Log4NetUtils.Warn(this, "查询用户信息，非法入侵！来自uil：" + Request.UrlReferrer);
+                LogUtils.Warn(this, "查询用户信息，非法入侵！来自uil：" + Request.UrlReferrer);
                 return Content(errorJsonString);
             }
             Guid idGuid;
             if (!Guid.TryParse(id, out idGuid))
             {
-                Log4NetUtils.Warn(this, "查询用户信息，非法入侵！来自uil：" + Request.UrlReferrer);
+                LogUtils.Warn(this, "查询用户信息，非法入侵！来自uil：" + Request.UrlReferrer);
                 return Content(errorJsonString);
             }
 
@@ -109,7 +109,7 @@ namespace MyWebSit.Controllers
             User user = SessionManager.OpenSession().Query<User>().SingleOrDefault<User>(ux => ux.f_id == idGuid);
             if (user == null)
             {
-                Log4NetUtils.Error(this, "查询用户信息，根据uid查询用户信息失败！");
+                LogUtils.Error(this, "查询用户信息，根据uid查询用户信息失败！");
                 return Content(errorJsonString);
             }
             StringBuilder re = new StringBuilder();
@@ -141,22 +141,22 @@ namespace MyWebSit.Controllers
             /*数据验证*/
             if (string.IsNullOrWhiteSpace(uidString))
             {
-                Log4NetUtils.Error(this, "修改个人信息，接收前台参数uid失败！");
+                LogUtils.Error(this, "修改个人信息，接收前台参数uid失败！");
                 return Content(errorJsonString);
             }
             Guid idGuid;
             int ageInt, genderInt;
             if (!Guid.TryParse(idString, out idGuid)) {
-                Log4NetUtils.Error(this, "修改个人信息，接收用户id失败");
+                LogUtils.Error(this, "修改个人信息，接收用户id失败");
                 return Content(errorJsonString);
             }
             if (!int.TryParse(ageString, out ageInt)) {
-                Log4NetUtils.Error(this, "修改个人信息，接收用户age失败");
+                LogUtils.Error(this, "修改个人信息，接收用户age失败");
                 ageInt = -1;
             }
             if (!int.TryParse(genderString, out genderInt))
             {
-                Log4NetUtils.Error(this, "修改个人信息，接收用户gender失败");
+                LogUtils.Error(this, "修改个人信息，接收用户gender失败");
                 genderInt = -1;
             }
             UserBLL userBll = new UserBLL();
@@ -165,7 +165,7 @@ namespace MyWebSit.Controllers
             User user = SessionManager.OpenSession().Query<User>().SingleOrDefault<User>(ux => ux.f_id == idGuid);
             if (user == null)
             {
-                Log4NetUtils.Error(this, "修改个人信息，查询用户模型失败！");
+                LogUtils.Error(this, "修改个人信息，查询用户模型失败！");
                 return Content(errorJsonString);
             }
             user.f_uid = uidString;
@@ -176,7 +176,7 @@ namespace MyWebSit.Controllers
             user.f_email = emailString;
             if (!userBll.ModifyModel<User>(user))
             {
-                Log4NetUtils.Error(this, "修改个人信息，修改用户模型失败！");
+                LogUtils.Error(this, "修改个人信息，修改用户模型失败！");
                 return Content(errorJsonString);
             }
             StringBuilder re = new StringBuilder();
@@ -196,7 +196,7 @@ namespace MyWebSit.Controllers
             Guid idGuid;
             if (string.IsNullOrWhiteSpace(id) || string.IsNullOrWhiteSpace(uid)||!Guid.TryParse(id,out idGuid))
             {
-                Log4NetUtils.Error(this,"验证失败！");
+                LogUtils.Error(this,"验证失败！");
                 return Content(errorJsonString);
             }
             Dictionary<string, object> condition = new Dictionary<string, object>()
@@ -207,7 +207,7 @@ namespace MyWebSit.Controllers
             List<User> userList = new UserBLL().SearchModelObjectListByCondition<User>(condition);
             if (userList == null)
             {
-                Log4NetUtils.Error(this,"验证用户名，查询失败！");
+                LogUtils.Error(this,"验证用户名，查询失败！");
                 return Content(errorJsonString);
             }
             StringBuilder re = new StringBuilder();
@@ -247,26 +247,26 @@ namespace MyWebSit.Controllers
             string idString = Request.Form["id"];
             if (string.IsNullOrWhiteSpace(idString))
             {
-                Log4NetUtils.Error(this, "重置密码，接收前台参数失败！");
+                LogUtils.Error(this, "重置密码，接收前台参数失败！");
                 return Content(errorJsonString);
             }
             Guid idGuid;
             if (!Guid.TryParse(idString, out idGuid))
             {
-                Log4NetUtils.Error(this, "重置密码，转换用户id失败！");
+                LogUtils.Error(this, "重置密码，转换用户id失败！");
                 return Content(errorJsonString);
             }
             //User user = new UserBLL().SearchModelObjectByID<User>(idGuid);
             User user = SessionManager.OpenSession().Query<User>().SingleOrDefault<User>(ux => ux.f_id == idGuid);
             if (user == null)
             {
-                Log4NetUtils.Error(this, "重置密码，查询用户失败！");
+                LogUtils.Error(this, "重置密码，查询用户失败！");
                 return Content(errorJsonString);
             }
             user.f_pwd = CommonFunction.MD5Encrypt(CommonEnum.UserDefaultParas.DEFAULT_PASSWORD);
             if (!new UserBLL().ModifyModel<User>(user))
             {
-                Log4NetUtils.Error(this, "重置密码，重置密码失败！");
+                LogUtils.Error(this, "重置密码，重置密码失败！");
                 return Content(errorJsonString);
             }
             string re = $"{{\"result\":\"{CommonEnum.AjaxResult.SUCCESS}\"}}";
@@ -286,30 +286,30 @@ namespace MyWebSit.Controllers
             string pwdNewString = Request.Form["pwd_new"];
             if (string.IsNullOrWhiteSpace(idString))
             {
-                Log4NetUtils.Error(this, "修改密码，接收前台参数失败！");
+                LogUtils.Error(this, "修改密码，接收前台参数失败！");
                 return Content(errorJsonString);
             }
             Guid idGuid;
             if (!Guid.TryParse(idString, out idGuid))
             {
-                Log4NetUtils.Error(this, "修改密码，转换用户id失败！");
+                LogUtils.Error(this, "修改密码，转换用户id失败！");
                 return Content(errorJsonString);
             }
             if (string.IsNullOrWhiteSpace(pwdOldString))
             {
-                Log4NetUtils.Error(this,"修改密码，接收前台旧密码失败！");
+                LogUtils.Error(this,"修改密码，接收前台旧密码失败！");
                 return Content(errorJsonString);
             }
             if (string.IsNullOrWhiteSpace(pwdNewString))
             {
-                Log4NetUtils.Error(this,"修改密码，接收前台新密码失败！");
+                LogUtils.Error(this,"修改密码，接收前台新密码失败！");
                 return Content(errorJsonString);
             }
           
             User user = new UserBLL().SearchModelObjectByID<User>(idGuid);
             if (user == null)
             {
-                Log4NetUtils.Error(this, "修改密码，查询用户失败！");
+                LogUtils.Error(this, "修改密码，查询用户失败！");
                 return Content(errorJsonString);
             }
             if (!user.f_pwd.Equals(CommonFunction.MD5Encrypt(pwdOldString)))
@@ -319,7 +319,7 @@ namespace MyWebSit.Controllers
             user.f_pwd = CommonFunction.MD5Encrypt(pwdNewString);
             if (!new UserBLL().ModifyModel<User>(user))
             {
-                Log4NetUtils.Error(this, "修改密码，修改密码失败！");
+                LogUtils.Error(this, "修改密码，修改密码失败！");
                 return Content(errorJsonString);
             }
 

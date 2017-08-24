@@ -40,7 +40,7 @@ namespace Common.NHibernate
             }
             catch (Exception exception)
             {
-                Log4NetUtils.Error("Common.NHibernate.SessionManager01", "数据库连接失败", exception);
+                LogUtils.Error("Common.NHibernate.SessionManager01", "数据库连接失败", exception);
             }
         }
 
@@ -65,7 +65,7 @@ namespace Common.NHibernate
             //}
             //catch (Exception exception)
             //{
-            //    Log4NetUtils.Error("Common.NHibernate.SessionManager01", "NHibernate Session打开失败", exception);
+            //    LogUtils.Error("Common.NHibernate.SessionManager01", "NHibernate Session打开失败", exception);
             //    return null;
             //}
         }
@@ -97,7 +97,7 @@ namespace Common.NHibernate
             }
             catch (Exception exception)
             {
-                Log4NetUtils.Error("Common.NHibernate.SessionManager01", "NHibernate Session关闭失败", exception);
+                LogUtils.Error("Common.NHibernate.SessionManager01", "NHibernate Session关闭失败", exception);
             }
         }
 
@@ -113,7 +113,7 @@ namespace Common.NHibernate
             }
             catch (Exception exception)
             {
-                Log4NetUtils.Error("Common.NHibernate.SessionManager01", "NHibernate Transaction关闭失败", exception);
+                LogUtils.Error("Common.NHibernate.SessionManager01", "NHibernate Transaction关闭失败", exception);
             }
         }
 
@@ -168,7 +168,7 @@ namespace Common.NHibernate
             }
             catch (Exception exception)
             {
-                Log4NetUtils.Error("Common.NHibernate.SessionManager01", "获取实体对应数据表结构信息失败，entityName：" + entityName, exception);
+                LogUtils.Error("Common.NHibernate.SessionManager01", "获取实体对应数据表结构信息失败，entityName：" + entityName, exception);
                 return null;
             }
         }

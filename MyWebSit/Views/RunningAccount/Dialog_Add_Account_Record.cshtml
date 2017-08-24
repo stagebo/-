@@ -1,0 +1,134 @@
+﻿
+@{
+    ViewBag.Title = "Dialog_Add_Account_Record";
+}
+<link href="~/Scripts/Plugins/jQueryUI/jquery-ui.css" rel="stylesheet" />
+<script src="~/Scripts/Plugins/jQueryUI/jquery-ui.js"></script>
+<style type="text/css">
+    div.typein_account_form_div {
+            border: solid 1px;
+            border-radius: 5px;
+           
+        }
+</style>
+<div id="dialog_add_account_record_div" style="display:none;">
+    <div class="typein_account_form_div">
+        <div style="margin-left:13%;">
+            <div style="clear:both;">
+                <div>用途</div>
+                <div id="choose_purpose_div" class="mini-combobox" url="/RunningAccount/SearchAccountPurposeList" width="200"></div>
+            </div><br />
+            <div style="clear:both;">
+                <div>数量</div>
+                <div id="account_num_div" class="mini-textbox" vtype="float" width="200"></div>
+            </div><br />
+            <div style="clear:both;">
+                <div>类型</div>
+                <div id="type_check_box_div" class="mini-checkboxlist" textField="text" valueField="id" multiSelect="false"
+                     url="/RunningAccount/GetAccountType" width="200">
+                </div>
+            </div><br />
+            <div style="clear:both;">
+                <div>描述</div>
+                <div id="account_descript_div" class="mini-textarea" width="200"></div>
+            </div><br />
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        /*初始化*/
+        $AddAccountRecordDialog = {};
+        $AddAccountRecordDialog.divID = "dialog_add_account_record_div";
+        $AddAccountRecordDialog.$divID = "#" + $AddAccountRecordDialog.divID;
+        $AddAccountRecordDialog.div = $($AddAccountRecordDialog.$divID);
+        mini.parse();
+        /*打开窗口*/
+        $AddAccountRecordDialog.showAddAccountRecordDialog = function () {
+            $AddAccountRecordDialog.div.dialog({
+                autoOpen: false,
+                closeText: "关闭",
+                width: 300,
+                height: 410,
+                resizable: false,
+                modal: true,
+                title: "查看账户统计信息",
+                open: function () {
+                },
+                focus: function (ev, data) {
+                },
+                buttons: [{
+                    text: "保存",
+                    icons: {
+                        primary: "dialog-button-icon-save"
+                    },
+                    click: function () {
+                        /*保存代码*/
+                        saveAccountRecordInDialog();                        
+                    }
+                },
+                {
+                    text: "退出",
+                    icons: {
+                        primary: "dialog-button-icon-cancel"
+                    },
+                    click: function () {
+                        $AddAccountRecordDialog.div.dialog("close");
+                    }
+                }],
+                close: function (event, ui) {
+                }
+            })
+              .dialog("open");
+        }
+        function saveAccountRecordInDialog() {
+
+            var purpose = mini.get("choose_purpose_div").getSelected();
+            var num = mini.get("account_num_div").getValue();
+            var descript = mini.get("account_descript_div").getValue();
+            var type = mini.get("type_check_box_div").getValue();
+            /* 2、数据验证*/
+            if (purpose == undefined) {
+                $ShowMessageDialog.ShowTipsRightTop({ "message": "请选择用途！" });
+                return;
+            }
+            if (num == undefined || num == "") {
+                $ShowMessageDialog.ShowTipsRightTop({ "message": "数量填写不正确！" });
+                mini.get("account_num_div").focus();
+                return;
+            }
+            if (type == null || type == undefined || type == "") {
+                $ShowMessageDialog.ShowTipsRightTop({ "message": "请选择类型！" });
+                return;
+            }
+            /* 3、数据提交*/
+            var option = {
+                'purpose': purpose["id"],
+                'num': num,
+                'descript': descript,
+                'type': type
+            };
+            $.ajax({
+                type: 'post',
+                url: '/RunningAccount/InsertAccount',
+                data: option,
+                dataType: 'json',
+                success: function (jsonData) {
+                    if (jsonData["result"] == "@Common.CommonEnum.AjaxResult.ERROR")
+                    {
+                        $ShowMessageDialog.ShowTipsRightTop({ "message": "添加流水账记录失败！" });
+                        return;
+                    }
+                    /*添加成功，清空对应输入框，提示是否继续添加*/
+                    $AddAccountRecordDialog.div.dialog("close");
+                },
+                error: function () {
+                    $ShowMessageDialog.ShowTipsRightTop({ "message": "添加流水账记录失败！" });
+                }
+
+            });
+        }
+    });
+</script>

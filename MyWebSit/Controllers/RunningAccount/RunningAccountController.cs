@@ -41,7 +41,7 @@ namespace MyWebSit.Controllers
             List<User> uList = new UserBLL().SearchModelObjectListByCondition<User>(condition);
             if (uList == null)
             {
-                Log4NetUtils.Error(this, "查询用户名列表：查询userList失败！");
+                LogUtils.Error(this, "查询用户名列表：查询userList失败！");
                 return Content(errorJsonString);
             }
             StringBuilder re = new StringBuilder();
@@ -72,10 +72,18 @@ namespace MyWebSit.Controllers
         public ActionResult SearchAccountPurposeList()
         {
             string errorJsonString = $"{{\"result\":\"{CommonEnum.AjaxResult.ERROR}\"}}";
-            List<AccountPurpose> apList = new UserBLL().SearchModelObjectListByCondition<AccountPurpose>();
+            Guid userIDGuid;
+            if (!Guid.TryParse(Session["id"]?.ToString(),out userIDGuid))
+            {
+                LogUtils.Error(this,"查询用途类型，获取登录信息失败！");
+                return Content(errorJsonString);
+            }
+            List<AccountPurpose> apList = SessionManager.OpenSession().Query<AccountPurpose>().Where<AccountPurpose>
+                (a=>a.f_user_id==userIDGuid).ToList<AccountPurpose>();
+                //new UserBLL().SearchModelObjectListByCondition<AccountPurpose>();
             if (apList == null)
             {
-                Log4NetUtils.Error(this, "查询用途类型，查询失败！");
+                LogUtils.Error(this, "查询用途类型，查询失败！");
                 return Content(errorJsonString);
             }
             StringBuilder re = new StringBuilder();
@@ -109,7 +117,7 @@ namespace MyWebSit.Controllers
             string errorJsonString = $"{{\"result\":\"{CommonEnum.AjaxResult.ERROR}\"}}";
             ISession session = SessionManager.OpenSession();
             /*接收数据*/
-            string uidString = Request.Form["uid"];
+            string uidString = Session["uid"]?.ToString();
             string purposeString = Request.Form["purpose"];
             string numString = Request.Form["num"];
             string desString = Request.Form["descript"];
@@ -128,7 +136,7 @@ namespace MyWebSit.Controllers
             if (!purposeValidate || !Decimal.TryParse(numString, out numDecimal) || user == null || ap == null
                 || !int.TryParse(typeString, out type))
             {
-                Log4NetUtils.Error(this, "插入流水账，接收参数失败！");
+                LogUtils.Error(this, "插入流水账，接收参数失败！");
                 return Content(errorJsonString);
             }
 
@@ -153,7 +161,7 @@ namespace MyWebSit.Controllers
 
             if (!new UserBLL().AddModel<RunningAccount>(ra))
             {
-                Log4NetUtils.Error(this, "插入流水账，插入失败！");
+                LogUtils.Error(this, "插入流水账，插入失败！");
                 return Content(errorJsonString);
             }
 
@@ -191,7 +199,7 @@ namespace MyWebSit.Controllers
             Guid userIDGuid;
             if (!Guid.TryParse(Session["id"]?.ToString(), out userIDGuid))
             {
-                Log4NetUtils.Error(this, "查询流水账，无登陆信息。");
+                LogUtils.Error(this, "查询流水账，无登陆信息。");
                 return Content(errorJsonString);
             }
 
@@ -205,7 +213,7 @@ namespace MyWebSit.Controllers
             int pageSize, pageIndex;
             if (!int.TryParse(pageSizeString, out pageSize) || !int.TryParse(pageIndexString, out pageIndex))
             {
-                Log4NetUtils.Error(this, "查询日常记账，接收参数失败！");
+                LogUtils.Error(this, "查询日常记账，接收参数失败！");
                 return Content(errorJsonString);
             }
             int totalCount = SessionManager.OpenSession().Query<RunningAccount>().Where<RunningAccount>(
@@ -234,7 +242,7 @@ namespace MyWebSit.Controllers
             List<object[]> accountInfoList = new RunningAccountBLL().SearchAccountInfoListByCondition(condition, orderList, pageIndex, pageSize);
             if (accountInfoList == null)
             {
-                Log4NetUtils.Error(this, "查询流水账，列表为空。");
+                LogUtils.Error(this, "查询流水账，列表为空。");
                 return Content(errorJsonString);
             }
 
@@ -282,7 +290,7 @@ namespace MyWebSit.Controllers
             Guid userIDGuid;
             if (!Guid.TryParse(Session["id"]?.ToString(), out userIDGuid))
             {
-                Log4NetUtils.Error(this, "查询余额，无登陆信息。");
+                LogUtils.Error(this, "查询余额，无登陆信息。");
                 return Content(errorJsonString);
             }
 
@@ -293,7 +301,7 @@ namespace MyWebSit.Controllers
             Dictionary<string, object> balanceInfo = new RunningAccountBLL().SearchBalanceInfoByCondition(condition);
             if (balanceInfo == null || !balanceInfo.ContainsKey("money"))
             {
-                Log4NetUtils.Error(this, "查询余额，查询余额信息失败！");
+                LogUtils.Error(this, "查询余额，查询余额信息失败！");
                 return Content(errorJsonString);
             }
 
@@ -313,20 +321,37 @@ namespace MyWebSit.Controllers
             string errorJsonString = $"{{\"result\":\"{CommonEnum.AjaxResult.ERROR}\"}}";
             string name = Request.Form["name"];
             string descript = Request.Form["descript"];
-            if (string.IsNullOrWhiteSpace(name))
+            string uid = Request.Form["uid"];
+            string userID = Request.Form["userID"];
+            if (string.IsNullOrWhiteSpace(name)||string.IsNullOrWhiteSpace(userID))
             {
-                Log4NetUtils.Error(this, "插入类型，接收参数失败！");
+                LogUtils.Error(this, "插入类型，接收参数失败！");
                 return Content(errorJsonString);
             }
+            Guid userIDGuid;
+            if (!Guid.TryParse(userID, out userIDGuid))
+            {
+                LogUtils.Error(this,"插入类型，接收用户id失败！");
+                return Content(errorJsonString);
+            }
+            User user = SessionManager.OpenSession().Query<User>().SingleOrDefault<User>(u=>u.f_id==userIDGuid);
+            if (user == null)
+            {
+                LogUtils.Error(this,"插入类型，查询用户信息失败！");
+                return Content(errorJsonString);
+            }
+
+
             AccountPurpose ap = new AccountPurpose();
             ap.f_name = name;
             ap.f_descript = descript;
             ap.f_id = Guid.NewGuid();
             ap.f_type = 1;
+            ap.f_user_id = user.f_id;
 
             if (!new AccountPurposeBLL().AddModel<AccountPurpose>(ap))
             {
-                Log4NetUtils.Error(this, "插入类型，插入模型失败！");
+                LogUtils.Error(this, "插入类型，插入模型失败！");
                 return Content(errorJsonString);
             }
 
@@ -348,20 +373,20 @@ namespace MyWebSit.Controllers
             Guid idGuid;
             if (string.IsNullOrWhiteSpace(idString) ||!Guid.TryParse(idString, out idGuid))
             {
-                Log4NetUtils.Error(this, "删除记录，读取参数失败！");
+                LogUtils.Error(this, "删除记录，读取参数失败！");
                 return Content(errorJsonString);
             }
 
             RunningAccount ra = new RunningAccountBLL().SearchModelObjectByID<RunningAccount>(idGuid);
             if (ra == null)
             {
-                Log4NetUtils.Error(this, "删除记录，查询记录失败！");
+                LogUtils.Error(this, "删除记录，查询记录失败！");
                 return Content(errorJsonString);
             }
             ra.f_exist = CommonEnum.DataExist.NOT_EXIST;
             if (!new RunningAccountBLL().ModifyModel<RunningAccount>(ra))
             {
-                Log4NetUtils.Error(this, "删除记录，修改记录字段失败！");
+                LogUtils.Error(this, "删除记录，修改记录字段失败！");
                 return Content(errorJsonString);
             }
             StringBuilder result = new StringBuilder();
@@ -390,7 +415,7 @@ namespace MyWebSit.Controllers
             Guid userIDGuid;
             if (!Guid.TryParse(userIDString, out userIDGuid))
             {
-                Log4NetUtils.Error(this, "查询流水账信息，获取登陆用户信息失败！");
+                LogUtils.Error(this, "查询流水账信息，获取登陆用户信息失败！");
             }
             /*测试*/
             //methodString = "day";
@@ -403,7 +428,7 @@ namespace MyWebSit.Controllers
             if (string.IsNullOrWhiteSpace(methodString) || string.IsNullOrWhiteSpace(countString) || string.IsNullOrWhiteSpace(typeString)
                 || !int.TryParse(typeString, out type) || !int.TryParse(countString, out count))
             {
-                Log4NetUtils.Error(this, "查询流水账数据集，接收参数失败！");
+                LogUtils.Error(this, "查询流水账数据集，接收参数失败！");
                 return Content(errorJsonString);
             }
             count = count - 1;
@@ -445,7 +470,7 @@ namespace MyWebSit.Controllers
                     timeString = $"{time.Year}-{1}-{1}";
                     break;
                 default:
-                    Log4NetUtils.Error(this, "查询流水账数据集，接收参数存在问题！");
+                    LogUtils.Error(this, "查询流水账数据集，接收参数存在问题！");
                     return Content(errorJsonString);
             }
             count += 1;
@@ -459,7 +484,7 @@ namespace MyWebSit.Controllers
             //r.f_type == 1).ToList<RunningAccount>();
             if (raList == null)
             {
-                Log4NetUtils.Error(this, "查询流水账数据集，查询Dictionary失败！");
+                LogUtils.Error(this, "查询流水账数据集，查询Dictionary失败！");
                 return Content(errorJsonString);
             }
 
@@ -518,7 +543,7 @@ namespace MyWebSit.Controllers
             Guid userIDGuid;
             if (!Guid.TryParse(userIDString, out userIDGuid))
             {
-                Log4NetUtils.Error(this, "查询流水账信息，获取登陆用户信息失败！");
+                LogUtils.Error(this, "查询流水账信息，获取登陆用户信息失败！");
             }
             /*测试*/
             //methodString = "day";
@@ -529,7 +554,7 @@ namespace MyWebSit.Controllers
             DateTime time;
             if (string.IsNullOrWhiteSpace(methodString) || string.IsNullOrWhiteSpace(countString) || !int.TryParse(countString, out count))
             {
-                Log4NetUtils.Error(this, "查询流水账数据集，接收参数失败！");
+                LogUtils.Error(this, "查询流水账数据集，接收参数失败！");
                 return Content(errorJsonString);
             }
             count = count - 1;
@@ -571,7 +596,7 @@ namespace MyWebSit.Controllers
                     timeString = $"{time.Year}-{1}-{1}";
                     break;
                 default:
-                    Log4NetUtils.Error(this, "查询流水账数据集，接收参数存在问题！");
+                    LogUtils.Error(this, "查询流水账数据集，接收参数存在问题！");
                     return Content(errorJsonString);
             }
             count += 1;
@@ -585,14 +610,14 @@ namespace MyWebSit.Controllers
             //r.f_type == 1).ToList<RunningAccount>();
             if (raInList == null)
             {
-                Log4NetUtils.Error(this, "查询流水账数据集，查询Dictionary失败！");
+                LogUtils.Error(this, "查询流水账数据集，查询Dictionary失败！");
                 return Content(errorJsonString);
             }
             condition["type,Eq"] = CommonEnum.RunningAccountType.OUTCOME;
             Dictionary<int, decimal> raOutList = new RunningAccountBLL().SearchRunningAccountDataInfoListByCondition(condition);
             if (raOutList == null)
             {
-                Log4NetUtils.Error(this, "查询流水账数据集，查询Dictionary失败！");
+                LogUtils.Error(this, "查询流水账数据集，查询Dictionary失败！");
                 return Content(errorJsonString);
             }
 
@@ -685,7 +710,7 @@ namespace MyWebSit.Controllers
             Guid userIDGuid;
             if (!Guid.TryParse(userIDString, out userIDGuid))
             {
-                Log4NetUtils.Error(this, "查询流水账信息，获取登陆用户信息失败！");
+                LogUtils.Error(this, "查询流水账信息，获取登陆用户信息失败！");
             }
             /*测试*/
             //methodString = "day";
@@ -695,7 +720,7 @@ namespace MyWebSit.Controllers
             DateTime time;
             if (string.IsNullOrWhiteSpace(methodString) || string.IsNullOrWhiteSpace(countString) || !int.TryParse(countString, out count))
             {
-                Log4NetUtils.Error(this, "查询流水账数据集，接收参数失败！");
+                LogUtils.Error(this, "查询流水账数据集，接收参数失败！");
                 return Content(errorJsonString);
             }
             string timeString;
@@ -714,7 +739,7 @@ namespace MyWebSit.Controllers
                     timeString = $"{time.Year}-{1}-{1}";
                     break;
                 default:
-                    Log4NetUtils.Error(this, "查询流水账数据集，接收参数存在问题！");
+                    LogUtils.Error(this, "查询流水账数据集，接收参数存在问题！");
                     return Content(errorJsonString);
             }
 
@@ -729,7 +754,7 @@ namespace MyWebSit.Controllers
             Dictionary<string, decimal> accountTypeDataList = new RunningAccountBLL().SearchAccountTypeDataListByCondition(condition);
             if (accountTypeDataList == null)
             {
-                Log4NetUtils.Error(this, "查询流水账数据集，查询失败！");
+                LogUtils.Error(this, "查询流水账数据集，查询失败！");
                 return Content(errorJsonString);
             }
 
