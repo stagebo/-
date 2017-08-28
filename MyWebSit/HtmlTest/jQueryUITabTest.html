@@ -1,0 +1,160 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <meta charset="utf-8" />
+    <link href="../Scripts/Plugins/jQueryUI/themes/sunny/jquery-ui.css" rel="stylesheet" />
+
+    <script src="../Scripts/Plugins/jQuery/jquery-2.1.1.min.js"></script>
+    <script src="../Scripts/Plugins/jQueryUI/jquery-ui.min.js"></script>
+    <script>
+        /*初始化*/
+        $(function () {
+            $("#tabs").tabs();
+            $MainFrame = {};
+            $("div[itype='menu-item-child']").click(function () {
+                // $("#tabs").tabs({ active: 1 });
+                var uri = $(this).attr("uri");
+                var name = $(this).html();
+                var tabItemID = $(this).attr("tabItemID");
+                var option = {
+                    uri: uri,
+                    tabName: name,
+                    tabID: 'tabs',
+                    titleContainerID: 'tabs_title_container',
+                    tabItemID: tabItemID
+                }
+               // $MainFrame.addTabs(option);
+                var tabIsExist = $("a#" + tabItemID).html();
+                if (tabIsExist && tabIsExist != undefined) {
+                    console.log(tabIsExist);
+                    $MainFrame.activeTab(option);
+                    return;
+                }
+                console.log("begin");
+                console.log(option);
+                $.ajax({
+                    url: uri,
+                    success: function (data) {
+                        var title = $("<a href='#" + uri + "'>" + name + "</a>").attr("id",tabItemID);
+                        title = $("<li></li>").append(title);
+                        $("#tabs_title_container").append(title);
+
+                        var content = $("<div></div>").attr("id", uri);
+                        content.append(data);
+                        $("#tabs").append(content);
+
+                        $("tabs").tabs("load", uri);
+                        $("#tabs").tabs("destroy");
+                        $("#tabs").tabs();
+                        $MainFrame.activeTab(option);
+                    }
+                });
+
+            });
+            /**
+             * 添加选项卡
+             *
+             */
+            $MainFrame.addTabs = function (options) {
+
+                var defaultSettings = {
+                    uri: '',
+                    tabName: '',
+                    tabID: '',
+                    titleContainerID: ''
+                }
+                options = $.extend(defaultSettings, options);
+                var $tabs = $("#" + options["tabID"]);
+                /*检查选项卡是否存在*/
+                var tabIsExist = $("a#" + options["tabItemID"]).html();
+                if (tabIsExist && tabIsExist != undefined) {
+                    console.log(tabIsExist);
+                    $MainFrame.activeTab(options);
+                    return;
+                }
+
+                /*请求数据*/
+                $.ajax({
+                    url: options['uri'],
+                    success: function (data) {
+                        var title = $("<a></a>").attr("href", options['uri']).html(options["tabName"]).attr("id", options["tabItemID"]);
+                        title = $("<li></li>").append(title);
+                        $("#" + options['titleContainerID']).append(title);
+
+                        var content = $("<div></div>").attr("id", options['uri']);
+                        content.append(data);
+                        $tabs.append(content);
+
+                        $tabs.tabs("load", options['uri']);
+                        $tabs.tabs("destroy");
+                        $tabs.tabs();
+                    }
+                });
+
+            }
+            /**
+             *激活选项卡
+             * item         string/int      id或者index
+             * tabID        string          tabID
+             */
+            $MainFrame.activeTab = function (options) {
+                $("#" + options["tabID"]).tabs({ active: options[" uri"] });
+            }
+
+        });
+    </script>
+    <style>
+        div.frame-header {
+            width: 100%;
+            height: 150px;
+            background-color: #d6dbe9;
+        }
+        div.frame-mid-left {
+            width:20%;
+            height:500px;
+            float:left;
+            background-color:#808080;
+        }
+        div.frame-mid-right {
+            width:70%;
+            height:100%;
+            float:left;
+            background-color:#c2c3c9;
+        }
+        div.menu-item-child {
+            width:100%;
+            height:40px;
+            font-size:20px;
+            padding-top:20px;
+            text-align:center;
+            background-color:#494ba5;
+        }
+    </style>
+</head>
+<body>
+    <div class="frame-header"></div>
+    <div class="frame-mid-left">
+        <div class="menu-item-child" itype="menu-item-child" uri="/MainPage/Index" tabItemID="main_page">主页</div>
+        <div class="menu-item-child" itype="menu-item-child" uri="/Blog/Index" tabItemID="blog_page">博客</div>
+    </div>
+    <div class="frame-mid-right">
+        <div id="tabs">
+            <ul id="tabs_title_container">
+                <li><a href="#tabs-1">保尔</a></li>
+                <li><a href="#tabs-2">陆游</a></li>
+            </ul>
+            <div id="tabs-1">
+                <p>人的一生应当这样度过……</p>
+            </div>
+            <div id="tabs-2">
+                <p>死去元知万事空</p>
+                <p>但悲不见九州同</p>
+                <p>王师北定中原日</p>
+                <p>家祭无忘告乃翁</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

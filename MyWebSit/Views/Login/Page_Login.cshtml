@@ -21,11 +21,6 @@
     <script type="text/javascript">
         $(function () {
             mini.parse();
-            new jBox('Confirm', {
-                content: 'Do you really want to do this?',
-                cancelButton: 'Nope',
-                confirmButton: 'Sure do!'
-            });
             /*注册键盘事件*/
             $(document).bind('keypress', function (event) {
                 if (event.keyCode == "13") {
@@ -77,17 +72,6 @@
             密　码： <div id="pwd_div" class="mini-password"></div><br /><br />
             <div id="login_div" class="mini-button" onclick="validateUser()">登录</div>
             <a href="/Login/RegisterPage" style="margin-left:50px;">注册</a>
-
-
-            @*<input type="button" value="TopLeft" onclick="$ShowMessageDialog.ShowTipsRightTop({'message': 'test message' })" />
-                <input type="button" value="BottomLeft" onclick="$ShowMessageDialog.ShowTipsLeftBottom({'message': 'test message' })" />
-                <input type="button" value="BottomRight" onclick="$ShowMessageDialog.ShowTipsRightBottom({'message': 'hello this is a message of right-bottom','title':'Message Title' })" />
-                <input type="button" value="ConfirmButton" onclick="$ShowMessageDialog.ShowConfirmMessage({ 'message': '您确认删除吗？', 'title': '确认删除？', 'confirm': function (d) { console.log(d['message']);} })" />
-                <input type="button" id="info_button" value="InfoButton" onclick="$ShowMessageDialog.ShowInfoMessage({ 'message': 'hello this is a message of right-bottom', 'title': 'Message Title' ,'id':'info_button'})" />
-                <div class="demo-button demo-button-click noselect" data-confirm onclick="new jBox('Notice', {content: 'Yay! You clicked the confirm button', color: 'green', attributes: {y: 'bottom'}})">Click me</div>
-
-                <input type="button" value="showconfirm" data-confirm onclick="fun()" />
-                <div id="Modal-1" class="demo-button demo-button-notice demo-button-click noselect">Click me</div>*@
         </div>
     </div>
 </body>

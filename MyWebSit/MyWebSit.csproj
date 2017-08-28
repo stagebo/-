@@ -98,6 +98,7 @@
     <Compile Include="Controllers\Common\ManagerInterfaceController.cs" />
     <Compile Include="Filter\SessionRefreshAttribute.cs" />
     <Content Include="Global.asax" />
+    <Content Include="HtmlTest\jQueryUITabTest.html" />
     <Content Include="life.html" />
     <Content Include="Scripts\Common\CommonEnum.js" />
     <Content Include="Scripts\Common\CommonFunction.js" />
