@@ -8,51 +8,156 @@
 
     <script src="../Scripts/Plugins/jQuery/jquery-2.1.1.min.js"></script>
     <script src="../Scripts/Plugins/jQueryUI/jquery-ui.min.js"></script>
-    <script>
+    <!--左侧菜单-->
+    <style type="text/css">
+        /*一级菜单菜单css*/
+        div.menu-item-parent {
+            width: 100%;
+            height: 50px;
+            background-color: #2369a6;
+            font-size: 30px;
+            padding-top: 15px;
+            text-align: left;
+            font: bold;
+        }
+        /*二级菜单项样式*/
+        div[itype='menu-item'] {
+             width: 90%;
+            height: 30px;
+            font-size: 25px;
+            padding-top: 5px;
+            padding-left: 10%;
+            text-align: left;
+        }
+        /*子菜单激活*/
+        div.menu-item-active {
+            background-color: #5cb85c;
+        }
+        /*子菜单未激活样式*/
+        div.menu-item-not-active {
+            background-color: #337ab7;
+        }
+        /*一级菜单项边框样式*/
+        div[itype='menu-item-p'] {
+            border: solid 1px black;
+            margin-top: 1px;
+        }
+
+            /*菜单项鼠标掠过样式*/
+            div[itype="menu-item"]:hover, div[itype="menu-item-p"]:hover {
+                background-color: #286090;
+            }
+            /*菜单项鼠标按下样式*/
+            div[itype="menu-item"]:active, div[itype="menu-item-p"]:active {
+                background-color: #6dc96d;
+            }
+    </style>
+    <!--菜单初始化-->
+    <script type="text/javascript">
         /*初始化*/
         $(function () {
-            $("#tabs").tabs();
-            $MainFrame = {};
-            $("div[itype='menu-item-child']").click(function () {
-                // $("#tabs").tabs({ active: 1 });
+            //showAllSecondMenu();
+            foldAllSecondMenu();
+        });
+
+        $(function () {
+            /*一级菜单点击事件*/
+            $("div[itype='menu-item-p']").click(function () {
+                var pid = $(this).attr("id");
+                var item = $("div[parentid='" + pid + "']");
+                console.log(item.attr("hide"));
+                if (item.attr("hide") == "true") {
+                    item.show();
+                    item.attr("hide", "false");
+                } else {
+                    item.hide();
+                    item.attr("hide", "true");
+                }
+
+            });
+
+            /*二级菜单点击事件*/
+            $("div[itype='menu-item']").click(function () {
+                /*点击效果*/
+                var brothers = $(this).parent().children();
+                for (var i = 0; i < brothers.length; i++) {
+                    $(brothers[i]).removeClass("menu-item-active").addClass("menu-item-not-active").attr("active", "false");
+                }
+                $(this).addClass("menu-item-active").removeClass("menu-item-not-active").attr("active", "true");
+                /*添加tab事件*/
                 var uri = $(this).attr("uri");
                 var name = $(this).html();
                 var tabItemID = $(this).attr("tabItemID");
-                var option = {
+                var tabHref = $(this).attr("tab-href");
+                var options = {
                     uri: uri,
                     tabName: name,
-                    tabID: 'tabs',
+                    tabID: 'tabs_container_div',
                     titleContainerID: 'tabs_title_container',
-                    tabItemID: tabItemID
+                    tabItemID: tabItemID,
+                    tabHref:tabHref
                 }
-               // $MainFrame.addTabs(option);
-                var tabIsExist = $("a#" + tabItemID).html();
-                if (tabIsExist && tabIsExist != undefined) {
-                    console.log(tabIsExist);
-                    $MainFrame.activeTab(option);
-                    return;
-                }
-                console.log("begin");
-                console.log(option);
-                $.ajax({
-                    url: uri,
-                    success: function (data) {
-                        var title = $("<a href='#" + uri + "'>" + name + "</a>").attr("id",tabItemID);
-                        title = $("<li></li>").append(title);
-                        $("#tabs_title_container").append(title);
-
-                        var content = $("<div></div>").attr("id", uri);
-                        content.append(data);
-                        $("#tabs").append(content);
-
-                        $("tabs").tabs("load", uri);
-                        $("#tabs").tabs("destroy");
-                        $("#tabs").tabs();
-                        $MainFrame.activeTab(option);
-                    }
-                });
-
+                $MainFrame.addTabs(options);
             });
+        });
+
+        /*全部折叠*/
+        function foldAllSecondMenu() {
+            var sm = $("div[itype='menu-item-container']");
+            if ($.isArray(sm)) {
+                for (var i = 0; i < sm.length; i++) {
+                    $(sm[i]).hide();
+                    $(sm[i]).attr("hide", "true");
+                    console.log($(sm[i]).attr("hide"));
+                }
+            } else {
+                sm.hide();
+                for (var i = 0; i < sm.length; i++) {
+                    $(sm[i]).attr("hide", "true");
+                }
+            }
+        }
+
+        /*全部展开*/
+        function showAllSecondMenu() {
+            var sm = $("div[itype='menu-item-container']");
+            if ($.isArray(sm)) {
+                for (var i = 0; i < sm.length; i++) {
+                    $(sm[i]).show();
+                    $(sm[i]).attr("hide", "false");
+                }
+            } else {
+                sm.show();
+                for (var i = 0; i < sm.length; i++) {
+                    $(sm[i]).attr("hide", "false");
+                }
+            }
+        }
+
+    </script>
+    <!--选项卡-->
+    <script>
+        /*初始化*/
+        $(function () {
+            $("#tabs_container_div").tabs();
+            $MainFrame = {};
+
+            /*菜单项点击--添加tab事件*/
+            //$("div[itype='menu-item-child']").click(function () {
+            //    // $("#tabs").tabs({ active: 1 });
+            //    var uri = $(this).attr("uri");
+            //    var name = $(this).html();
+            //    var tabItemID = $(this).attr("tabItemID");
+            //    var options = {
+            //        uri: uri,
+            //        tabName: name,
+            //        tabID: 'tabs',
+            //        titleContainerID: 'tabs_title_container',
+            //        tabItemID: tabItemID
+            //    }
+            //    $MainFrame.addTabs(options);
+            //});
+
             /**
              * 添加选项卡
              *
@@ -62,11 +167,14 @@
                 var defaultSettings = {
                     uri: '',
                     tabName: '',
-                    tabID: '',
-                    titleContainerID: ''
+                    tabID: 'tabs_container_div',
+                    titleContainerID: 'tabs_title_container',
+                    tabItemID: ''
                 }
                 options = $.extend(defaultSettings, options);
+                console.log(options);
                 var $tabs = $("#" + options["tabID"]);
+                console.log($tabs);
                 /*检查选项卡是否存在*/
                 var tabIsExist = $("a#" + options["tabItemID"]).html();
                 if (tabIsExist && tabIsExist != undefined) {
@@ -74,22 +182,21 @@
                     $MainFrame.activeTab(options);
                     return;
                 }
-
-                /*请求数据*/
                 $.ajax({
                     url: options['uri'],
                     success: function (data) {
-                        var title = $("<a></a>").attr("href", options['uri']).html(options["tabName"]).attr("id", options["tabItemID"]);
+                        var title = $("<a href='#" + options['tabHref'] + "'>" + options['tabName'] + "</a>").attr("id", options["tabItemID"]);
                         title = $("<li></li>").append(title);
                         $("#" + options['titleContainerID']).append(title);
 
-                        var content = $("<div></div>").attr("id", options['uri']);
+                        var content = $("<div></div>").attr("id", options['tabHref']);
                         content.append(data);
                         $tabs.append(content);
 
-                        $tabs.tabs("load", options['uri']);
+                        //$("tabs").tabs("load", options['uri']);
                         $tabs.tabs("destroy");
                         $tabs.tabs();
+                        $MainFrame.activeTab(options);
                     }
                 });
 
@@ -100,11 +207,12 @@
              * tabID        string          tabID
              */
             $MainFrame.activeTab = function (options) {
-                $("#" + options["tabID"]).tabs({ active: options[" uri"] });
+                $("#" + options["tabID"]).tabs({ active: options[" tabHref"] });
             }
 
         });
     </script>
+    <!--Frame布局-->
     <style>
         div.frame-header {
             width: 100%;
@@ -121,6 +229,7 @@
             width:70%;
             height:100%;
             float:left;
+            margin-left:3px;
             background-color:#c2c3c9;
         }
         div.menu-item-child {
@@ -134,13 +243,40 @@
     </style>
 </head>
 <body>
+    <!--Frame头部-->
     <div class="frame-header"></div>
+    <!--Frame菜单-->
     <div class="frame-mid-left">
-        <div class="menu-item-child" itype="menu-item-child" uri="/MainPage/Index" tabItemID="main_page">主页</div>
-        <div class="menu-item-child" itype="menu-item-child" uri="/Blog/Index" tabItemID="blog_page">博客</div>
+        <div class="menu-item-child" itype="menu-item-child" uri="/MainPage/Index" tabItemID="main_page">我的个人网站</div>
+        <!--一级-->
+        <div id="menu_item_p_1" itype="menu-item-p" class="menu-item-parent">主页</div>
+        <!--二级-->
+        <div itype="menu-item-container" parentid="menu_item_p_1" hide="false">
+            <div itype="menu-item" class="menu-item-not-active" active="false" uri="/MainPage/Index" tabItemID="main_page" tab-href="main-page">主页</div>
+        </div>
+        <!--一级-->
+        <div id="menu_item_p_2" itype="menu-item-p" class="menu-item-parent">博客</div>
+        <!--二级-->
+        <div itype="menu-item-container" parentid="menu_item_p_2" hide="false">
+            <div itype="menu-item" class="menu-item-not-active" active="false" uri="/Blog/Index" tabItemID="blog_page" tab-href="blog-page">博客</div>
+        </div>
+        <!--一级-->
+        <div id="menu_item_p_3" itype="menu-item-p" class="menu-item-parent">个人中心</div>
+        <!--二级-->
+        <div itype="menu-item-container" parentid="menu_item_p_3" hide="false">
+            <div itype="menu-item" class="menu-item-not-active" active="false" uri="/UserManagement/CheckUserPage" tab-href="check-user-info" tabItemID="check_user_info">查看个人信息</div>
+            <div itype="menu-item" class="menu-item-not-active" active="false" uri="/UserManagement/ModifyUserPage" tab-href="modify-user-info" tabItemID="modify_user_info">修改个人信息</div>
+        </div>
+        <!--一级-->
+        <div id="menu_item_p_4" itype="menu-item-p" class="menu-item-parent">留言板</div>
+        <!--二级-->
+        <div itype="menu-item-container" parentid="menu_item_p_4" hide="false">
+            <div itype="menu-item" class="menu-item-not-active" active="false" uri="/Note/Index" tab-href="comment-board" tabItemID="comment_board">留言板</div>
+        </div>
     </div>
+    <!--Frametab-->
     <div class="frame-mid-right">
-        <div id="tabs">
+        <div id="tabs_container_div">
             <ul id="tabs_title_container">
                 <li><a href="#tabs-1">保尔</a></li>
                 <li><a href="#tabs-2">陆游</a></li>
