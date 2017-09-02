@@ -105,6 +105,7 @@ namespace MyWebSit.Controllers.NoteManage
                 LogUtils.Error(this, "查询留言，查询MessageList失败！");
                 return Content(errorJsonString);
             }
+
             StringBuilder successStringBuilder = new StringBuilder();
             successStringBuilder.Append("{\"result\":\"" + CommonEnum.AjaxResult.SUCCESS + "\",");
             successStringBuilder.Append($"\"totalPages\":\"{totalPage}\",");

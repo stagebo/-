@@ -4858,6 +4858,7 @@
     <Content Include="Scripts\Plugins\dojo\dojo\tests\unit\request\support\truthy.json" />
     <Content Include="Scripts\Plugins\dojo\dojo\tests\unit\resources\nodemod\package.json" />
     <Content Include="Scripts\Plugins\dojo\dojo\tests\unit\rpc\support\testClass.smd" />
+    <Content Include="Views\ManagerInterface\Page_Excute_Sql.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -4882,7 +4883,6 @@
     <Folder Include="Scripts\Plugins\MiniUI\themes\metro-orange\images\button\" />
     <Folder Include="Scripts\Plugins\MiniUI\themes\metro\images\button\" />
     <Folder Include="Style\" />
-    <Folder Include="Views\ManagerInterface\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Base\Base.csproj">
