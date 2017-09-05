@@ -129,7 +129,7 @@ namespace Common.Log4Net
         {
             fileLogger.Error(string.Format("[{0}] - {1}", typeName, message));
         }
-
+        /*严重*/
         public static void Fatal(object o, String message, Exception exception)
         {
             Type type = o.GetType();
