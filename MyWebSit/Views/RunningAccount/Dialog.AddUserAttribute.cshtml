@@ -26,51 +26,97 @@
 
 <!-- 页面初始化 -->
 <script type="text/javascript">
+    /*注册onlod实践*/
     $(function () {
+        /*代码放在立即执行的函数里面*/
+        (function ($) {
+            /*判断命名空间是否存在*/
+            if (!$.isPlainObject($.userAttribute)) {
+                $.userAttribute = {};
+                $.userAttribute.showAddUserAttributeDialog = function (callbackFunction) {
 
+
+                    $("#add_userAttribute_dialog").dialog({
+                        autoOpen: false,
+                        closeText: "关闭",
+                        height: 450,
+                        width: 430,
+                        resizable: false,
+                        modal: true,
+                        title: "添加用户属性信息",
+                        open: function () {
+                        },
+                        focus: function (ev, data) {
+                        },
+                        buttons: [{
+                            text: "保存",
+                            icons: {
+                                primary: "dialog-button-icon-save"
+                            },
+                            click: function () {
+                                _saveUserAttribute(callbackFunction);
+                            }
+                        }, {
+                            text: "取消",
+                            icons: {
+                                primary: "dialog-button-icon-cancel"
+                            },
+                            click: function () {
+                                $("#add_userAttribute_dialog").dialog("close");
+                            }
+                        }],
+                        close: function (event, ui) {
+                        }
+                    })
+                    .dialog("open");
+                    mini.parse();
+                };
+            }
+
+        }(jQuery));
     });
-    (function ($) {
-        if (!$.isPlainObject($.userAttribute)) {
-            $.userAttribute = {};
-            $.userAttribute.showAddUserAttributeDialog = function (callbackFunction) {
+    //(function ($) {
+    //    if (!$.isPlainObject($.userAttribute)) {
+    //        $.userAttribute = {};
+    //        $.userAttribute.showAddUserAttributeDialog = function (callbackFunction) {
 
 
-                $("#add_userAttribute_dialog").dialog({
-                    autoOpen: false,
-                    closeText: "关闭",
-                    height: 450,
-                    width: 430,
-                    resizable: false,
-                    modal: true,
-                    title: "添加用户属性信息",
-                    open: function () {
-                    },
-                    focus: function (ev, data) {
-                    },
-                    buttons: [{
-                        text: "保存",
-                        icons: {
-                            primary: "dialog-button-icon-save"
-                        },
-                        click: function () {
-                            _saveUserAttribute(callbackFunction);
-                        }
-                    }, {
-                        text: "取消",
-                        icons: {
-                            primary: "dialog-button-icon-cancel"
-                        },
-                        click: function () {
-                            $("#add_userAttribute_dialog").dialog("close");
-                        }
-                    }],
-                    close: function (event, ui) {
-                    }
-                })
-                .dialog("open");
-                mini.parse();
-            };
-        }
+    //            $("#add_userAttribute_dialog").dialog({
+    //                autoOpen: false,
+    //                closeText: "关闭",
+    //                height: 450,
+    //                width: 430,
+    //                resizable: false,
+    //                modal: true,
+    //                title: "添加用户属性信息",
+    //                open: function () {
+    //                },
+    //                focus: function (ev, data) {
+    //                },
+    //                buttons: [{
+    //                    text: "保存",
+    //                    icons: {
+    //                        primary: "dialog-button-icon-save"
+    //                    },
+    //                    click: function () {
+    //                        _saveUserAttribute(callbackFunction);
+    //                    }
+    //                }, {
+    //                    text: "取消",
+    //                    icons: {
+    //                        primary: "dialog-button-icon-cancel"
+    //                    },
+    //                    click: function () {
+    //                        $("#add_userAttribute_dialog").dialog("close");
+    //                    }
+    //                }],
+    //                close: function (event, ui) {
+    //                }
+    //            })
+    //            .dialog("open");
+    //            mini.parse();
+    //        };
+    //    }
            
-    })(jQuery);
+    //})(jQuery);
 </script>

@@ -133,7 +133,7 @@
                     }
                 },
                 cancel: function () {
-                    if (options['cancel'] && $.isFunction(options['cancel'])) {
+                    if (typeof options['cancel'] != undefined && $.isFunction(options['cancel'])) {
                         options['cancel']();
                     }
                 }
